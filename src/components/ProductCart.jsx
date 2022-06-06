@@ -1,6 +1,6 @@
-import { Text } from "@chakra-ui/react";
+import { TextareaAutosize, TextField } from "@mui/material";
 
 const ProductCard = () => {
-  return <Text>Ini Product Card</Text>;
+  return <TextField id="standard-basic" label="Standard" variant="standard" />;
 };
 export default ProductCard;
