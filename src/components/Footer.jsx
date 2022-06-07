@@ -3,8 +3,8 @@ import Image from "next/image";
 import logo from "assets/logo.png";
 import { RiWhatsappFill } from "react-icons/ri";
 import { MdEmail, MdPhoneInTalk } from "react-icons/md";
-import { FaFacebookF, FaTwitter } from "react-icons/fa";
-import { AiFillInstagram } from "react-icons/ai";
+import { FaFacebookF, FaTwitter} from "react-icons/fa";
+import { AiFillInstagram} from "react-icons/ai"
 
 const Footer = () => {
   return (
