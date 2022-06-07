@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import CarouselCard from "components/Carousel";
 import Footer from "components/Footer";
 import Navbar from "components/Navbar";
 import ProductCard from "components/ProductCard";
@@ -11,9 +10,9 @@ import Banner from "../components/Banner";
 const Home = () => {
   return (
     <Box>
-      <Navbar />
-      <Banner />
-      <ProductCard />
+      <Navbar/>
+      <ProductCard/>
+      <Footer/>
     </Box>
   );
 };
