@@ -1,7 +1,11 @@
 import ProductCard from "components/ProductCart";
 
 const Homepage = () => {
-  return <ProductCard />;
+  return (
+    <>
+      <ProductCard />
+    </>
+  );
 };
 
 export default Homepage;
