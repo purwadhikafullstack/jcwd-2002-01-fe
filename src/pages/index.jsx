@@ -10,9 +10,6 @@ import Banner from "../components/Banner";
 const Home = () => {
   return (
     <Box>
-      <Navbar/>
-      <ProductCard/>
-      <Footer/>
     </Box>
   );
 };
