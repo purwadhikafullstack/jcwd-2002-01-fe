@@ -30,7 +30,6 @@ const AdminSidebar = () => {
 
   return (
     <Box
-      boxShadow="10"
       sx={{
         height: "1024px",
         pr: 2,
