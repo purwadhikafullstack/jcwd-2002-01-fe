@@ -30,11 +30,10 @@ const AdminSidebar = () => {
 
   return (
     <Box
-      boxShadow="10"
       sx={{
-        width: "256px",
         height: "1024px",
         pr: 2,
+        boxShadow: "0px 8px 20px -12px black",
       }}
     >
       <Typography textAlign="center" sx={{ p: 4 }}>
