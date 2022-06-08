@@ -1,22 +1,13 @@
 import {
   Box,
   Collapse,
-  ListItemButton,
   Stack,
   Typography,
-  List,
-  ListItemIcon,
   ListItemText,
   MenuItem,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-import {
-  ContentCopy,
-  ContentCut,
-  ExpandLess,
-  ExpandMore,
-  StarBorder,
-} from "@mui/icons-material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import SsidChartIcon from "@mui/icons-material/SsidChart";
@@ -37,19 +28,12 @@ const AdminSidebar = () => {
     setOpenSales(!openSales);
   };
 
-  const [open, setOpen] = useState(true);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
   return (
     <Box
+      boxShadow="10"
       sx={{
-        boxShadow: "0px 8px 20px -12px black",
-        width: 250,
-        height: "100vh",
-        position: "absolute",
+        width: "256px",
+        height: "1024px",
         pr: 2,
       }}
     >
@@ -57,7 +41,7 @@ const AdminSidebar = () => {
         Healthymed
       </Typography>
 
-      <Stack spacing={6} sx={{ pl: 2 }}>
+      <Stack spacing={5} sx={{ pl: 2 }}>
         {/* Dashboard */}
 
         <Box
@@ -98,31 +82,28 @@ const AdminSidebar = () => {
         </Box>
 
         <Collapse in={openProduct} timeout="auto" unmountOnExit>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Daftar Produk
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+              },
+            }}
+          >
+            Daftar Produk
           </MenuItem>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Tambah Produk
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Tambah Produk
           </MenuItem>
         </Collapse>
 
@@ -148,83 +129,77 @@ const AdminSidebar = () => {
           {openTransaction ? <ExpandMore /> : <ExpandLess />}
         </Box>
         <Collapse in={openTransaction} timeout="auto" unmountOnExit>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Semua Pesanan
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Semua Pesanan
           </MenuItem>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Pesanan Baru
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Pesanan Baru
           </MenuItem>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Siap Dikirim
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Siap Dikirim
           </MenuItem>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Dalam Pengiriman
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Dalam Pengiriman
           </MenuItem>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Selesai
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Selesai
           </MenuItem>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Dibatalkan
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Dibatalkan
           </MenuItem>
         </Collapse>
 
@@ -250,44 +225,41 @@ const AdminSidebar = () => {
           {openSales ? <ExpandMore /> : <ExpandLess />}
         </Box>
         <Collapse in={openSales} timeout="auto" unmountOnExit>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Ringkasan Statistik
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Ringkasan Statistik
           </MenuItem>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Buku Kas
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Buku Kas
           </MenuItem>
-          <MenuItem>
-            <ListItemText
-              sx={{
-                color: "#52637A",
-                "&:hover": {
-                  color: "#009B90",
-                  opacity: [0.9, 0.8, 0.7],
-                },
-              }}
-            >
-              Laba dan Rugi
-            </ListItemText>
+          <MenuItem
+            sx={{
+              color: "#52637A",
+              "&:hover": {
+                color: "#009B90",
+                opacity: [0.9, 0.8, 0.7],
+                cursor: "pointer",
+              },
+            }}
+          >
+            Laba dan Rugi
           </MenuItem>
         </Collapse>
       </Stack>
