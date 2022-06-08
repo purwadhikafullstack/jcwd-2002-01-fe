@@ -4,13 +4,13 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 const AdminNavbar = () => {
   return (
     <Box
-      boxShadow="10"
       display="flex"
       sx={{
         height: "64px",
         alignItems: "center",
         justifyContent: "end",
-        bgcolor: "#FFFFFF",
+
+        boxShadow: "0px 8px 20px -12px black",
       }}
     >
       <Box display="flex" sx={{ pr: "64px" }}>
