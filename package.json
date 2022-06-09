@@ -15,6 +15,7 @@
     "@mui/icons-material": "^5.8.2",
     "@mui/material": "^5.8.2",
     "framer-motion": "^6.3.10",
+    "lodash": "^4.17.21",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-animated-progress-bar": "^1.1.1",
