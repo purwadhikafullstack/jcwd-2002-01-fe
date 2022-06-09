@@ -12,6 +12,7 @@ import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import SsidChartIcon from "@mui/icons-material/SsidChart";
 import { useState } from "react";
+import Link from "next/link";
 
 const AdminSidebar = () => {
   const [openProduct, setOpenProduct] = useState(false);
@@ -31,9 +32,10 @@ const AdminSidebar = () => {
   return (
     <Box
       sx={{
-        height: "1024px",
+        height: "100vh",
         pr: 2,
         boxShadow: "0px 8px 20px -12px black",
+        bgcolor: "#FFFFFF",
       }}
     >
       <Typography textAlign="center" sx={{ p: 4 }}>
@@ -150,7 +152,7 @@ const AdminSidebar = () => {
               },
             }}
           >
-            Pesanan Baru
+            <Link href={"/admin/pesanan"}>Pesanan Baru</Link>
           </MenuItem>
           <MenuItem
             sx={{

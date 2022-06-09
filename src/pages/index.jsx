@@ -9,9 +9,9 @@ import styles from "../styles/Home.module.css";
 const Home = () => {
   return (
     <Box>
+      <ProductCard />
     </Box>
   );
 };
 
 export default Home;
-

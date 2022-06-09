@@ -9,7 +9,7 @@ const AdminNavbar = () => {
         height: "64px",
         alignItems: "center",
         justifyContent: "end",
-
+        bgcolor: "#FFFFFF",
         boxShadow: "0px 8px 20px -12px black",
       }}
     >
