@@ -1,3 +1,5 @@
+import { ThemeProvider } from "@mui/material";
+import theme from "theme";
 import AdminPageContainer from "components/admin/AdminPageContainer";
 import { useRouter } from "next/router";
 import "../styles/globals.css";
@@ -20,11 +22,13 @@ const MyApp = ({ Component, pageProps }) => {
   // return <Component {...pageProps} />;
   return (
     <Provider>
-      {router.pathname.startsWith("/admin") ? (
-        <AdminPageContainer children={<Component {...pageProps} />} />
-      ) : (
-        <Component {...pageProps} />
-      )}
+      <ThemeProvider theme={theme}>
+        {router.pathname.startsWith("/admin") ? (
+          <AdminPageContainer children={<Component {...pageProps} />} />
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </ThemeProvider>
     </Provider>
   );
 };

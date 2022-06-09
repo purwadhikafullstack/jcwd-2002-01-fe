@@ -13,6 +13,7 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import SsidChartIcon from "@mui/icons-material/SsidChart";
 import { useState } from "react";
 import Link from "next/link";
+import SidebarMenu from "./Sidebar/SidebarMenu";
 
 const AdminSidebar = () => {
   const [openProduct, setOpenProduct] = useState(false);
@@ -33,7 +34,7 @@ const AdminSidebar = () => {
     <Box
       sx={{
         height: "100vh",
-        pr: 2,
+        // pr: 2,
         boxShadow: "0px 8px 20px -12px black",
         bgcolor: "#FFFFFF",
       }}
@@ -42,7 +43,7 @@ const AdminSidebar = () => {
         Healthymed
       </Typography>
 
-      <Stack spacing={5} sx={{ pl: 2 }}>
+      <Stack>
         {/* Dashboard */}
 
         <Box
@@ -60,209 +61,36 @@ const AdminSidebar = () => {
           <Typography sx={{ pl: 1 }}>dashboard</Typography>
         </Box>
 
-        {/* Product */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          sx={{
-            color: "#52637A",
-            "&:hover": {
-              color: "#009B90",
-              opacity: [0.9, 0.8, 0.7],
-              cursor: "pointer",
+        {/* Sidebar menu component */}
+        <SidebarMenu
+          menuTitle="Inventory"
+          subMenus={[
+            {
+              submenuTitle: "Stock Produk",
+              href: "/admin/inventory/products",
             },
-          }}
-          onClick={handleClickProduct}
-        >
-          <Box display="flex">
-            <LocalPharmacyIcon />
-            <Typography sx={{ pl: 1 }}>Produk</Typography>
-          </Box>
-
-          {openProduct ? <ExpandMore /> : <ExpandLess />}
-        </Box>
-
-        <Collapse in={openProduct} timeout="auto" unmountOnExit>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-              },
-            }}
-          >
-            Daftar Produk
-          </MenuItem>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Tambah Produk
-          </MenuItem>
-        </Collapse>
-
-        {/* Trasaction */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          sx={{
-            color: "#52637A",
-            "&:hover": {
-              color: "#009B90",
-              opacity: [0.9, 0.8, 0.7],
-              cursor: "pointer",
+            {
+              submenuTitle: "Mutasi Stock",
+              href: "/admin/inventory/mutation",
             },
-          }}
-          onClick={handleClickTransaction}
-        >
-          <Box display="flex">
-            <ReceiptIcon />
-            <Typography sx={{ pl: 1 }}>transaksi</Typography>
-          </Box>
+          ]}
+          icon={<LocalPharmacyIcon />}
+        />
 
-          {openTransaction ? <ExpandMore /> : <ExpandLess />}
-        </Box>
-        <Collapse in={openTransaction} timeout="auto" unmountOnExit>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Semua Pesanan
-          </MenuItem>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            <Link href={"/admin/pesanan"}>Pesanan Baru</Link>
-          </MenuItem>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Siap Dikirim
-          </MenuItem>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Dalam Pengiriman
-          </MenuItem>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Selesai
-          </MenuItem>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Dibatalkan
-          </MenuItem>
-        </Collapse>
-
-        {/* Sales and Revenue */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          sx={{
-            color: "#52637A",
-            "&:hover": {
-              color: "#009B90",
-              opacity: [0.9, 0.8, 0.7],
-              cursor: "pointer",
+        <SidebarMenu
+          menuTitle="Inventory"
+          subMenus={[
+            {
+              submenuTitle: "Stock Produk",
+              href: "/admin/inventory/products",
             },
-          }}
-          onClick={handleClickSales}
-        >
-          <Box display="flex">
-            <SsidChartIcon />
-            <Typography sx={{ pl: 1 }}>sales & revenue</Typography>
-          </Box>
-
-          {openSales ? <ExpandMore /> : <ExpandLess />}
-        </Box>
-        <Collapse in={openSales} timeout="auto" unmountOnExit>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Ringkasan Statistik
-          </MenuItem>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Buku Kas
-          </MenuItem>
-          <MenuItem
-            sx={{
-              color: "#52637A",
-              "&:hover": {
-                color: "#009B90",
-                opacity: [0.9, 0.8, 0.7],
-                cursor: "pointer",
-              },
-            }}
-          >
-            Laba dan Rugi
-          </MenuItem>
-        </Collapse>
+            {
+              submenuTitle: "Mutasi Stock",
+              href: "/admin/inventory/mutation",
+            },
+          ]}
+          icon={<LocalPharmacyIcon />}
+        />
       </Stack>
     </Box>
   );
