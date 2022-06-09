@@ -11,15 +11,6 @@ const Provider = ({ children }) => {
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
 
-  // if (router.pathname.startsWith("/admin")) {
-  //   return (
-  //     <AdminPageContainer>
-  //       <Component {...pageProps} />
-  //     </AdminPageContainer>
-  //   );
-  // }
-
-  // return <Component {...pageProps} />;
   return (
     <Provider>
       <ThemeProvider theme={theme}>

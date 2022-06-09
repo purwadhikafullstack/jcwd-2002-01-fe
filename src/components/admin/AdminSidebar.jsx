@@ -1,35 +1,16 @@
-import {
-  Box,
-  Collapse,
-  Stack,
-  Typography,
-  ListItemText,
-  MenuItem,
-} from "@mui/material";
+import Link from "next/link";
+import { Box, Stack } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import logo from "assets/logo.png";
+import Image from "next/image";
+
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import SsidChartIcon from "@mui/icons-material/SsidChart";
-import { useState } from "react";
-import Link from "next/link";
+
 import SidebarMenu from "./Sidebar/SidebarMenu";
 
 const AdminSidebar = () => {
-  const [openProduct, setOpenProduct] = useState(false);
-  const [openTransaction, setOpenTransaction] = useState(false);
-  const [openSales, setOpenSales] = useState(false);
-
-  const handleClickProduct = () => {
-    setOpenProduct(!openProduct);
-  };
-  const handleClickTransaction = () => {
-    setOpenTransaction(!openTransaction);
-  };
-  const handleClickSales = () => {
-    setOpenSales(!openSales);
-  };
-
   return (
     <Box
       sx={{
@@ -39,38 +20,30 @@ const AdminSidebar = () => {
         bgcolor: "#FFFFFF",
       }}
     >
-      <Typography textAlign="center" sx={{ p: 4 }}>
-        Healthymed
-      </Typography>
+      <Box textAlign="center" sx={{ p: 4 }}>
+        <Image src={logo} />
+      </Box>
 
       <Stack>
         {/* Dashboard */}
 
-        <Box
-          display="flex"
-          sx={{
-            color: "#52637A",
-            "&:hover": {
-              color: "#009B90",
-              opacity: [0.9, 0.8, 0.7],
-              cursor: "pointer",
-            },
-          }}
-        >
-          <HomeIcon />
-          <Typography sx={{ pl: 1 }}>dashboard</Typography>
-        </Box>
-
         {/* Sidebar menu component */}
+
         <SidebarMenu
-          menuTitle="Inventory"
+          menuTitle="Dashboard"
+          href="/admin/dashboard"
+          icon={<HomeIcon />}
+        />
+
+        <SidebarMenu
+          menuTitle="Produk"
           subMenus={[
             {
-              submenuTitle: "Stock Produk",
+              submenuTitle: "Daftar Produk",
               href: "/admin/inventory/products",
             },
             {
-              submenuTitle: "Mutasi Stock",
+              submenuTitle: "Tambah Produk",
               href: "/admin/inventory/mutation",
             },
           ]}
@@ -78,18 +51,53 @@ const AdminSidebar = () => {
         />
 
         <SidebarMenu
-          menuTitle="Inventory"
+          menuTitle="Transaction"
           subMenus={[
             {
-              submenuTitle: "Stock Produk",
-              href: "/admin/inventory/products",
+              submenuTitle: "Semua Pesanan",
+              href: "/admin/pesanan",
             },
             {
-              submenuTitle: "Mutasi Stock",
+              submenuTitle: "Pesanan Baru",
+              href: "/admin/inventory/mutation",
+            },
+            {
+              submenuTitle: "Siap Dikirim",
+              href: "/admin/inventory/mutation",
+            },
+            {
+              submenuTitle: "Dalam Pengiriman",
+              href: "/admin/inventory/mutation",
+            },
+            {
+              submenuTitle: "Selesai",
+              href: "/admin/inventory/mutation",
+            },
+            {
+              submenuTitle: "Dibatalkan",
               href: "/admin/inventory/mutation",
             },
           ]}
-          icon={<LocalPharmacyIcon />}
+          icon={<ReceiptIcon />}
+        />
+
+        <SidebarMenu
+          menuTitle="Sales & Revenue"
+          subMenus={[
+            {
+              submenuTitle: "Ringkasan Statistic",
+              href: "/admin/inventory/products",
+            },
+            {
+              submenuTitle: "Buku Kas",
+              href: "/admin/inventory/mutation",
+            },
+            {
+              submenuTitle: "Laba dan Rugi",
+              href: "/admin/inventory/mutation",
+            },
+          ]}
+          icon={<SsidChartIcon />}
         />
       </Stack>
     </Box>
