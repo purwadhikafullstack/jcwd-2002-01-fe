@@ -11,7 +11,7 @@ const Button = (theme) => {
         },
         outlined: {
           borderColor: theme.palette.brand["500"],
-          color: theme.palette.brand["500"]
+          color: theme.palette.brand["500"],
         },
         root: {
           borderRadius: "8px",
@@ -19,8 +19,8 @@ const Button = (theme) => {
         },
       },
       defaultProps: {
-        disableElevation: true
-      }
+        disableElevation: true,
+      },
     },
   };
 };
