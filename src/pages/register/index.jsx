@@ -7,6 +7,7 @@ import {
   OutlinedInput,
   InputAdornment,
   Icon,
+  IconButton,
   Stack,
   Checkbox,
   FormLabel,
@@ -41,12 +42,18 @@ const RegisterPage = () => {
             Sudah punya akun? <Link component="button">Masuk</Link>
           </Typography>
           <Box display="flex" justifyContent="space-between">
-            <Button variant="outlined" sx={{ width: "256px" }}>
+            <Button variant="outlined" sx={{ width: "256px", borderColor:"brand.500", color: "brand.500" }}>
               Daftar dengan Google
             </Button>
             <Button
               variant="contained"
-              sx={{ boxShadow: "none", width: "256px" }}
+              sx={{
+                boxShadow: "none",
+                width: "256px",
+                "&:hover": {
+                  boxShadow: "none",
+                },
+              }}
             >
               Daftar dengan Facebook
             </Button>
@@ -109,12 +116,11 @@ const RegisterPage = () => {
               }
               endAdornment={
                 <InputAdornment position="end">
-                  <Icon
-                    sx={{ mr: "17px" }}
+                  <IconButton
                     onClick={() => setPasswordVisible(!passwordVisible)}
                   >
                     {passwordVisible ? <AiFillEye /> : <AiFillEyeInvisible />}
-                  </Icon>
+                  </IconButton>
                 </InputAdornment>
               }
             ></OutlinedInput>
