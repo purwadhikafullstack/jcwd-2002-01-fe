@@ -14,7 +14,7 @@ import {
 import logo from "../assets/logo.png";
 import Image from "next/image";
 import { HiOutlineSearch } from "react-icons/hi";
-import { margin, textAlign, width } from "@mui/system";
+import { margin, textAlign, width } from "@mui/material";
 
 const Navbar = () => {
   return (
