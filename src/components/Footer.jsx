@@ -3,12 +3,12 @@ import Image from "next/image";
 import logo from "assets/logo.png";
 import { RiWhatsappFill } from "react-icons/ri";
 import { MdEmail, MdPhoneInTalk } from "react-icons/md";
-import { FaFacebookF, FaTwitter} from "react-icons/fa";
-import { AiFillInstagram} from "react-icons/ai"
+import { FaFacebookF, FaTwitter } from "react-icons/fa";
+import { AiFillInstagram } from "react-icons/ai";
 
 const Footer = () => {
   return (
-    <Box sx={{position: "absolute", bottom: "0", width: "100%"}}>
+    <Box sx={{ position: "absolute", bottom: "0", width: "100%" }}>
       <Box padding="60px 96px" sx={{ backgroundColor: "whitesmoke" }}>
         <Grid container spacing={10}>
           <Grid item xs={3}>
