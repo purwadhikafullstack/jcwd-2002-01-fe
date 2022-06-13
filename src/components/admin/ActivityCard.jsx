@@ -6,11 +6,12 @@ const ActivityCard = () => {
       sx={{
         width: "168px",
         height: "93px",
-        borderRadius: "16px",
+        borderRadius: "10px",
         margin: "20px",
         padding: "15px",
         boxShadow: "0px 8px 20px -12px black",
         alignItems: "center",
+        bgcolor: "#FFFFFF",
       }}
     >
       <Typography fontSize="14px" sx={{ color: "#737A8D" }}>
