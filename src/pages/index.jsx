@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
-import Footer from "components/Footer";
+import Example from "components/Carousel";
+
 import Navbar from "components/Navbar";
 import ProductCard from "components/ProductCard";
 import UserSidebar from "components/Sidebar";
