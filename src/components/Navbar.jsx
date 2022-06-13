@@ -39,7 +39,7 @@ const Navbar = () => {
             height: "44px",
             mr: "67px",
             borderRadius: "8px",
-            p: "24px 15px"
+            p: "24px 15px",
           }}
           endAdornment={
             <InputAdornment position="end">
@@ -62,16 +62,13 @@ const Navbar = () => {
         Masuk
       </Button>
       <Button
-        variant="outlined"
+        variant="contained"
         sx={{
-          backgroundColor: "#009B90",
-          color: "white",
           height: "44px",
           width: "118px",
-          borderRadius: "8px",
         }}
       >
-        daftar
+        Daftar
       </Button>
     </Box>
   );
