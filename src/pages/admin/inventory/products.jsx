@@ -1,7 +1,3 @@
-import { Typography } from "@mui/material";
-
-const Products = () => {
-  return <Typography>Daftar Produk</Typography>;
-};
+const Products = () => {};
 
 export default Products;
