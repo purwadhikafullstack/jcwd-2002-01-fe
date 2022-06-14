@@ -1,16 +1,26 @@
-import { Box, Button, Checkbox, Divider, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
+import Image from "next/image";
+import fotoObat from "assets/panadol.jpg";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { borderRadius } from "@mui/system";
 
 const TransactionCard = () => {
   return (
     <Box
       sx={{
-        height: "200px",
         width: "1088px",
         borderRadius: "10px",
         margin: "20px",
-        padding: "5px",
+        padding: "15px",
         boxShadow: "0px 8px 20px -12px black",
         alignItems: "center",
         bgcolor: "#FFFFFF",
@@ -31,8 +41,89 @@ const TransactionCard = () => {
       </Box>
       <Divider></Divider>
       <Box display="flex" sx={{ alignItems: "center" }}>
-        <Box sx={{ p: 2, m: 2, border: "2px solid grey" }}>
-          <Button>Save</Button>
+        <Box
+          sx={{
+            m: 2,
+            pt: 1,
+            mr: "30px",
+            border: "solid grey",
+            width: "80px",
+            height: "80px",
+            borderRadius: "8px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Image width="55px" height="55px" src={fotoObat} />
+        </Box>
+
+        <Box sx={{ mr: "32px" }}>
+          <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
+            Panadol Banteng Merah
+          </Typography>
+          <Typography sx={{ fontSize: "12px", color: "#737A8D" }}>
+            2 x 13.000
+          </Typography>
+          <Box display="flex" sx={{ color: "brand.500", alignItems: "center" }}>
+            <Typography sx={{ fontSize: "12px" }}>
+              lihat 2 obat lainnya
+            </Typography>
+            <ExpandMore fontSize="24px"></ExpandMore>
+          </Box>
+        </Box>
+        <Divider sx={{ my: "16px" }} orientation="vertical" flexItem />
+
+        <Stack direction="row" spacing={28} sx={{ mx: "32px" }}>
+          <Box>Item 1</Box>
+          <Box>Item 2</Box>
+          <Box>Item 3</Box>
+        </Stack>
+      </Box>
+
+      <Box
+        display="flex"
+        sx={{
+          height: "40px",
+
+          borderRadius: "4px",
+          bgcolor: "#F6FAFB",
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: "16px",
+        }}
+      >
+        <Box display="inline-flex">
+          <Typography sx={{ fontWeight: "Bold", mr: 2, fontSize: "14px" }}>
+            Total Harga
+          </Typography>
+          <Typography sx={{ fontSize: "14px" }}>(4 Obat)</Typography>
+        </Box>
+
+        <Typography sx={{ fontWeight: "Bold", fontSize: "14px" }}>
+          Rp 65.000
+        </Typography>
+      </Box>
+
+      <Box
+        display="flex"
+        sx={{
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: "16px",
+          mt: "16px",
+        }}
+      >
+        <Box display="flex" sx={{ color: "brand.500" }}>
+          <Typography sx={{ pr: "32px", fontSize: "14px" }}>
+            Chat Pembeli
+          </Typography>
+          <Typography sx={{ fontSize: "14px" }}>Detail Pesanan</Typography>
+        </Box>
+
+        <Box display="flex">
+          <Button sx={{ mr: "32px" }}>Tolak Pesanan</Button>
+          <Button sx={{ bgcolor: "brand.400" }}>Terima Pesanan</Button>
         </Box>
       </Box>
     </Box>
