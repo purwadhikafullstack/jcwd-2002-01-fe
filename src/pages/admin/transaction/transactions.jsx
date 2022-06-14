@@ -4,6 +4,7 @@ const Transaction = () => {
   return (
     <>
       <TransactionCard></TransactionCard>
+      <TransactionCard></TransactionCard>
     </>
   );
 };
