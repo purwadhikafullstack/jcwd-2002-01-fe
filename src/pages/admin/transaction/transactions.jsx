@@ -1,7 +1,11 @@
-import { Typography } from "@mui/material";
+import TransactionCard from "components/admin/TransactionCard";
 
 const Transaction = () => {
-  return <Typography>All Transaction</Typography>;
+  return (
+    <>
+      <TransactionCard></TransactionCard>
+    </>
+  );
 };
 
 export default Transaction;
