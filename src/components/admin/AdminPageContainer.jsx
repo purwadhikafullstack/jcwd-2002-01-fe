@@ -17,7 +17,6 @@ const AdminPageContainer = ({ children }) => {
           background:
             "linear-gradient(90deg, rgba(191,229,247,1) 41%, rgba(232,246,252,1) 74%)",
           borderRadius: "5px",
-          height: "100vh",
         }}
       >
         <AdminNavbar></AdminNavbar>
