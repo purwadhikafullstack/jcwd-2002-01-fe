@@ -3,6 +3,7 @@ import {
   Button,
   Checkbox,
   Divider,
+  Grid,
   Stack,
   Typography,
 } from "@mui/material";
@@ -38,53 +39,76 @@ const TransactionCard = () => {
           10 Jan 2022, 10:45 WIB
         </Typography>
       </Box>
+
       <Divider></Divider>
-      <Box display="flex" sx={{ alignItems: "center" }}>
-        <Box
-          sx={{
-            m: 2,
-            pt: 1,
-            mr: "30px",
-            border: "solid grey",
-            width: "80px",
-            height: "80px",
-            borderRadius: "8px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Image width="55px" height="55px" src={fotoObat} />
-        </Box>
+      <Grid container display="flex" sx={{ alignItems: "center" }}>
+        <Grid item xs={4}>
+          <Box display="flex" sx={{ alignItems: "center" }}>
+            <Box
+              sx={{
+                m: 2,
+                pt: 1,
+                mr: "30px",
+                border: "solid grey",
+                width: "80px",
+                height: "80px",
+                borderRadius: "8px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Image width="55px" height="55px" src={fotoObat} />
+            </Box>
 
-        <Box sx={{ mr: "32px" }}>
-          <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
-            Panadol Banteng Merah
-          </Typography>
-          <Typography sx={{ fontSize: "12px", color: "#737A8D" }}>
-            2 x 13.000
-          </Typography>
-          <Box display="flex" sx={{ color: "brand.500", alignItems: "center" }}>
-            <Typography sx={{ fontSize: "12px" }}>
-              lihat 2 obat lainnya
-            </Typography>
-            <ExpandMore fontSize="24px"></ExpandMore>
+            <Box sx={{ mr: "32px" }}>
+              <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
+                Panadol Banteng Merah
+              </Typography>
+              <Typography sx={{ fontSize: "12px", color: "#737A8D" }}>
+                2 x 13.000
+              </Typography>
+              <Box
+                display="flex"
+                sx={{ color: "brand.500", alignItems: "center" }}
+              >
+                <Typography sx={{ fontSize: "12px" }}>
+                  lihat 2 obat lainnya
+                </Typography>
+                <ExpandMore fontSize="24px"></ExpandMore>
+              </Box>
+            </Box>
+            <Divider sx={{ my: "16px" }} orientation="vertical" flexItem />
           </Box>
-        </Box>
-        <Divider sx={{ my: "16px" }} orientation="vertical" flexItem />
+        </Grid>
 
-        <Stack direction="row" spacing={28} sx={{ mx: "32px" }}>
-          <Box>
-            <Typography>Pembeli</Typography>
-          </Box>
-          <Box>
-            <Typography>Alamat</Typography>
-          </Box>
-          <Box>
-            <Typography>Kurir</Typography>
-          </Box>
-        </Stack>
-      </Box>
+        <Grid item xs={8}>
+          <Stack direction="row" spacing={4}>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                Pembeli
+              </Typography>
+              <Typography sx={{ fontSize: "14px" }}>
+                Alex Tuner Hernandas
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                Alamat
+              </Typography>
+              <Typography sx={{ fontSize: "14px" }}>
+                Jl . Tebet Barat Dalam 6K , Tebet, Kota Jakarta Selatan
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                Kurir
+              </Typography>
+              <Typography sx={{ fontSize: "14px" }}>Grab-Same Day</Typography>
+            </Grid>
+          </Stack>
+        </Grid>
+      </Grid>
 
       <Box
         display="flex"
