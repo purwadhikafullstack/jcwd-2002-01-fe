@@ -55,7 +55,6 @@ const Navbar = () => {
           height: "44px",
           width: "118px",
           mr: "26px",
-          borderRadius: "8px",
           border: "2px solid",
         }}
       >
