@@ -14,7 +14,6 @@ import React, { useEffect, useState } from "react";
 import ModalSalinanResep from "components/admin/ModalSalinanResep";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { borderRadius } from "@mui/system";
 
 const TransactionCard = () => {
   const [salinanResep, setSalinanResep] = useState(false);
