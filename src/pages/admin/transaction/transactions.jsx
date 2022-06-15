@@ -33,7 +33,7 @@ const Transaction = () => {
       <TransactionCard></TransactionCard>
       <TransactionCard></TransactionCard>
       <TransactionCard></TransactionCard>
-    </>
+    </Box>
   );
 };
 
