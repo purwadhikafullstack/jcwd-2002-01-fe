@@ -11,7 +11,6 @@ import fotoObat from "assets/panadol.jpg";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { borderRadius } from "@mui/system";
 
 const TransactionCard = () => {
   return (
@@ -75,9 +74,15 @@ const TransactionCard = () => {
         <Divider sx={{ my: "16px" }} orientation="vertical" flexItem />
 
         <Stack direction="row" spacing={28} sx={{ mx: "32px" }}>
-          <Box>Item 1</Box>
-          <Box>Item 2</Box>
-          <Box>Item 3</Box>
+          <Box>
+            <Typography>Pembeli</Typography>
+          </Box>
+          <Box>
+            <Typography>Alamat</Typography>
+          </Box>
+          <Box>
+            <Typography>Kurir</Typography>
+          </Box>
         </Stack>
       </Box>
 
