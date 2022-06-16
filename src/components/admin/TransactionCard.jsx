@@ -12,7 +12,6 @@ import fotoObat from "assets/panadol.jpg";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { borderRadius } from "@mui/system";
 
 const TransactionCard = () => {
   return (
