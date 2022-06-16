@@ -3,6 +3,7 @@ import {
   Button,
   ButtonGroup,
   Checkbox,
+  Divider,
   FormControlLabel,
   Grid,
   IconButton,
@@ -18,6 +19,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import Link from "next/link";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState("false");
@@ -59,7 +61,7 @@ const Login = () => {
         <Box sx={{ width: "550px" }}>
           <InputLabel>Email</InputLabel>
           <OutlinedInput
-            placeholder="JohnDoe@gmail.com"
+            placeholder="Your Email"
             startAdornment={
               <MailIcon sx={{ marginRight: "17px" }} htmlColor="#02114f" />
             }
@@ -114,6 +116,38 @@ const Login = () => {
           >
             Masuk
           </Button>
+          <Divider>Atau Masuk Dengan</Divider>
+          <Button
+            fullWidth
+            // startIcon={<Image src={GoogleIcon} />}
+            variant="contained"
+            sx={{
+              my: "26px",
+              backgroundColor: "white",
+              color: "black",
+              fontWeight: "bold",
+              height: "48px",
+              border: "solid 1px",
+              borderColor: "brand.200",
+
+              boxShadow: "none",
+              ":hover": { backgroundColor: "brand.500", border: "unset" },
+            }}
+          >
+            Masuk dengan Google
+          </Button>
+          <Typography textAlign="center">
+            Belum Punya Akun ?{" "}
+            <Link href="/register">
+              <Typography
+                sx={{ ":hover": { cursor: "pointer" } }}
+                component="span"
+                color="brand.500"
+              >
+                Daftar
+              </Typography>
+            </Link>{" "}
+          </Typography>
         </Box>
       </Grid>
     </Grid>
