@@ -20,7 +20,9 @@ const AdminPageContainer = ({ children }) => {
         }}
       >
         <AdminNavbar></AdminNavbar>
-        <Box>{children}</Box>
+        <Box sx={{ height: "90vh", overflow: "hidden", overflowY: "scroll" }}>
+          {children}
+        </Box>
       </Grid>
     </Grid>
   );
