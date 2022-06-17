@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 const AnalyticCard = () => {
   return (
@@ -28,7 +28,37 @@ const AnalyticCard = () => {
           +5.700.000
         </Typography>
       </Box>
-      <Box></Box>
+      <Box>
+        <Box sx={{ position: "relative", display: "inline-flex" }}>
+          <CircularProgress
+            variant="determinate"
+            value={60}
+            thickness={4}
+            size={65}
+            color="success"
+          />
+          <Box
+            sx={{
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              position: "absolute",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Typography
+              variant="caption"
+              component="div"
+              color="text.secondary"
+            >
+              60%
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 };
