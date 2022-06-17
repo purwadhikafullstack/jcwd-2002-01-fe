@@ -1,7 +1,9 @@
 import {
   Box,
+  Checkbox,
   Container,
   FormControl,
+  FormControlLabel,
   MenuItem,
   Pagination,
   Select,
@@ -11,8 +13,23 @@ import TransactionCard from "components/admin/TransactionCard";
 
 const Transaction = () => {
   return (
-    <>
-      <Box sx={{ p: "20px" }}>
+    <Container sx={{ m: "32px" }}>
+      <Box>
+        <Typography sx={{ fontWeight: "700", fontSize: "20px" }}>
+          Semua Pesanan
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: "32px",
+        }}
+      >
+        <Box>
+          <FormControlLabel control={<Checkbox />} label="Pilih Semua" />
+        </Box>
         <Box display="flex" sx={{ alignItems: "center" }}>
           <Typography sx={{ mr: "5px" }}>Kartu per halaman</Typography>
           <FormControl>

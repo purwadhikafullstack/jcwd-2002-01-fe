@@ -21,9 +21,9 @@ const TransactionCard = () => {
   return (
     <Box
       sx={{
-        width: "1088px",
+        width: "100%",
         borderRadius: "10px",
-        margin: "20px",
+        marginBottom: "20px",
         padding: "15px",
         boxShadow: "0px 8px 20px -12px black",
         alignItems: "center",

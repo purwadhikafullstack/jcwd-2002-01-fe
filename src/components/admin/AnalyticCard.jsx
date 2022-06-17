@@ -8,7 +8,6 @@ const AnalyticCard = () => {
         width: "353px",
         height: "122px",
         borderRadius: "10px",
-        margin: "20px",
         padding: "15px",
         justifyContent: "space-between",
         boxShadow: "0px 8px 20px -12px black",
