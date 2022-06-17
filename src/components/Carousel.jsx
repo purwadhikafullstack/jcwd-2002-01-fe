@@ -4,7 +4,7 @@ import { Paper, Button, Box } from "@mui/material";
 import Image from "next/image";
 
 const CarouselCard = (props) => {
-  var items = [
+  let items = [
     {
       name: "Random Name #1",
       description: "Probably the most random thing you have ever seen!",
