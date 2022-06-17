@@ -24,7 +24,11 @@ const Navbar = () => {
         height: "80px",
         alignItems: "center",
         justifyContent: "center",
-        boxShadow: "0px 4px 12px -8px #009B90",
+        boxShadow: "0px 4px 12px -8px #1BA1E4",
+        top:"0",
+        position: "sticky",
+        backgroundColor: "white",
+        zIndex: "9"
       }}
     >
       <Box marginRight="18px">
@@ -51,7 +55,6 @@ const Navbar = () => {
       <Button
         variant="outlined"
         sx={{
-          color: "#009B90",
           height: "44px",
           width: "118px",
           mr: "26px",

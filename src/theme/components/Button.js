@@ -9,11 +9,18 @@ const Button = (theme) => {
             backgroundColor: theme.palette.brand["600"],
           },
         },
+        outlined: {
+          borderColor: theme.palette.brand["500"],
+          color: theme.palette.brand["500"]
+        },
         root: {
           borderRadius: "8px",
           textTransform: "none",
         },
       },
+      defaultProps: {
+        disableElevation: true
+      }
     },
   };
 };
