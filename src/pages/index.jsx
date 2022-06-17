@@ -3,6 +3,7 @@ import CarouselCard from "components/Carousel";
 import Footer from "components/Footer";
 import Navbar from "components/Navbar";
 import ProductCard from "components/ProductCard";
+import UserSidebar from "components/Sidebar";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
@@ -12,8 +13,7 @@ const Home = () => {
   return (
     <Box>
       <Navbar />
-      <Banner />
-      <ProductCard />
+      <UserSidebar/>
     </Box>
   );
 };
