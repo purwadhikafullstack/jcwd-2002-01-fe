@@ -53,7 +53,7 @@ const Transaction = () => {
       <TransactionCard></TransactionCard>
       <TransactionCard></TransactionCard>
       <TransactionCard></TransactionCard>
-    </>
+    </Container>
   );
 };
 
