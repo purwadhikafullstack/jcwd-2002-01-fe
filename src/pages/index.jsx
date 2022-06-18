@@ -13,8 +13,7 @@ import BannerJaminan from "../components/BannerJaminan"
 const Home = () => {
   return (
     <Box>
-      <Navbar />
-      <UserSidebar/>
+      <CarouselCard/>
     </Box>
   );
 };

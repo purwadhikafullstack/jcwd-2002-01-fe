@@ -3,6 +3,8 @@ import theme from "theme";
 import AdminPageContainer from "components/admin/AdminPageContainer";
 import { useRouter } from "next/router";
 import "../styles/globals.css";
+import Navbar from "components/Navbar";
+import UserSidebar from "components/Sidebar";
 
 const Provider = ({ children }) => {
   return children;
@@ -17,7 +19,10 @@ const MyApp = ({ Component, pageProps }) => {
         {router.pathname.startsWith("/admin") ? (
           <AdminPageContainer children={<Component {...pageProps} />} />
         ) : (
-          <Component {...pageProps} />
+          <>
+            <Navbar />
+            <Component {...pageProps} />
+          </>
         )}
       </ThemeProvider>
     </Provider>
