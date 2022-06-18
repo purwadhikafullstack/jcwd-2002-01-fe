@@ -4,7 +4,6 @@ import { useState } from "react";
 import { MdOutlineNavigateNext } from "react-icons/md";
 
 const PaymentMethod = ({ logo, title, payment }) => {
-  const [openModal, setOpenModal] = useState("");
 
   return (
     <Box sx={{ width: "100%" }}>

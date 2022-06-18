@@ -28,9 +28,12 @@ import logoPermata from "assets/permata.png";
 
 const checkoutPage = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [openMethod, setOpenMethod] = useState(false);
+  const [openMethod, setOpenMethod] = useState("");
   const handleOpen = () => setOpenModal(true);
-  const handleClose = () => setOpenModal(false);
+  const handleClose = () => {
+    setOpenModal(false)
+    setOpenMethod(false)
+  };
   const handleBack = () => setOpenMethod(false);
   const handleMethod = (payment) => {
     setOpenMethod(payment);
@@ -147,23 +150,33 @@ const checkoutPage = () => {
           open={openModal}
           handleClose={handleClose}
           isMethod={openMethod}
+          handleBack={handleBack}
+          isiButton="Pilih Metode Pembayaran"
         >
           {openMethod == "BCA" ? (
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
                 alignItems: "center",
-                minHeight: "82px",
-                width: "444px",
-                my: "24px",
-                p: "18px 20px",
-                boxShadow:
-                  "0px 2px 3px 2px rgba(33, 51, 96, 0.02), 0px 4px 12px 4px rgba(0, 155, 144, 0.08)",
-                borderRadius: "8px",
+                justifyContent: "center",
               }}
             >
-              <Typography>BCA Virtual Account</Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  minHeight: "82px",
+                  width: "444px",
+                  my: "24px",
+                  p: "18px 20px",
+                  boxShadow:
+                    "0px 2px 3px 2px rgba(33, 51, 96, 0.02), 0px 4px 12px 4px rgba(0, 155, 144, 0.08)",
+                  borderRadius: "8px",
+                }}
+              >
+                <Typography>BCA Virtual Account</Typography>
+              </Box>
             </Box>
           ) : (
             <Box
@@ -185,11 +198,6 @@ const checkoutPage = () => {
                     />
                   );
                 })}
-              </Box>
-              <Box sx={{ p: "10px" }}>
-                <Button variant="contained" disabled sx={{ width: "100%" }}>
-                  Pilih Metode
-                </Button>
               </Box>
             </Box>
           )}

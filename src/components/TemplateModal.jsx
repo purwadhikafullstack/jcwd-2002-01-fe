@@ -1,13 +1,22 @@
-import { Box, Divider, IconButton, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Modal,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { MdClose, MdOutlineNavigateBefore } from "react-icons/md";
 
-const TemplateModal = ({ children, open, handleClose, isMethod = false}) => {
-
-    const [method, setMethod] = useState(isMethod)
-
-    const backMethod = () => setMethod(false)
-
+const TemplateModal = ({
+  children,
+  open,
+  handleClose,
+  handleBack,
+  isiButton,
+  isMethod = false,
+}) => {
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -25,12 +34,13 @@ const TemplateModal = ({ children, open, handleClose, isMethod = false}) => {
         }}
       >
         <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
-        {method? 
-          <Box sx={{ position: "absolute", left: "0px", top: "0px" }}>
-            <IconButton onClick={backMethod}>{<MdOutlineNavigateBefore />}</IconButton>
-          </Box>
-          : "anjing"
-        }
+          {isMethod ? (
+            <Box sx={{ position: "absolute", left: "0px", top: "0px" }}>
+              <IconButton onClick={handleBack}>
+                {<MdOutlineNavigateBefore />}
+              </IconButton>
+            </Box>
+          ) : undefined}
           <Box sx={{ position: "absolute", right: "0px", top: "0px" }}>
             <IconButton onClick={handleClose}>{<MdClose />}</IconButton>
           </Box>
@@ -80,9 +90,27 @@ const TemplateModal = ({ children, open, handleClose, isMethod = false}) => {
                 Lihat Detail
               </Typography>
             </Box>
-            <Box sx={{width: "100%", height: "400px"}}>
+            <Box sx={{ width: "100%", height: "400px" }}>
               <Divider sx={{ width: "100%" }} />
-              {children}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: "100%",
+                }}
+              >
+                {children}
+                <Box sx={{p: 2}}>
+                  <Button
+                    variant="contained"
+                    disabled={isMethod ? false : true}
+                    sx={{ width: "100%" }}
+                  >
+                    {isiButton}d
+                  </Button>
+                </Box>
+              </Box>
             </Box>
           </Box>
         </Box>

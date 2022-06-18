@@ -14,8 +14,9 @@ const Home = () => {
   return (
     <Box>
       <CarouselCard/>
+      <BannerJaminan/>
     </Box>
   );
 };
-s
+
 export default Home;
