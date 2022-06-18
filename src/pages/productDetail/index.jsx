@@ -38,7 +38,6 @@ const productDetailPage = () => {
 
   return (
     <>
-      <Navbar />
       <Box sx={{ mx: "96px" }}>
         <Grid container spacing={2} marginTop="70px" sx={{ height: "100vh" }}>
           <Grid
