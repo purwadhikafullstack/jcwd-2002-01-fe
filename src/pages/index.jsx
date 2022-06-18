@@ -12,8 +12,7 @@ import Banner from "../components/Banner";
 const Home = () => {
   return (
     <Box>
-      <Navbar />
-      <UserSidebar/>
+      <CarouselCard/>
     </Box>
   );
 };
