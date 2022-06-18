@@ -13,6 +13,9 @@ const TableData = ({ rows, columns }) => {
       rowCount={100}
       pagination
       disableSelectionOnClick
+      sx={{
+        boxShadow: 2,
+      }}
     />
   );
 };
