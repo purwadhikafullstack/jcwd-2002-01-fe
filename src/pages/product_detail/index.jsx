@@ -20,6 +20,7 @@ import ProductCard from "components/ProductCard";
 import Footer from "components/Footer";
 import Deskripsi from "components/tabs/Deskripsi";
 import TabPanel from "components/TabPanel";
+import RelatedProduct from "components/RelatedProducts";
 
 
 
@@ -38,8 +39,8 @@ const productDetailPage = () => {
 
   return (
     <>
-      <Navbar />
       <Box sx={{ mx: "96px" }}>
+        <Typography sx={{pl: "80px", pt: "40px"}}>Beranda/ Kategori/ Obat</Typography>
         <Grid container spacing={2} marginTop="70px" sx={{ height: "100vh" }}>
           <Grid
             item
@@ -208,10 +209,7 @@ const productDetailPage = () => {
         <Box>
           <Divider variant="fullWidth" sx={{ my: "72px" }} />
         </Box>
-        <Typography fontSize="24px" fontWeight="700">
-          Produk Terkait
-        </Typography>
-        <Box sx={{ display: "flex" }}></Box>
+        <RelatedProduct/>
       </Box>
       <Footer />
     </>
