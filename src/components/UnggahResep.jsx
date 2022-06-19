@@ -14,7 +14,7 @@ const UnggahResep = () => {
         borderRadius: "16px",
         boxShadow: "-1px -1px 5px 4px rgba(0, 12, 54, 0.01), 2px 2px 2px rgba(33, 51, 96, 0.04), 4px 4px 4px 6px rgba(0, 155, 144, 0.04)",
         pr: 4,
-        pt: "4px"
+        pt: "4px "
       }}
     >
       <Box>

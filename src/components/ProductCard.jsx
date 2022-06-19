@@ -9,10 +9,17 @@ const ProductCard = () => {
       sx={{
         width: "194px",
         height: "331px",
-        margin: "20px",
+        margin: "10px",
         padding: "20px",
         borderRadius: "16px",
         boxShadow: "0px 8px 20px -12px black",
+        backgroundColor: "white",
+        transition: "200ms",
+        ":hover": {
+          cursor: "pointer",
+          transform: "translateY(-5px)",
+          boxShadow: "0px 12px 20px -12px black",
+        },
       }}
       position="relative"
     >
@@ -37,7 +44,9 @@ const ProductCard = () => {
           {<IoMdHeart color="#D5D7DD" />}
         </IconButton>
       </Box>
-      <Typography marginBottom="25px" fontWeight="700">Panadol Merah PDI</Typography>
+      <Typography marginBottom="25px" fontWeight="700">
+        Panadol Merah PDI
+      </Typography>
       <Typography marginBottom="20px">Rp. 30000 / pack</Typography>
       <Box display="flex" flexDirection="column" alignItems="center">
         <Button
@@ -47,9 +56,8 @@ const ProductCard = () => {
             width: "139px",
             fontSize: "12px",
             fontWeight: "700",
-            color: "#009B90",
             position: "absolute",
-            bottom: "25px"
+            bottom: "25px",
           }}
         >
           Keranjang
