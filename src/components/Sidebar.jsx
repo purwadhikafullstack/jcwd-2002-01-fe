@@ -79,7 +79,7 @@ const SidebarMenu = ({ menuTitle, subMenus = [], icon, }) => {
 
 const UserSidebar = () => {
   return (
-    <Box margin="20px">
+    <Box>
       <Box
         sx={{
           width: "300px",
