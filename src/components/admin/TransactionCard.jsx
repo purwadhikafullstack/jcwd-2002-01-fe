@@ -10,10 +10,13 @@ import {
 import Image from "next/image";
 import fotoObat from "assets/panadol.jpg";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import ModalSalinanResep from "components/admin/ModalSalinanResep";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const TransactionCard = () => {
+  const [salinanResep, setSalinanResep] = useState(false);
   return (
     <Box
       sx={{
@@ -77,6 +80,17 @@ const TransactionCard = () => {
                 </Typography>
                 <ExpandMore fontSize="24px"></ExpandMore>
               </Box>
+                <Button 
+                sx={{ bgcolor: "brand.400" }} 
+                size="small"
+                onClick={() => setSalinanResep(true)}
+                >
+                  Buat Salinan Resep
+                </Button>
+                <ModalSalinanResep
+                  open={salinanResep}
+                  handleClose={() => setSalinanResep(false)}
+                />
             </Box>
             <Divider sx={{ my: "16px" }} orientation="vertical" flexItem />
           </Box>
