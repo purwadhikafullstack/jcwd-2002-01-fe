@@ -5,9 +5,9 @@ const ExpiredMedicineCard = () => {
     <Box
       sx={{
         width: "353px",
-        height: "186px",
+        maxHeight: "202px",
+        height: "100%",
         borderRadius: "10px",
-        margin: "20px",
         padding: "30px",
         boxShadow: "0px 8px 20px -12px black",
         alignItems: "center",

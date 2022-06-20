@@ -3,18 +3,18 @@ import theme from "theme";
 import AdminPageContainer from "components/admin/AdminPageContainer";
 import { useRouter } from "next/router";
 import "../styles/globals.css";
-import Navbar from "components/Navbar";
-import UserSidebar from "components/Sidebar";
+import { Provider } from "react-redux";
+import { store } from "redux/store";
 
-const Provider = ({ children }) => {
-  return children;
-};
+// const Provider = ({ children }) => {
+//   return children;
+// };
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
 
   return (
-    <Provider>
+    <Provider store={store}>
       <ThemeProvider theme={theme}>
         {router.pathname.startsWith("/admin") ? (
           <AdminPageContainer children={<Component {...pageProps} />} />

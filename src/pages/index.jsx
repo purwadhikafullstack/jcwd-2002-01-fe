@@ -200,12 +200,12 @@ const Home = () => {
             <ProductCard />
             <ProductCard />
             <ProductCard />
-            <ProductCard /> 
+            <ProductCard />
             <ProductCard />
           </Box>
         </Box>
         <Divider sx={{ width: "100%", my: "10px" }} variant="fullWidth" />
-        <Box sx={{my: "50px"}}>
+        <Box sx={{ my: "50px" }}>
           <BannerJaminan />
         </Box>
       </Container>

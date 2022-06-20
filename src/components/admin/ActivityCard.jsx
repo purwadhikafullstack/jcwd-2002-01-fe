@@ -1,13 +1,14 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 
 const ActivityCard = () => {
   return (
     <Box
       sx={{
-        width: "168px",
+        maxWidth: "168px",
+        width: "100%",
         height: "93px",
         borderRadius: "10px",
-        margin: "20px",
+        marginBottom: "20px",
         padding: "15px",
         boxShadow: "0px 8px 20px -12px black",
         alignItems: "center",
