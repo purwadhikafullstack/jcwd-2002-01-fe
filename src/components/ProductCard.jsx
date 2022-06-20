@@ -2,8 +2,11 @@ import Image from "next/image";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import fotoObat from "assets/panadol.jpg";
 import { IoMdHeart } from "react-icons/io";
+import { useState } from "react";
 
 const ProductCard = () => {
+  const [isLiked, setIsLiked] = useState(false);
+
   return (
     <Box
       sx={{
@@ -34,14 +37,23 @@ const ProductCard = () => {
       </Box>
       <Box position="absolute" top="20px" right="20px">
         <IconButton
+          onClick={() => setIsLiked(!isLiked)}
           sx={{
             width: "44px",
             height: "44px",
             backgroundColor: "white",
+            color: isLiked ? "#f57182" : "#D5D7DD",
             boxShadow: "0px 8px 20px -12px black",
+            ":hover": {
+              backgroundColor: "#D5D7DD",
+              color: isLiked ? "#f57182" : "whitesmoke"
+            },
           }}
         >
-          {<IoMdHeart color="#D5D7DD" />}
+          {
+            <IoMdHeart
+            />
+          }
         </IconButton>
       </Box>
       <Typography marginBottom="25px" fontWeight="700">
