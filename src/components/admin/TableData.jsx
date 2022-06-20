@@ -15,6 +15,7 @@ const TableData = ({ rows, columns }) => {
       disableSelectionOnClick
       sx={{
         boxShadow: 2,
+        borderRadius: "10px",
       }}
     />
   );

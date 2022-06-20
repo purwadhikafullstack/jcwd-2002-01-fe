@@ -3,8 +3,7 @@ import ActivityCard from "components/admin/ActivityCard";
 
 import AnalyticCard from "components/admin/AnalyticCard";
 import ExpiredMedicineCard from "components/admin/ExpiredMedicineCard";
-import dynamic from "next/dynamic";
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+import ProfitCard from "components/admin/ProfitCard";
 
 const Dashboard = () => {
   return (
@@ -68,54 +67,7 @@ const Dashboard = () => {
           </Grid>
         </Grid>
 
-        {/* <Chart
-          series={[
-            {
-              name: "sales",
-              data: [
-                {
-                  x: "2019/01/01",
-                  y: 400,
-                },
-                {
-                  x: "2019/04/01",
-                  y: 430,
-                },
-                {
-                  x: "2019/07/01",
-                  y: 448,
-                },
-                {
-                  x: "2019/10/01",
-                  y: 470,
-                },
-                {
-                  x: "2020/01/01",
-                  y: 540,
-                },
-                {
-                  x: "2020/04/01",
-                  y: 580,
-                },
-                {
-                  x: "2020/07/01",
-                  y: 690,
-                },
-                {
-                  x: "2020/10/01",
-                  y: 690,
-                },
-              ],
-            },
-          ]}
-          options={{
-            xaxis: {
-              categories: [1, 2, 3, 4, 5, 6, 7],
-            },
-          }}
-          type="line"
-          height="200px"
-        /> */}
+        <ProfitCard></ProfitCard>
       </Container>
     </>
   );
