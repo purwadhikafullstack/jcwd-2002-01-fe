@@ -21,7 +21,6 @@ const axiosInstance = axios.create({
 //     (err) => {
 //         if(err?.response?.status == 419){
 //             jsCookie.remove("auth_token")
-
 //             store.dispatch({
 //                 type: user_types.LOGOUT_USER
 //             })
