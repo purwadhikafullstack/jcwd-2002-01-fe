@@ -6,8 +6,8 @@ import axios from "axios";
 const API_URL = "http://localhost:2000";
 
 const axiosInstance = axios.create({
-    baseURL: API_URL
-})
+  baseURL: API_URL,
+});
 
 // axiosInstance.interceptors.request.use((config) => {
 //     config.headers.authorization = jsCookie.get("auth_token") || ""
@@ -21,7 +21,7 @@ const axiosInstance = axios.create({
 //     (err) => {
 //         if(err?.response?.status == 419){
 //             jsCookie.remove("auth_token")
-            
+
 //             store.dispatch({
 //                 type: user_types.LOGOUT_USER
 //             })
@@ -31,4 +31,4 @@ const axiosInstance = axios.create({
 
 // )
 
-export default axiosInstance
+export default axiosInstance;
