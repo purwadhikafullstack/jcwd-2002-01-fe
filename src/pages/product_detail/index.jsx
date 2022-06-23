@@ -33,7 +33,6 @@ const productDetailPage = () => {
 
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue)
-    console.log(newValue)
   };
   
 
