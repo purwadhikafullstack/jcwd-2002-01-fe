@@ -31,7 +31,7 @@ const shippingAddress = () => {
     <Box>
       <Container maxWidth="sm">
         <Typography
-          sx={{ mb: "36px", fontSize: "24px", fontWeight: "700", mt: "110px" }}
+          sx={{ mb: "36px", fontSize: "24px", fontWeight: "700", mt: "90px" }}
         >
           Alamat Pengiriman
         </Typography>
@@ -63,7 +63,7 @@ const shippingAddress = () => {
               id="nomerHp"
               sx={{ padding: "0px", width: "480px" }}
               startAdornment={
-                <FormControl sx={{ width: "100px" }}>
+                <FormControl sx={{ width: "100px", mr: "10px" }}>
                   <Select size="small" value={nation} onChange={handleChange}>
                     <MenuItem value="+62">+62</MenuItem>
                     <MenuItem value="+22">+22</MenuItem>

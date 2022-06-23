@@ -21,7 +21,10 @@ const MyApp = ({ Component, pageProps }) => {
           <AdminPageContainer children={<Component {...pageProps} />} />
         ) : (
           <>
-            {router.pathname.startsWith("/register") ? undefined : <Navbar />}
+            {router.pathname.startsWith("/register") ||
+            router.pathname.includes("admin") ? undefined : (
+              <Navbar />
+            )}
             <Component {...pageProps} />
           </>
         )}

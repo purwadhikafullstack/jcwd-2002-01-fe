@@ -27,7 +27,7 @@ const UnggahResep = () => {
         </Typography>
       </Box>
       <Box>
-        <Link href="uploadPrescription" underline="none">
+        <Link href="upload_prescription" underline="none">
           <Button variant="contained" sx={{width: "274px"}}>Unggah Resep</Button>
         </Link>
       </Box>
