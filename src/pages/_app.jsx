@@ -22,7 +22,7 @@ const MyApp = ({ Component, pageProps }) => {
         ) : (
           <>
             {router.pathname.startsWith("/register") ||
-            router.pathname.includes("admin") ? undefined : (
+            router.pathname.startsWith("/verification_page") ? undefined : (
               <Navbar />
             )}
             <Component {...pageProps} />
