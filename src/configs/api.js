@@ -3,7 +3,7 @@ import axios from "axios";
 // import { user_types } from "../redux/reducers/types/user";
 // import store from "../redux/store";
 
-const API_URL = "http://localhost:2000";
+const API_URL = "http://localhost:2001";
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
