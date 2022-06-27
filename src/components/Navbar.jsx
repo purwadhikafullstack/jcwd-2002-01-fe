@@ -15,6 +15,7 @@ import logo from "../assets/logo.png";
 import Image from "next/image";
 import { HiOutlineSearch } from "react-icons/hi";
 import { margin, textAlign, width } from "@mui/material";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
@@ -25,10 +26,10 @@ const Navbar = () => {
         alignItems: "center",
         justifyContent: "center",
         boxShadow: "0px 4px 12px -8px #1BA1E4",
-        top:"0",
+        top: "0",
         position: "sticky",
         backgroundColor: "white",
-        zIndex: "9"
+        zIndex: "9",
       }}
     >
       <Box marginRight="18px">
@@ -63,15 +64,17 @@ const Navbar = () => {
       >
         Masuk
       </Button>
-      <Button
-        variant="contained"
-        sx={{
-          height: "44px",
-          width: "118px",
-        }}
-      >
-        Daftar
-      </Button>
+      <Link href="/register">
+        <Button
+          variant="contained"
+          sx={{
+            height: "44px",
+            width: "118px",
+          }}
+        >
+          Daftar
+        </Button>
+      </Link>
     </Box>
   );
 };
