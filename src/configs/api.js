@@ -3,7 +3,7 @@ import axios from "axios";
 // import { user_types } from "../redux/reducers/types/user";
 // import store from "../redux/store";
 
-const API_URL = "http://localhost:2000";
+const API_URL = "http://localhost:2001";
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -21,7 +21,6 @@ const axiosInstance = axios.create({
 //     (err) => {
 //         if(err?.response?.status == 419){
 //             jsCookie.remove("auth_token")
-
 //             store.dispatch({
 //                 type: user_types.LOGOUT_USER
 //             })
