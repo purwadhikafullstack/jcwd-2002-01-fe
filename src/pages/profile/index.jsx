@@ -8,8 +8,11 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
+  IconButton,
   Input,
+  InputLabel,
   MenuItem,
+  Modal,
   OutlinedInput,
   Radio,
   RadioGroup,
@@ -19,10 +22,13 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
+import ProductCheckoutContainer from "components/ProductCheckoutContainer";
 import TabPanel from "components/TabPanel";
+import TemplateModal from "components/TemplateModal";
 import axiosInstance from "configs/api";
 import { useFormik } from "formik";
 import { useRef, useState } from "react";
+import { MdClose } from "react-icons/md";
 
 import * as Yup from "yup";
 
@@ -32,6 +38,12 @@ const myProfile = () => {
   const [gender, setGender] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const inputFileRef = useRef(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [value, setValue] = useState(false);
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue);
@@ -53,10 +65,9 @@ const myProfile = () => {
         formData
       );
 
-    setSelectedFile(null)
+      setSelectedFile(null);
     } catch (err) {
       console.log(err);
-
     }
   };
 
@@ -89,8 +100,6 @@ const myProfile = () => {
             id: values.id,
           };
 
-          console.log(newProfile);
-
           const res = await axiosInstance.patch("/users", newProfile);
 
           if (res?.data?.message !== undefined) {
@@ -101,6 +110,63 @@ const myProfile = () => {
         } catch (err) {
           console.log(err?.response?.data?.message);
           profileFormik.setSubmitting(false);
+        }
+      }, 3000);
+    },
+  });
+
+  const addressFormik = useFormik({
+    initialValues: {
+      address: "",
+      recipient_name: "",
+      recipient_telephone: "",
+      province: "",
+      city: "",
+      kecamatan: "",
+      postal_code: "",
+      is_main_address: false,
+      address_label: "",
+    },
+    validationSchema: Yup.object().shape({
+      address: Yup.string().required("this field is required"),
+      recipient_name: Yup.string().required("this field is required"),
+      recipient_telephone: Yup.string().required("this field is required"),
+      province: Yup.string().required("this field is required"),
+      city: Yup.string().required("this field is required"),
+      kecamatan: Yup.string().required("this field is required"),
+      postal_code: Yup.string().required("this field is required"),
+      // is_main_address: Yup.boolean(),
+      address_label: Yup.string().required("this field is required"),
+    }),
+    validateOnChange: false,
+    onSubmit: (values) => {
+      setTimeout(async () => {
+        try {
+          const newAddress = {
+            address: values.address,
+            recipient_name: values.recipient_name,
+            recipient_telephone: values.recipient_name,
+            province: values.province,
+            city: values.city,
+            kecamatan: values.kecamatan,
+            postal_code: values.postal_code,
+            // kalo boolean gimana cara validatenya
+            is_main_address: values.is_main_address,
+            address_label: values.address_label,
+          };
+
+          console.log(newAddress);
+
+          const res = await axiosInstance.post("/users/address/1", newAddress);
+
+          if (res?.data?.message !== undefined) {
+            console.log("Added new address");
+          }
+
+          addressFormik.setSubmitting(false);
+        } catch (err) {
+          console.log(err);
+          addressFormik.setSubmitting(false);
         }
       }, 3000);
     },
@@ -254,11 +320,192 @@ const myProfile = () => {
                 </Button>
               </Box>
             </TabPanel>
+
+            {/* {  ADDRESS  } */}
+
             <TabPanel value={tabMenu} index={1}>
-              <FormControl sx={{ width: "500px" }}>
-                <FormLabel htmlFor="address">Address</FormLabel>
-                <OutlinedInput id="address" size="small" />
-              </FormControl>
+              <Box
+                sx={{ display: "flex", justifyContent: "right", mb: "10px" }}
+              >
+                <Button variant="contained" size="small" onClick={handleOpen}>
+                  Tambah Alamat
+                </Button>
+              </Box>
+              <ProductCheckoutContainer
+                cardTitle={
+                  <Typography fontWeight="700" fontSize="18px">
+                    Alamat
+                  </Typography>
+                }
+              ></ProductCheckoutContainer>
+              <Modal open={openModal} onClose={handleClose}>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 700,
+                    height: 600,
+                    bgcolor: "background.paper",
+                    borderRadius: "8px",
+                    boxShadow: 24,
+                    p: 2,
+                  }}
+                >
+                  {/* Header */}
+                  <Box sx={{ width: "100%", position: "relative" }}>
+                    <Box
+                      sx={{ position: "absolute", right: "0px", top: "0px" }}
+                    >
+                      <IconButton onClick={handleClose}>
+                        {<MdClose />}
+                      </IconButton>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        pt: "5px",
+                      }}
+                    >
+                      <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
+                        Add New Address
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ padding: "20px" }}>
+                    <Grid container spacing={1}>
+                      <Grid item sm={6} md={6}>
+                        <Stack spacing={3}>
+                          <FormControl>
+                            <Typography>Label Alamat</Typography>
+                            <OutlinedInput
+                              size="small"
+                              onChange={(event) =>
+                                addressFormik.setFieldValue(
+                                  "address_label",
+                                  event.target.value
+                                )
+                              }
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <Typography>Nama Penerima</Typography>
+                            <OutlinedInput
+                              size="small"
+                              onChange={(event) =>
+                                addressFormik.setFieldValue(
+                                  "recipient_name",
+                                  event.target.value
+                                )
+                              }
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <Typography>Nomor Hp</Typography>
+                            <OutlinedInput
+                              size="small"
+                              onChange={(event) =>
+                                addressFormik.setFieldValue(
+                                  "recipient_telephone",
+                                  event.target.value
+                                )
+                              }
+                            />
+                          </FormControl>
+                        </Stack>
+                      </Grid>
+                      <Grid item sm={6} md={6}>
+                        <Stack spacing={3}>
+                          <FormControl>
+                            <Typography>Provinsi</Typography>
+                            <OutlinedInput
+                              size="small"
+                              onChange={(event) =>
+                                addressFormik.setFieldValue(
+                                  "province",
+                                  event.target.value
+                                )
+                              }
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <Typography>Kabupaten/Kota</Typography>
+                            <OutlinedInput
+                              size="small"
+                              onChange={(event) =>
+                                addressFormik.setFieldValue(
+                                  "city",
+                                  event.target.value
+                                )
+                              }
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <Typography>Kecamatan</Typography>
+                            <OutlinedInput
+                              size="small"
+                              onChange={(event) =>
+                                addressFormik.setFieldValue(
+                                  "kecamatan",
+                                  event.target.value
+                                )
+                              }
+                            />
+                          </FormControl>
+                        </Stack>
+                      </Grid>
+                    </Grid>
+                    <Stack spacing={3} sx={{ mt: "15px" }}>
+                      <FormControl>
+                        <Typography>Alamat</Typography>
+                        <OutlinedInput
+                          size="small"
+                          onChange={(event) =>
+                            addressFormik.setFieldValue(
+                              "address",
+                              event.target.value
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <Box sx={{ display: "flex", alignItems: "end" }}>
+                        <FormControl>
+                          <Typography>Kode Pos</Typography>
+                          <OutlinedInput
+                            size="small"
+                            sx={{ width: "200px", mr: "80px" }}
+                            onChange={(event) =>
+                              addressFormik.setFieldValue(
+                                "postal_code",
+                                event.target.value
+                              )
+                            }
+                          />
+                        </FormControl>
+                        <FormControlLabel
+                          label="set as main address"
+                          control={
+                            <Checkbox onChange={() => setValue(!value)} />
+                          }
+                        />
+                      </Box>
+                    </Stack>
+                    <Stack sx={{ mt: "60px" }}>
+                      <Button
+                        variant="contained"
+                        disabled={addressFormik.isSubmitting}
+                        onClick={addressFormik.handleSubmit}
+                      >
+                        Add Address
+                      </Button>
+                    </Stack>
+                  </Box>
+                </Box>
+              </Modal>
             </TabPanel>
           </Grid>
         </Grid>
