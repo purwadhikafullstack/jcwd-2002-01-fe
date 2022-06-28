@@ -4,7 +4,7 @@ import fotoObat from "assets/panadol.jpg";
 import { IoMdHeart } from "react-icons/io";
 import { useState } from "react";
 
-const ProductCard = () => {
+const ProductCard = ({ productName, price, productImage }) => {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
@@ -33,7 +33,12 @@ const ProductCard = () => {
         flexDirection="column"
         alignItems="center"
       >
-        <Image width="114px" height="116px" src={fotoObat} />
+        {/* IMAGE */}
+        <Box
+          sx={{ width: "114px", height: "116px" }}
+          component="img"
+          src={productImage}
+        />
       </Box>
       <Box position="absolute" top="20px" right="20px">
         <IconButton
@@ -46,20 +51,17 @@ const ProductCard = () => {
             boxShadow: "0px 8px 20px -12px black",
             ":hover": {
               backgroundColor: "#D5D7DD",
-              color: isLiked ? "#f57182" : "whitesmoke"
+              color: isLiked ? "#f57182" : "whitesmoke",
             },
           }}
         >
-          {
-            <IoMdHeart
-            />
-          }
+          {<IoMdHeart />}
         </IconButton>
       </Box>
       <Typography marginBottom="25px" fontWeight="700">
-        Panadol Merah PDI
+        {productName}
       </Typography>
-      <Typography marginBottom="20px">Rp. 30000 / pack</Typography>
+      <Typography marginBottom="20px">Rp. {price.toLocaleString()} / pack</Typography>
       <Box display="flex" flexDirection="column" alignItems="center">
         <Button
           variant="outlined"
