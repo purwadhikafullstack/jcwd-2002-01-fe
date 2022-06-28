@@ -43,7 +43,6 @@ const productListPage = () => {
       const res = await axiosInstance.get("/categories");
 
       setCategories(res.data.result);
-      console.log(res.data.result);
     } catch (err) {
       console.log(err);
     }
@@ -101,7 +100,6 @@ const productListPage = () => {
     } else if (value == "Z-A") {
       setSortBy("name");
       setSortDir("DESC");
-      
     } else if (value == "") {
       setSortBy("");
       setSortDir("");
