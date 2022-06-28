@@ -4,16 +4,133 @@ import {
   Divider,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
+  Pagination,
   Select,
   Typography,
 } from "@mui/material";
 import Footer from "components/Footer";
 import ProductCard from "components/ProductCard";
 import UserSidebar from "components/Sidebar";
+import axiosInstance from "configs/api";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useState } from "react";
+import { GrPowerReset } from "react-icons/gr";
 
 const productListPage = () => {
+  const router = useRouter();
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [productsCount, setProductsCount] = useState(0);
+  const [page, setPage] = useState(router.query._page || 1);
+  const [sortBy, setSortBy] = useState(router.query._sortBy || "");
+  const [sortDir, setSortDir] = useState(router.query._sortDir || "");
+  const [sortInput, setSortInput] = useState("");
+  const [pageIsReady, setPageIsReady] = useState(false)
+
+  console.log(router.query._page);
+
+  const maxProductPerPage = 4;
+
+  const fetchCategory = async () => {
+    try {
+      const res = await axiosInstance.get("/categories");
+
+      setCategories(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchProduct = async () => {
+    try {
+      const res = await axiosInstance.get("/products", {
+        params: {
+          _sortBy: sortBy ? sortBy : undefined,
+          _sortDir: sortDir ? sortDir : undefined,
+          _limit: maxProductPerPage,
+          _page: page,
+        },
+      });
+
+      setProducts(res.data.result.rows);
+      setProductsCount(res.data.result.count);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderProducts = () => {
+    return products.map((val, idx) => {
+      return (
+        <ProductCard
+          productName={val?.name}
+          price={val?.price}
+          productImage={val.Product_images[0].image_url}
+        />
+      );
+    });
+  };
+
+  const sortInputHandler = (event) => {
+    const { value } = event.target;
+    setSortInput(value);
+
+    if (value == "Harga Tertinggi") {
+      setSortBy("price");
+      setSortDir("DESC");
+      setPage(1);
+    } else if (value == "Harga Terendah") {
+      setSortBy("price");
+      setSortDir("ASC");
+      setPage(1);
+    } else if (value == "A-Z") {
+      setSortBy("name");
+      setSortDir("ASC");
+      setPage(1);
+    } else if (value == "Z-A") {
+      setSortBy("name");
+      setSortDir("DESC");
+    } else if (value == "") {
+      setSortBy("");
+      setSortDir("");
+      setPage(1);
+    }
+  };
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (router.query._sortDir) {
+        setSortDir(router.query._sortDir);
+      }
+      if (router.query._sortBy) {
+        setSortBy(router.query._sortBy);
+      }
+      if (router.query._page) {
+        setPage(parseInt(router.query._page));
+      }
+      setPageIsReady(true)
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    // fetchCategory()
+    if (pageIsReady) {
+      fetchProduct();
+
+      router.push({
+        query: {
+          _sortBy: sortBy ? sortBy : undefined,
+          _sortDir: sortDir ? sortDir : undefined,
+          _page: page ? page : undefined,
+        },
+      });
+    }
+  }, [page, sortDir, sortBy, pageIsReady]);
+
   return (
     <Box>
       <Box sx={{ px: "96px", pt: "20px" }}>
@@ -41,37 +158,49 @@ const productListPage = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  width: "250px",
+                  width: "300px",
                 }}
               >
                 <Typography sx={{ mr: "10px" }}>Urutkan</Typography>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Sort</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="Sort"
+                    value={sortInput}
+                    onChange={sortInputHandler}
                   >
-                    <MenuItem>A-Z</MenuItem>
-                    <MenuItem>Terpopular</MenuItem>
-                    <MenuItem>Z-A</MenuItem>
+                    <MenuItem value="A-Z">A-Z</MenuItem>
+                    <MenuItem value="Z-A">Z-A</MenuItem>
+                    <MenuItem value="Harga Terendah">Harga Terendah</MenuItem>
+                    <MenuItem value="Harga Tertinggi">Harga Tertinggi</MenuItem>
                   </Select>
                 </FormControl>
+                {sortInput ? (
+                  <IconButton onClick={() => setSortInput(undefined)}>
+                    {<GrPowerReset />}
+                  </IconButton>
+                ) : undefined}
               </Box>
             </Box>
             {/* product list */}
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
+              {renderProducts()}
+            </Box>
+            <Box
+              sx={{
+                mt: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              page: {page}
+              <Pagination
+                count={Math.ceil(productsCount / maxProductPerPage)}
+                page={page}
+                onChange={(e, value) => setPage(value)}
+              />
             </Box>
           </Grid>
         </Grid>
