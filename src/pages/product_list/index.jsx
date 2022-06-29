@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useState } from "react";
 import { GrPowerReset } from "react-icons/gr";
+import { useSelector } from "react-redux";
 
 const productListPage = () => {
   const router = useRouter();
@@ -29,9 +30,14 @@ const productListPage = () => {
   const [sortBy, setSortBy] = useState(router.query._sortBy || "");
   const [sortDir, setSortDir] = useState(router.query._sortDir || "");
   const [sortInput, setSortInput] = useState("");
-  const [pageIsReady, setPageIsReady] = useState(false)
+  const [pageIsReady, setPageIsReady] = useState(false);
+  const [searchInput, setSearchInput] = useState("")
+  
+  const search = useSelector((state) => state.search);
 
-  console.log(router.query._page);
+  console.log(search?.searchInput);
+
+
 
   const maxProductPerPage = 4;
 
