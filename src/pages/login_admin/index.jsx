@@ -58,7 +58,7 @@ const Login = () => {
           const userResponse = res.data.result;
           console.log(userResponse);
 
-          jsCookie.set("auth_token", userResponse.token);
+          jsCookie.set("admin_token", userResponse.token);
 
           // if (userResponse.token) {
           // }

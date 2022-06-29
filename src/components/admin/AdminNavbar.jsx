@@ -1,7 +1,10 @@
-import { Avatar, Badge, Box, Typography } from "@mui/material";
+import { Badge, Box, Typography } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useSelector } from "react-redux";
 
 const AdminNavbar = () => {
+  const adminSelector = useSelector((state) => state.auth);
+
   return (
     <Box
       display="flex"
@@ -24,7 +27,7 @@ const AdminNavbar = () => {
         >
           <NotificationsIcon fontSize={"medium"}></NotificationsIcon>
         </Badge>
-        <Avatar sx={{ width: 25, height: 25, ml: 5 }}></Avatar>
+        <Typography sx={{ ml: 2 }}>{adminSelector?.username}</Typography>
       </Box>
     </Box>
   );
