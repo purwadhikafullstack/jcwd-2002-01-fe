@@ -14,20 +14,20 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        {router.pathname.startsWith("/admin") ? (
-          <AdminProvider>
+        <AdminProvider>
+          {router.pathname.startsWith("/admin") ? (
             <AdminPageContainer children={<Component {...pageProps} />} />
-          </AdminProvider>
-        ) : (
-          <>
-            {router.pathname.startsWith("/register") ||
-            router.pathname.startsWith("/verification_page") ||
-            router.pathname.startsWith("/login") ? undefined : (
-              <Navbar />
-            )}
-            <Component {...pageProps} />
-          </>
-        )}
+          ) : (
+            <>
+              {router.pathname.startsWith("/register") ||
+              router.pathname.startsWith("/verification_page") ||
+              router.pathname.startsWith("/login") ? undefined : (
+                <Navbar />
+              )}
+              <Component {...pageProps} />
+            </>
+          )}
+        </AdminProvider>
       </ThemeProvider>
     </Provider>
   );

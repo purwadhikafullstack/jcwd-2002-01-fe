@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   ButtonGroup,
@@ -11,6 +12,7 @@ import {
   IconButton,
   InputLabel,
   OutlinedInput,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
@@ -19,7 +21,7 @@ import register from "assets/Frameregister.png";
 import MailIcon from "@mui/icons-material/Mail";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Link from "next/link";
 import { useFormik } from "formik";
@@ -35,7 +37,18 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState("false");
   const dispatch = useDispatch();
   const Router = useRouter();
-  const authSelector = useSelector((state) => state.auth);
+  const adminSelector = useSelector((state) => state.auth);
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
+  const [severity, setSeverity] = useState();
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -68,14 +81,35 @@ const Login = () => {
           formik.setSubmitting(false);
         } catch (err) {
           console.log(err);
+          setAlertContent(err?.response?.data?.message);
+          setAlert(true);
+          setSeverity(false);
           formik.setSubmitting(false);
         }
       }, 2000);
     },
   });
-
+  useEffect(() => {
+    if (adminSelector.id) {
+      Router.push("/admin/dashboard");
+    }
+  }, [adminSelector.id]);
   return (
     <Grid container width="100%" height="100vh" direction="row">
+      {alert ? (
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert variant="filled" severity={severity ? "success" : "error"}>
+            {alertContent}
+          </Alert>
+        </Snackbar>
+      ) : (
+        <></>
+      )}
       <Grid item xs={6}>
         <Image src={register} />
       </Grid>

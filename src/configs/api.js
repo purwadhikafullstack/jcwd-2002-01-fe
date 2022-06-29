@@ -10,14 +10,22 @@ const axiosInstance = axios.create({
 });
 
 // axiosInstance.interceptors.request.use((config) => {
-//   config.headers.authorization = jsCookie.get("auth_token") || "";
+//   config.headers.authorization = jsCookie.get("user_token") || "";
+
+//   // config.headers.authorization = jsCookie.get("admin_token") || "";
+
 //   return config;
 // });
 
 axiosInstance.interceptors.request.use((config) => {
-  config.headers.authorization = jsCookie.get("user_token") || "";
+  const userToken = jsCookie.get("user_token");
 
-  config.headers.authorization = jsCookie.get("admin_token") || "";
+  if (userToken) {
+    config.headers.authorization = userToken || "";
+  } else {
+    config.headers.authorization = jsCookie.get("admin_token") || "";
+  }
+
   return config;
 });
 

@@ -8,6 +8,7 @@ const initial_state = {
   email: "",
   is_verified: "",
   role: "",
+  gender: "",
 };
 
 const authReducer = createSlice({
