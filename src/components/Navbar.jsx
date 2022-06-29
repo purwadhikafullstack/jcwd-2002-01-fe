@@ -15,8 +15,16 @@ import logo from "../assets/logo.png";
 import Image from "next/image";
 import { HiOutlineSearch } from "react-icons/hi";
 import { margin, textAlign, width } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { search } from "redux/reducers/search";
 
 const Navbar = () => {
+  const [searchInput, setSearchInput] = useState("")
+
+  const dispatch = useDispatch()
+
+
   return (
     <Box
       display="flex"
@@ -25,10 +33,10 @@ const Navbar = () => {
         alignItems: "center",
         justifyContent: "center",
         boxShadow: "0px 4px 12px -8px #1BA1E4",
-        top:"0",
+        top: "0",
         position: "sticky",
         backgroundColor: "white",
-        zIndex: "9"
+        zIndex: "9",
       }}
     >
       <Box marginRight="18px">
@@ -38,6 +46,7 @@ const Navbar = () => {
         <OutlinedInput
           placeholder="Cari Obat, Suplemen, Vitamin, produk Kesehatan"
           id="searchInput"
+          onChange={(e) => setSearchInput(e.target.value)}
           sx={{
             width: "744px",
             height: "44px",
@@ -47,7 +56,9 @@ const Navbar = () => {
           }}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton>{<HiOutlineSearch />}</IconButton>
+              <IconButton onClick={() => dispatch(search(searchInput))}>
+                {<HiOutlineSearch />}
+              </IconButton>
             </InputAdornment>
           }
         ></OutlinedInput>
