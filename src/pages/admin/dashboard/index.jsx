@@ -4,6 +4,7 @@ import ActivityCard from "components/admin/ActivityCard";
 import AnalyticCard from "components/admin/AnalyticCard";
 import ExpiredMedicineCard from "components/admin/ExpiredMedicineCard";
 import ProfitCard from "components/admin/ProfitCard";
+import requiresAdmin from "lib/requiresAdmin";
 
 const Dashboard = () => {
   return (
@@ -72,5 +73,11 @@ const Dashboard = () => {
     </>
   );
 };
+
+export const getServerSideProps = requiresAdmin((context) => {
+  return {
+    props: {},
+  };
+});
 
 export default Dashboard;

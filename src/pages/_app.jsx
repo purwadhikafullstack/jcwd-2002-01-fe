@@ -6,10 +6,7 @@ import "../styles/globals.css";
 import { Provider } from "react-redux";
 import { store } from "redux/store";
 import Navbar from "components/Navbar";
-
-// const Provider = ({ children }) => {
-//   return children;
-// };
+import AdminProvider from "components/AuthProvider/AdminProvider";
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -17,18 +14,20 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        {router.pathname.startsWith("/admin") ? (
-          <AdminPageContainer children={<Component {...pageProps} />} />
-        ) : (
-          <>
-            {router.pathname.startsWith("/register") ||
-            router.pathname.startsWith("/verification_page") ||
-            router.pathname.startsWith("/login") ? undefined : (
-              <Navbar />
-            )}
-            <Component {...pageProps} />
-          </>
-        )}
+        <AdminProvider>
+          {router.pathname.startsWith("/admin") ? (
+            <AdminPageContainer children={<Component {...pageProps} />} />
+          ) : (
+            <>
+              {router.pathname.startsWith("/register") ||
+              router.pathname.startsWith("/verification_page") ||
+              router.pathname.startsWith("/login") ? undefined : (
+                <Navbar />
+              )}
+              <Component {...pageProps} />
+            </>
+          )}
+        </AdminProvider>
       </ThemeProvider>
     </Provider>
   );
