@@ -101,6 +101,7 @@ const productListPage = () => {
     } else if (value == "Z-A") {
       setSortBy("name");
       setSortDir("DESC");
+      
     } else if (value == "") {
       setSortBy("");
       setSortDir("");
