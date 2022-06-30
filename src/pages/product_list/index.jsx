@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 
 const productListPage = () => {
   const router = useRouter();
+  const search = useSelector((state) => state.search);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [productsCount, setProductsCount] = useState(0);
@@ -31,13 +32,7 @@ const productListPage = () => {
   const [sortDir, setSortDir] = useState(router.query._sortDir || "");
   const [sortInput, setSortInput] = useState("");
   const [pageIsReady, setPageIsReady] = useState(false);
-  const [searchInput, setSearchInput] = useState("")
-  
-  const search = useSelector((state) => state.search);
-
-  console.log(search?.searchInput);
-
-
+  const [searchValue, setSearchValue] = useState(search.searchInput);
 
   const maxProductPerPage = 4;
 
@@ -55,6 +50,7 @@ const productListPage = () => {
     try {
       const res = await axiosInstance.get("/products", {
         params: {
+          name: searchValue,
           _sortBy: sortBy ? sortBy : undefined,
           _sortDir: sortDir ? sortDir : undefined,
           _limit: maxProductPerPage,
@@ -109,6 +105,9 @@ const productListPage = () => {
 
   useEffect(() => {
     if (router.isReady) {
+      if (router.query.name) {
+        setSearchValue(router.query.name);
+      }
       if (router.query._sortDir) {
         setSortDir(router.query._sortDir);
       }
@@ -118,7 +117,7 @@ const productListPage = () => {
       if (router.query._page) {
         setPage(parseInt(router.query._page));
       }
-      setPageIsReady(true)
+      setPageIsReady(true);
     }
   }, [router.isReady]);
 
@@ -129,13 +128,19 @@ const productListPage = () => {
 
       router.push({
         query: {
+          name: searchValue,
           _sortBy: sortBy ? sortBy : undefined,
           _sortDir: sortDir ? sortDir : undefined,
           _page: page ? page : undefined,
         },
       });
     }
-  }, [page, sortDir, sortBy, pageIsReady]);
+  }, [page, sortDir, sortBy, pageIsReady, searchValue]);
+
+  useEffect(() => {
+    setSearchValue(search.searchInput)
+    setPage(1)
+  }, [search.searchInput])
 
   return (
     <Box>
@@ -158,7 +163,7 @@ const productListPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Typography>45 product di Vitamin & suplemen</Typography>
+              <Typography>{`${productsCount} product di Vitamin & suplemen`}</Typography>
               <Box
                 sx={{
                   display: "flex",
