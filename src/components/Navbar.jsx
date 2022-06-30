@@ -63,9 +63,11 @@ const Navbar = () => {
         zIndex: "9",
       }}
     >
-      <Box marginRight="18px">
-        <Image src={logo} />
-      </Box>
+      <Link href="/">
+        <Box marginRight="18px" sx={{ ":hover": { cursor: "pointer" } }}>
+          <Image src={logo} />
+        </Box>
+      </Link>
       <FormControl>
         <OutlinedInput
           placeholder="Cari Obat, Suplemen, Vitamin, produk Kesehatan"
@@ -86,7 +88,7 @@ const Navbar = () => {
       </FormControl>
       {userSelector.id ? (
         <Stack direction="row" spacing={3}>
-          <Link href="/">
+          <Link href="/cart">
             <IconButton>
               <ShoppingCartIcon sx={{ color: "brand.500" }} />
             </IconButton>
@@ -116,26 +118,30 @@ const Navbar = () => {
         </Stack>
       ) : (
         <>
-          <Button
-            variant="outlined"
-            sx={{
-              height: "44px",
-              width: "118px",
-              mr: "26px",
-              border: "2px solid",
-            }}
-          >
-            Masuk
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              height: "44px",
-              width: "118px",
-            }}
-          >
-            Daftar
-          </Button>
+          <Link href="/login_user">
+            <Button
+              variant="outlined"
+              sx={{
+                height: "44px",
+                width: "118px",
+                mr: "26px",
+                border: "2px solid",
+              }}
+            >
+              Masuk
+            </Button>
+          </Link>
+          <Link href="/register">
+            <Button
+              variant="contained"
+              sx={{
+                height: "44px",
+                width: "118px",
+              }}
+            >
+              Daftar
+            </Button>
+          </Link>
         </>
       )}
     </Box>
