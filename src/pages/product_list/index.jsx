@@ -19,9 +19,11 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useState } from "react";
 import { GrPowerReset } from "react-icons/gr";
+import { useSelector } from "react-redux";
 
 const productListPage = () => {
   const router = useRouter();
+  const search = useSelector((state) => state.search);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [productsCount, setProductsCount] = useState(0);
@@ -29,9 +31,11 @@ const productListPage = () => {
   const [sortBy, setSortBy] = useState(router.query._sortBy || "");
   const [sortDir, setSortDir] = useState(router.query._sortDir || "");
   const [sortInput, setSortInput] = useState("");
-  const [pageIsReady, setPageIsReady] = useState(false)
+  const [pageIsReady, setPageIsReady] = useState(false);
+  const [searchValue, setSearchValue] = useState(search.searchInput);
+  const [selectedCategory, setSelectedCategory] = useState("")
 
-  console.log(router.query._page);
+  console.log(selectedCategory);
 
   const maxProductPerPage = 4;
 
@@ -40,6 +44,7 @@ const productListPage = () => {
       const res = await axiosInstance.get("/categories");
 
       setCategories(res.data.result);
+      console.log(res.data.result);
     } catch (err) {
       console.log(err);
     }
@@ -49,6 +54,7 @@ const productListPage = () => {
     try {
       const res = await axiosInstance.get("/products", {
         params: {
+          name: searchValue,
           _sortBy: sortBy ? sortBy : undefined,
           _sortDir: sortDir ? sortDir : undefined,
           _limit: maxProductPerPage,
@@ -94,6 +100,7 @@ const productListPage = () => {
     } else if (value == "Z-A") {
       setSortBy("name");
       setSortDir("DESC");
+      
     } else if (value == "") {
       setSortBy("");
       setSortDir("");
@@ -103,6 +110,9 @@ const productListPage = () => {
 
   useEffect(() => {
     if (router.isReady) {
+      if (router.query.name) {
+        setSearchValue(router.query.name);
+      }
       if (router.query._sortDir) {
         setSortDir(router.query._sortDir);
       }
@@ -112,24 +122,30 @@ const productListPage = () => {
       if (router.query._page) {
         setPage(parseInt(router.query._page));
       }
-      setPageIsReady(true)
+      setPageIsReady(true);
     }
   }, [router.isReady]);
 
   useEffect(() => {
-    // fetchCategory()
+    fetchCategory()
     if (pageIsReady) {
       fetchProduct();
 
       router.push({
         query: {
+          name: searchValue,
           _sortBy: sortBy ? sortBy : undefined,
           _sortDir: sortDir ? sortDir : undefined,
           _page: page ? page : undefined,
         },
       });
     }
-  }, [page, sortDir, sortBy, pageIsReady]);
+  }, [page, sortDir, sortBy, pageIsReady, searchValue]);
+
+  useEffect(() => {
+    setSearchValue(search.searchInput)
+    setPage(1)
+  }, [search.searchInput])
 
   return (
     <Box>
@@ -137,7 +153,7 @@ const productListPage = () => {
         <Typography sx={{ py: "20px" }}>Beranda/ Kategori/ Obat</Typography>
         <Grid container>
           <Grid item sm={4} md={4}>
-            <UserSidebar />
+            <UserSidebar category={categories} setSelectedCategory={setSelectedCategory} />
           </Grid>
           <Grid item sm={8} md={8}>
             <Typography
@@ -152,7 +168,7 @@ const productListPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Typography>45 product di Vitamin & suplemen</Typography>
+              <Typography>{`${productsCount} product di Vitamin & suplemen`}</Typography>
               <Box
                 sx={{
                   display: "flex",

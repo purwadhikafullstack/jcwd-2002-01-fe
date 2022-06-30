@@ -72,6 +72,7 @@ const Navbar = () => {
         <OutlinedInput
           placeholder="Cari Obat, Suplemen, Vitamin, produk Kesehatan"
           id="searchInput"
+          onChange={(e) => setSearchInput(e.target.value)}
           sx={{
             width: "744px",
             height: "44px",
@@ -81,7 +82,9 @@ const Navbar = () => {
           }}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton>{<HiOutlineSearch />}</IconButton>
+              <IconButton onClick={() => dispatch(search(searchInput))}>
+                {<HiOutlineSearch />}
+              </IconButton>
             </InputAdornment>
           }
         ></OutlinedInput>

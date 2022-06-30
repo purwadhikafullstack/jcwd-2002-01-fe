@@ -61,7 +61,7 @@ const ProductCard = ({ productName, price, productImage }) => {
       <Typography marginBottom="25px" fontWeight="700">
         {productName}
       </Typography>
-      <Typography marginBottom="20px">Rp. {price.toLocaleString()} / pack</Typography>
+      <Typography marginBottom="20px">Rp. {price?.toLocaleString()} / pack</Typography>
       <Box display="flex" flexDirection="column" alignItems="center">
         <Button
           variant="outlined"
