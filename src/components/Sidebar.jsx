@@ -12,14 +12,22 @@ import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import { useState } from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
-ExpandMore;
+const SidebarSubmenu = ({ submenuTitle, icon, isMenu = true, setSelectedCategory, onClick, id, setKategoriTerpilih }) => {
+  const [kategoriTerpilih, setKategoriTerpilih] = useState(null)
+  const [isSelected, setIsSelected] = useState(submenuTitle)
+  const categoryHandler = (value) => {
+    setKategoriTerpilih(value)
+    setIsSelected(true)
+  }
 
-const SidebarSubmenu = ({ submenuTitle, href, icon, isMenu = true }) => {
+  console.log(kategoriTerpilih);
+
   return (
-    <Link href={href || undefined} underline="none">
       <MenuItem
+
+        onClick={() => categoryHandler(id)}
         sx={{
-          color: "#52637A",
+          color: isSelected? "red" : "#52637A",
           "&:hover": {
             color: "#44B2E9",
             opacity: [0.9, 0.8, 0.7],
@@ -34,12 +42,12 @@ const SidebarSubmenu = ({ submenuTitle, href, icon, isMenu = true }) => {
       >
         {submenuTitle}
       </MenuItem>
-    </Link>
   );
 };
 
-const SidebarMenu = ({ menuTitle, subMenus = [], icon, }) => {
+const SidebarMenu = ({ menuTitle, subMenus = [], icon, setSelectedCategory }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+
 
   return (
     <Box>
@@ -69,7 +77,7 @@ const SidebarMenu = ({ menuTitle, subMenus = [], icon, }) => {
       <Collapse in={menuOpen} timeout="auto" unmountOnExit>
         {subMenus.map((val) => {
           return (
-            <SidebarSubmenu isMenu={val.isMenu} submenuTitle={val.submenuTitle} href={val.href} />
+            <SidebarSubmenu isMenu={val.isMenu} submenuTitle={val.name} setSelectedCategory={val.id} id={val.id}/>
           );
         })}
       </Collapse>
@@ -78,7 +86,9 @@ const SidebarMenu = ({ menuTitle, subMenus = [], icon, }) => {
 };
 
 
-const UserSidebar = () => {
+const UserSidebar = ({category=[], setSelectedCategory}) => {
+  const [KategoriTerpilih, setKategoriTerpilih] = useState(null)
+
   return (
     <Box>
       <Box
@@ -93,36 +103,9 @@ const UserSidebar = () => {
       >
         <SidebarMenu
           menuTitle="Kategori"
-          subMenus={[
-            {
-              submenuTitle: "Obat-obatan",
-              href: "/",
-            },
-            {
-              submenuTitle: "Nutrisi",
-              href: "/",
-            },
-            {
-              submenuTitle: "Herbal",
-              href: "/",
-            },
-            {
-              submenuTitle: "Vitamin & Suplemen",
-              href: "/",
-            },
-            {
-              submenuTitle: "Alat Kesehatan",
-              href: "/",
-            },
-            {
-              submenuTitle: "Perawatan Tubuh",
-              href: "/",
-            },
-            {
-              submenuTitle: "Ibu & Anak",
-              href: "/",
-            },
-          ]}
+          subMenus={category}
+          setSelectedCategory={setSelectedCategory}
+          setKategoriTerpilih={setKategoriTerpilih}
         />
       </Box>
       <Box
