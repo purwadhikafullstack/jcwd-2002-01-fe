@@ -43,6 +43,7 @@ const productListPage = () => {
       const res = await axiosInstance.get("/categories");
 
       setCategories(res.data.result);
+      console.log(res.data.result);
     } catch (err) {
       console.log(err);
     }
