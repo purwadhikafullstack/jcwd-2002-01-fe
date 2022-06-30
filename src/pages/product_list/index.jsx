@@ -33,6 +33,9 @@ const productListPage = () => {
   const [sortInput, setSortInput] = useState("");
   const [pageIsReady, setPageIsReady] = useState(false);
   const [searchValue, setSearchValue] = useState(search.searchInput);
+  const [selectedCategory, setSelectedCategory] = useState("")
+
+  console.log(selectedCategory);
 
   const maxProductPerPage = 4;
 
@@ -41,6 +44,7 @@ const productListPage = () => {
       const res = await axiosInstance.get("/categories");
 
       setCategories(res.data.result);
+      console.log(res.data.result);
     } catch (err) {
       console.log(err);
     }
@@ -96,6 +100,7 @@ const productListPage = () => {
     } else if (value == "Z-A") {
       setSortBy("name");
       setSortDir("DESC");
+      
     } else if (value == "") {
       setSortBy("");
       setSortDir("");
@@ -122,7 +127,7 @@ const productListPage = () => {
   }, [router.isReady]);
 
   useEffect(() => {
-    // fetchCategory()
+    fetchCategory()
     if (pageIsReady) {
       fetchProduct();
 
@@ -148,7 +153,7 @@ const productListPage = () => {
         <Typography sx={{ py: "20px" }}>Beranda/ Kategori/ Obat</Typography>
         <Grid container>
           <Grid item sm={4} md={4}>
-            <UserSidebar />
+            <UserSidebar category={categories} setSelectedCategory={setSelectedCategory} />
           </Grid>
           <Grid item sm={8} md={8}>
             <Typography
