@@ -42,6 +42,7 @@ const SidebarSubmenu = ({ submenuTitle, icon, isMenu = true, id, selectedCategor
 const SidebarMenu = ({ menuTitle, subMenus = [], icon, selectedCategory, setSelectedCategory }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
+
   return (
     <Box>
       <Box
