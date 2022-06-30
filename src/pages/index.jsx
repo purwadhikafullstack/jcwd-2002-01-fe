@@ -20,6 +20,9 @@ import CategoryCard from "components/CategoryCard";
 import kejarDiskon from "assets/kejardiskon.png";
 import { position } from "@chakra-ui/react";
 import MetodePembayaran from "components/MetodePembayaran";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 const Home = () => {
   const categoryList = [

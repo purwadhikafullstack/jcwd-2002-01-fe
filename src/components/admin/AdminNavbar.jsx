@@ -1,7 +1,32 @@
-import { Avatar, Badge, Box, Typography } from "@mui/material";
+import { Badge, Box, Menu, MenuItem, Typography } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useDispatch, useSelector } from "react-redux";
+import jsCookie from "js-cookie";
+import { logout } from "redux/reducers/auth";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 const AdminNavbar = () => {
+  const adminSelector = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const Router = useRouter();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const logoutBtnHandler = () => {
+    dispatch(logout());
+
+    jsCookie.remove("admin_token");
+    Router.push("/login_admin");
+  };
+
   return (
     <Box
       display="flex"
@@ -24,7 +49,16 @@ const AdminNavbar = () => {
         >
           <NotificationsIcon fontSize={"medium"}></NotificationsIcon>
         </Badge>
-        <Avatar sx={{ width: 25, height: 25, ml: 5 }}></Avatar>
+
+        <Typography
+          onClick={handleClick}
+          sx={{ ml: 2, ":hover": { cursor: "pointer" } }}
+        >
+          {adminSelector?.username}
+        </Typography>
+        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+          <MenuItem onClick={logoutBtnHandler}>Keluar</MenuItem>
+        </Menu>
       </Box>
     </Box>
   );

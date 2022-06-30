@@ -1,5 +1,5 @@
 import axios from "axios";
-// import jsCookie from "js-cookie"
+import jsCookie from "js-cookie";
 // import { user_types } from "../redux/reducers/types/user";
 // import store from "../redux/store";
 
@@ -10,9 +10,24 @@ const axiosInstance = axios.create({
 });
 
 // axiosInstance.interceptors.request.use((config) => {
-//     config.headers.authorization = jsCookie.get("auth_token") || ""
-//     return config
-// })
+//   config.headers.authorization = jsCookie.get("user_token") || "";
+
+//   // config.headers.authorization = jsCookie.get("admin_token") || "";
+
+//   return config;
+// });
+
+axiosInstance.interceptors.request.use((config) => {
+  const userToken = jsCookie.get("user_token");
+
+  if (userToken) {
+    config.headers.authorization = userToken || "";
+  } else {
+    config.headers.authorization = jsCookie.get("admin_token") || "";
+  }
+
+  return config;
+});
 
 // axiosInstance.interceptors.response.use(
 //     (res) => {
