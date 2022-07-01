@@ -51,7 +51,6 @@ const SidebarMenu = ({
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-
   return (
     <Box>
       <Box
