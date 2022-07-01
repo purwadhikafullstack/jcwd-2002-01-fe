@@ -221,6 +221,7 @@ const productListPage = () => {
             </Box>
 
             {/* product list */}
+            <Link underline="hover" href="/product_detail">
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
             </Box>
@@ -239,6 +240,7 @@ const productListPage = () => {
                 onChange={(e, value) => setPage(value)}
               />
             </Box>
+            </Link>
           </Grid>
         </Grid>
       </Box>
