@@ -12,42 +12,36 @@ import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import { useState } from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
-const SidebarSubmenu = ({ submenuTitle, icon, isMenu = true, setSelectedCategory, onClick, id, setKategoriTerpilih }) => {
-  const [kategoriTerpilih, setKategoriTerpilih] = useState(null)
-  const [isSelected, setIsSelected] = useState(submenuTitle)
+const SidebarSubmenu = ({ submenuTitle, icon, isMenu = true, id, selectedCategory, setSelectedCategory }) => {
+  const [pilihKategori, setPilihKategori] = useState(null);
   const categoryHandler = (value) => {
-    setKategoriTerpilih(value)
-    setIsSelected(true)
-  }
-
-  console.log(kategoriTerpilih);
+    setSelectedCategory(value)
+  };
 
   return (
-      <MenuItem
-
-        onClick={() => categoryHandler(id)}
-        sx={{
-          color: isSelected? "red" : "#52637A",
-          "&:hover": {
-            color: "#44B2E9",
-            opacity: [0.9, 0.8, 0.7],
-            cursor: "pointer",
-          },
-          textDecoration: "none",
-          fontSize: "14px",
-          mb: "5px",
-          px: "28px",
-        }}
-        disableRipple={(isMenu? false : true)}
-      >
-        {submenuTitle}
-      </MenuItem>
+    <MenuItem
+      onClick={() => categoryHandler(id)}
+      sx={{
+        color: selectedCategory == id ? "brand.500" : "black",
+        "&:hover": {
+          color: "#44B2E9",
+          opacity: [0.9, 0.8, 0.7],
+          cursor: "pointer",
+        },
+        textDecoration: "none",
+        fontSize: "14px",
+        mb: "5px",
+        px: "28px",
+      }}
+      disableRipple={isMenu ? false : true}
+    >
+      {submenuTitle}
+    </MenuItem>
   );
 };
 
-const SidebarMenu = ({ menuTitle, subMenus = [], icon, setSelectedCategory }) => {
+const SidebarMenu = ({ menuTitle, subMenus = [], icon, selectedCategory, setSelectedCategory }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-
 
   return (
     <Box>
@@ -77,7 +71,13 @@ const SidebarMenu = ({ menuTitle, subMenus = [], icon, setSelectedCategory }) =>
       <Collapse in={menuOpen} timeout="auto" unmountOnExit>
         {subMenus.map((val) => {
           return (
-            <SidebarSubmenu isMenu={val.isMenu} submenuTitle={val.name} setSelectedCategory={val.id} id={val.id}/>
+            <SidebarSubmenu
+              isMenu={val.isMenu}
+              submenuTitle={val.name}
+              id={val.id}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
           );
         })}
       </Collapse>
@@ -85,10 +85,7 @@ const SidebarMenu = ({ menuTitle, subMenus = [], icon, setSelectedCategory }) =>
   );
 };
 
-
-const UserSidebar = ({category=[], setSelectedCategory}) => {
-  const [KategoriTerpilih, setKategoriTerpilih] = useState(null)
-
+const UserSidebar = ({ category = [], setSelectedCategory, selectedCategory }) => {
   return (
     <Box>
       <Box
@@ -105,7 +102,7 @@ const UserSidebar = ({category=[], setSelectedCategory}) => {
           menuTitle="Kategori"
           subMenus={category}
           setSelectedCategory={setSelectedCategory}
-          setKategoriTerpilih={setKategoriTerpilih}
+          selectedCategory={selectedCategory}
         />
       </Box>
       <Box
@@ -122,15 +119,12 @@ const UserSidebar = ({category=[], setSelectedCategory}) => {
           subMenus={[
             {
               submenuTitle: "Pusing",
-              href: "/",
             },
             {
               submenuTitle: "Demam",
-              href: "/",
             },
             {
               submenuTitle: "Sakit Gigi",
-              href: "/",
             },
           ]}
         />
@@ -151,7 +145,7 @@ const UserSidebar = ({category=[], setSelectedCategory}) => {
                   }
                 />
               ),
-              isMenu: false
+              isMenu: false,
             },
             {
               submenuTitle: (
@@ -165,7 +159,7 @@ const UserSidebar = ({category=[], setSelectedCategory}) => {
                   }
                 />
               ),
-              isMenu: false
+              isMenu: false,
             },
           ]}
         />
