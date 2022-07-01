@@ -13,6 +13,9 @@ import Image from "next/image";
 import fotoObat from "assets/panadol.jpg";
 import Navbar from "components/Navbar";
 import { useState } from "react";
+import { useRouter } from "next/router"; 
+import  axios from "axios";
+import * as Yup from "yup";
 import { HiOutlineHeart, HiHeart } from "react-icons/hi";
 import { FaCartPlus } from "react-icons/fa";
 import { BsChatDotsFill, BsShareFill } from "react-icons/bs";
@@ -31,11 +34,12 @@ const productDetailPage = () => {
 
   const [isLiked, setIsLiked] = useState(false);
 
+  const [product, setProduct] = useState({});
+
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue)
   };
   
-
   return (
     <>
       <Box sx={{ mx: "96px" }}>
@@ -214,5 +218,17 @@ const productDetailPage = () => {
     </>
   );
 };
+
+export async function getServerSideProps(context) {
+  const { productId } = context.params;
+
+  const res = await axios.get(`http://localhost:2001/products/${productId}`);
+
+  return {
+    props: {
+      productDetail: res?.data?.result,
+    },
+  };
+}
 
 export default productDetailPage;
