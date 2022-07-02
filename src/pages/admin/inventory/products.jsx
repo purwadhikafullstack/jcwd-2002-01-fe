@@ -1,181 +1,107 @@
-import { Box, Button, Container } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  InputAdornment,
+  OutlinedInput,
+  Typography,
+} from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download";
 import TableData from "components/admin/TableData";
+import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import ModalAddProduct from "components/admin/ModalAddProduct";
+import { useState } from "react";
+import ModalAddStock from "components/admin/ModalAddStock";
 
-const columns = [
-  { field: "id", headerName: "No", width: 70 },
-  { field: "namaObat", headerName: "Nama Obat", width: 130 },
-  { field: "noObat", headerName: "No Obat", width: 130 },
-  {
-    field: "noBpom",
-    headerName: "No.BPOM",
-    width: 130,
-  },
-  {
-    field: "kategori",
-    headerName: "Kategori",
-    sortable: false,
-    width: 130,
-  },
-  { field: "stok", headerName: "Stok", width: 90, type: "number" },
-  { field: "satuan", headerName: "Satuan", width: 130, sortable: false },
-  { field: "nilaiBarang", headerName: "Nilai Barang", width: 130 },
-  { field: "nilaiJual", headerName: "Nilai Jual", width: 130 },
-  {
-    field: "atur",
-    headerName: "Atur",
-    width: 130,
-    renderCell: () => {
-      return <Button variant="outlined">Lihat Detail</Button>;
-    },
-  },
-];
-
-const rows = [
-  {
-    id: 1,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 20,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 2,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 10,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 4,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 15,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 5,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 20,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 6,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 10,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 7,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 15,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 8,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 20,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 9,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 10,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 10,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 15,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 11,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 20,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 12,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 10,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-  {
-    id: 13,
-    namaObat: "Adem Sari",
-    noObat: "A000321",
-    noBpom: "B000521",
-    kategori: "Obat Bebas",
-    stok: 15,
-    satuan: "Box",
-    nilaiBarang: "Rp. 15.000",
-    nilaiJual: "Rp. 44.000",
-  },
-];
 const Products = () => {
+  const [Open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const [OpenStock, setOpenStock] = useState(false);
+  const handleOpenStock = () => setOpenStock(true);
+  const handleCloseStock = () => {
+    setOpenStock(false);
+  };
   return (
-    <Box
+    <Container
       sx={{
         p: "20px",
-        height: 400,
-        width: "100%",
-        marginTop: "32px",
+        marginTop: "16px",
       }}
     >
-      <TableData columns={columns} rows={rows}></TableData>
-    </Box>
+      <Box>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6" fontWeight="bold">
+            Daftar Obat
+          </Typography>
+          <Box display="flex">
+            <Button
+              sx={{ marginRight: "15px" }}
+              variant="outlined"
+              startIcon={<DownloadIcon />}
+            >
+              Unduh PDF
+            </Button>
+            <Button variant="outlined" startIcon={<InsertDriveFileIcon />}>
+              Excel
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          bgcolor: "#FFFFFF",
+          mt: "38px",
+          borderRadius: "8px",
+          height: "73vh",
+        }}
+      >
+        <Box sx={{ p: 3 }}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            marginBottom="24px"
+          >
+            <OutlinedInput
+              placeholder="Cari nama obat"
+              sx={{ width: "328px", height: "42px" }}
+              endAdornment={
+                <InputAdornment>
+                  <SearchIcon />
+                </InputAdornment>
+              }
+            />
+            <Box>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={handleOpenStock}
+                sx={{ mr: 2 }}
+              >
+                Tambah Stock
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={handleOpen}
+              >
+                Tambah Obat
+              </Button>
+            </Box>
+          </Box>
+          <Divider />
+          <ModalAddProduct open={Open} handleClose={handleClose} />
+          <ModalAddStock open={OpenStock} handleClose={handleCloseStock} />
+          {/* <TableData columns={columns} rows={rows}></TableData> */}
+        </Box>
+      </Box>
+    </Container>
   );
 };
 
