@@ -33,9 +33,7 @@ const productListPage = () => {
   const [sortInput, setSortInput] = useState("");
   const [pageIsReady, setPageIsReady] = useState(false);
   const [searchValue, setSearchValue] = useState(search.searchInput);
-  const [selectedCategory, setSelectedCategory] = useState("")
-
-  console.log(selectedCategory);
+  const [selectedCategory, setSelectedCategory] = useState(0)
 
   const maxProductPerPage = 4;
 
@@ -55,6 +53,7 @@ const productListPage = () => {
       const res = await axiosInstance.get("/products", {
         params: {
           name: searchValue,
+          selectedCategory: selectedCategory || undefined,
           _sortBy: sortBy ? sortBy : undefined,
           _sortDir: sortDir ? sortDir : undefined,
           _limit: maxProductPerPage,
@@ -122,6 +121,9 @@ const productListPage = () => {
       if (router.query._page) {
         setPage(parseInt(router.query._page));
       }
+      if(router.query.selectedCategory){
+        setSelectedCategory(router.query.selectedCategory)
+      }
       setPageIsReady(true);
     }
   }, [router.isReady]);
@@ -137,10 +139,11 @@ const productListPage = () => {
           _sortBy: sortBy ? sortBy : undefined,
           _sortDir: sortDir ? sortDir : undefined,
           _page: page ? page : undefined,
+          selectedCategory: selectedCategory || undefined
         },
       });
     }
-  }, [page, sortDir, sortBy, pageIsReady, searchValue]);
+  }, [page, sortDir, sortBy, pageIsReady, searchValue, selectedCategory]);
 
   useEffect(() => {
     setSearchValue(search.searchInput)
@@ -153,7 +156,7 @@ const productListPage = () => {
         <Typography sx={{ py: "20px" }}>Beranda/ Kategori/ Obat</Typography>
         <Grid container>
           <Grid item sm={4} md={4}>
-            <UserSidebar category={categories} setSelectedCategory={setSelectedCategory} />
+            <UserSidebar category={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
           </Grid>
           <Grid item sm={8} md={8}>
             <Typography
