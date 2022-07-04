@@ -6,8 +6,10 @@ import {
   FormHelperText,
   FormLabel,
   Grid,
+  MenuItem,
   Modal,
   OutlinedInput,
+  Select,
   Stack,
   Step,
   StepLabel,
@@ -28,6 +30,7 @@ const ModalAddProduct = ({ open, handleClose }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [selectedFile, setSelectedFile] = useState([]);
   const [preview, setPreview] = useState();
+  const [CategoryList, setCategoryList] = useState();
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -37,18 +40,11 @@ const ModalAddProduct = ({ open, handleClose }) => {
 
   const handleFile = (event) => {
     setSelectedFile([...selectedFile, event.target.files[0]]);
-    alert(event.target.files[0].name);
-
-    // const imagesArray = fileArray.map((val) => {
-    //   return URL.createObjectURL(val);
-    // });
-
-    // setPreview(imagesArray);
   };
 
   const handleSubmit = async () => {
     const formData = new FormData();
-    const { name, price, no_bpom, no_medicine, packaging, discount } =
+    const { name, price, no_bpom, no_medicine, packaging, discount, category } =
       formik.values;
 
     if (!discount) {
@@ -61,6 +57,7 @@ const ModalAddProduct = ({ open, handleClose }) => {
     formData.append("no_medicine", no_medicine);
     formData.append("packaging", packaging);
     formData.append("discount", discount);
+    formData.append("categoryName", category);
 
     if (selectedFile.length) {
       Object.values(selectedFile).forEach((file) => {
@@ -76,14 +73,13 @@ const ModalAddProduct = ({ open, handleClose }) => {
       formik.setFieldValue("no_medicine", "");
       formik.setFieldValue("packaging", "");
       formik.setFieldValue("discount", "");
+      formik.setFieldValue("category", "");
 
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     } catch (err) {
       console.log(err);
     }
   };
-
-  console.log(preview);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -97,6 +93,7 @@ const ModalAddProduct = ({ open, handleClose }) => {
       no_medicine: "",
       packaging: "",
       discount: 0,
+      category: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("This field is required"),
@@ -105,6 +102,7 @@ const ModalAddProduct = ({ open, handleClose }) => {
       no_medicine: Yup.string().required("This field is required"),
       packaging: Yup.string().required("This field is required"),
       discount: Yup.number(),
+      category: Yup.string().required("This field is required"),
     }),
     validateOnChange: false,
     onSubmit: handleNext,
@@ -276,6 +274,41 @@ const ModalAddProduct = ({ open, handleClose }) => {
               </Grid>
             </Grid>
           </FormControl>
+          <FormControl sx={{ borderRadius: "4px" }}>
+            <Grid container>
+              <Grid item xs={3}>
+                <FormLabel
+                  sx={{
+                    fontSize: "14px",
+                    color: "black",
+                  }}
+                >
+                  Kategori
+                </FormLabel>
+              </Grid>
+              <Grid item xs={9}>
+                <Select
+                  sx={{
+                    backgroundColor: "white",
+                    height: "36px",
+                    minWidth: "226px",
+                  }}
+                  onChange={(e) => {
+                    formik.setFieldValue("category", e.target.value);
+                  }}
+                  value={formik.values.category}
+                  autoWidth
+                >
+                  <MenuItem disabled value="Select">
+                    Select
+                  </MenuItem>
+                  {CategoryList?.map((val) => {
+                    return <MenuItem value={val.name}>{val.name}</MenuItem>;
+                  })}
+                </Select>
+              </Grid>
+            </Grid>
+          </FormControl>
         </Stack>
       );
     } else if (activeStep === 1) {
@@ -322,7 +355,15 @@ const ModalAddProduct = ({ open, handleClose }) => {
       );
     }
   };
-
+  const fetchCategory = async () => {
+    try {
+      const res = await axiosInstance.get("/categories");
+      const data = res?.data?.result;
+      setCategoryList(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const previewImage = () => {
     if (!selectedFile) {
       setPreview(undefined);
@@ -341,6 +382,10 @@ const ModalAddProduct = ({ open, handleClose }) => {
   useEffect(() => {
     previewImage();
   }, [selectedFile]);
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
 
   return (
     <Modal open={open} onClose={handleClose}>
