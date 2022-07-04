@@ -13,7 +13,6 @@ import { useState } from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 const SidebarSubmenu = ({ submenuTitle, icon, isMenu = true, id, selectedCategory, setSelectedCategory }) => {
-  const [pilihKategori, setPilihKategori] = useState(null);
   const categoryHandler = (value) => {
     setSelectedCategory(value)
   };
