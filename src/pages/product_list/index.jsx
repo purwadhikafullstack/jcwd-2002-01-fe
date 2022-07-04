@@ -33,7 +33,8 @@ const productListPage = () => {
   const [sortInput, setSortInput] = useState("");
   const [pageIsReady, setPageIsReady] = useState(false);
   const [searchValue, setSearchValue] = useState(search.searchInput);
-  const [selectedCategory, setSelectedCategory] = useState(0)
+  const [selectedCategory, setSelectedCategory] = useState(0);
+
 
   const maxProductPerPage = 4;
 
@@ -75,6 +76,7 @@ const productListPage = () => {
           productName={val?.name}
           price={val?.price}
           productImage={val.Product_images[0].image_url}
+          id={val.id}
         />
       );
     });
@@ -99,7 +101,6 @@ const productListPage = () => {
     } else if (value == "Z-A") {
       setSortBy("name");
       setSortDir("DESC");
-      
     } else if (value == "") {
       setSortBy("");
       setSortDir("");
@@ -121,15 +122,15 @@ const productListPage = () => {
       if (router.query._page) {
         setPage(parseInt(router.query._page));
       }
-      if(router.query.selectedCategory){
-        setSelectedCategory(router.query.selectedCategory)
+      if (router.query.selectedCategory) {
+        setSelectedCategory(router.query.selectedCategory);
       }
       setPageIsReady(true);
     }
   }, [router.isReady]);
 
   useEffect(() => {
-    fetchCategory()
+    fetchCategory();
     if (pageIsReady) {
       fetchProduct();
 
@@ -146,9 +147,9 @@ const productListPage = () => {
   }, [page, sortDir, sortBy, pageIsReady, searchValue, selectedCategory]);
 
   useEffect(() => {
-    setSearchValue(search.searchInput)
-    setPage(1)
-  }, [search.searchInput])
+    setSearchValue(search.searchInput);
+    setPage(1);
+  }, [search.searchInput]);
 
   return (
     <Box>
@@ -156,7 +157,11 @@ const productListPage = () => {
         <Typography sx={{ py: "20px" }}>Beranda/ Kategori/ Obat</Typography>
         <Grid container>
           <Grid item sm={4} md={4}>
-            <UserSidebar category={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
+            <UserSidebar
+              category={categories}
+              setSelectedCategory={setSelectedCategory}
+              selectedCategory={selectedCategory}
+            />
           </Grid>
           <Grid item sm={8} md={8}>
             <Typography
@@ -202,7 +207,7 @@ const productListPage = () => {
               </Box>
             </Box>
             {/* product list */}
-            <Link underline="hover" href="/product_detail">
+
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
             </Box>
@@ -222,7 +227,6 @@ const productListPage = () => {
                 onChange={(e, value) => setPage(value)}
               />
             </Box>
-            </Link>
           </Grid>
         </Grid>
       </Box>
