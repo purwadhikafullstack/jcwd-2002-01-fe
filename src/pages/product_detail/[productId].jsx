@@ -24,10 +24,11 @@ import Footer from "components/Footer";
 import Deskripsi from "components/tabs/Deskripsi";
 import TabPanel from "components/TabPanel";
 import RelatedProduct from "components/RelatedProducts";
+import {useParams} from "react-router-dom"
+import ProductCarousel from "components/ProductCarousel"
 
-
-
-const productDetailPage = () => {
+const productDetailPage = ({productDetail}) => {
+ 
   const [counter, setCounter] = useState(0);
 
   const [tabMenu, setTabMenu] = useState(0);
@@ -36,6 +37,21 @@ const productDetailPage = () => {
 
   const [product, setProduct] = useState({});
 
+  console.log(productDetail)
+
+  const renderProducts = () => {
+    return products.map((val, idx) => {
+      return (
+        <ProductCard
+          productName={val?.name}
+          price={val?.price}
+          productImage={val.Product_images[0]?.image_url}
+          id={val.id}
+        />
+      );
+    });
+  };
+
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue)
   };
@@ -43,6 +59,7 @@ const productDetailPage = () => {
   return (
     <>
       <Box sx={{ mx: "96px" }}>
+        
         <Typography sx={{pl: "80px", pt: "40px"}}>Beranda/ Kategori/ Obat</Typography>
         <Grid container spacing={2} marginTop="70px" sx={{ height: "100vh" }}>
           <Grid
@@ -57,20 +74,12 @@ const productDetailPage = () => {
             }}
           >
             <Box>
-              <Box
-                sx={{
-                  p: "10px 30px",
-                  boxShadow: "0px 7px 18px -15px black",
-                  width: "380px",
-                  heigth: "300px",
-                  borderRadius: "8px",
-                  mb: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Image src={fotoObat} />
+              <Box>
+                {/* <Image src={productDetail.Product_images[0].image_url} /> */}
+                <Box             
+                // component="img" src={productDetail.Product_images[0].image_url}
+                />
+                <ProductCarousel img_url={productDetail.Product_images}/>
               </Box>
               <Box>
                 <Button
@@ -107,13 +116,13 @@ const productDetailPage = () => {
           >
             <Box>
               <Typography fontSize="14px" fontWeight="700">
-                Panadol
+              {productDetail.name}
               </Typography>
               <Typography fontSize="22px" marginBottom="20px">
-                Panadol Merah
+              {productDetail.name}
               </Typography>
               <Typography fontSize="24px" fontWeight="700" marginBottom="24px">
-                Rp 13.000/strip
+              {productDetail.price}
               </Typography>
             </Box>
             <ButtonGroup
