@@ -97,6 +97,21 @@ const productDetailPage = ({ productDetail }) => {
 
   const [product, setProduct] = useState({});
 
+  console.log(productDetail)
+
+  const renderProducts = () => {
+    return products.map((val, idx) => {
+      return (
+        <ProductCard
+          productName={val?.name}
+          price={val?.price}
+          productImage={val.Product_images[0]?.image_url}
+          id={val.id}
+        />
+      );
+    });
+  };
+
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue);
   };
