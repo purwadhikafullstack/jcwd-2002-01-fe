@@ -27,11 +27,13 @@ import { logout } from "redux/reducers/auth";
 import jsCookie from "js-cookie";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import {search} from "redux/reducers/search";
 
 const Navbar = () => {
   const userSelector = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const Router = useRouter();
+  const [searchInput, setSearchInput] = useState("")
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
