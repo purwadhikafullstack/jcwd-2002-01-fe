@@ -25,34 +25,31 @@ const Products = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const [OpenStock, setOpenStock] = useState(false);
-  const handleOpenStock = () => setOpenStock(true);
-  const handleCloseStock = () => {
-    setOpenStock(false);
-  };
 
   const [page, setPage] = useState(0);
-  const [rowPerPage, setRowPerPage] = useState(10);
+  const [rowPerPage, setRowPerPage] = useState(5);
   const [sortBy, setSortBy] = useState();
   const [sortDir, setSortDir] = useState();
   const [filterCategory, setFilterCategory] = useState(
     router.query.filter_by_category
   );
-  const [namaObatFilter, setNamaObatFilter] = useState();
+  const [searchInput, setSearchInput] = useState("");
+
   const [rows, setRows] = useState([]);
   const [totalData, setTotalData] = useState(0);
   const [pageIsReady, setPageIsReady] = useState(false);
+  const [searchValue, setSearchValue] = useState(router.query.product_name);
 
   const fetchProduct = async () => {
     try {
       const res = await axiosInstance.get("/products/quantity", {
         params: {
-          // // name: searchValue,
+          name: searchValue,
           // selectedCategory: selectedCategory || undefined,
-          // _sortBy: sortBy ? sortBy : undefined,
-          // _sortDir: sortDir ? sortDir : undefined,
-          _limit: 10,
-          _page: 1,
+          _sortBy: sortBy ? sortBy : undefined,
+          _sortDir: sortDir ? sortDir : undefined,
+          _limit: rowPerPage,
+          _page: page + 1,
         },
       });
 
@@ -80,30 +77,74 @@ const Products = () => {
       console.log(err);
     }
   };
-  // useEffect(() => {
-  //   if (router.isReady) {
-  //     if (router.query.name) {
-  //       setSearchValue(router.query.name);
-  //     }
-  //     if (router.query._sortDir) {
-  //       setSortDir(router.query._sortDir);
-  //     }
-  //     if (router.query._sortBy) {
-  //       setSortBy(router.query._sortBy);
-  //     }
-  //     if (router.query._page) {
-  //       setPage(parseInt(router.query._page));
-  //     }
-  //     if (router.query.selectedCategory) {
-  //       setSelectedCategory(router.query.selectedCategory);
-  //     }
-  //     setPageIsReady(true);
-  //   }
-  // }, [router.isReady]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const searchInputHandler = (event) => {
+    const { value } = event.target;
+
+    setSearchInput(value);
+  };
+
+  const searchButton = () => {
+    setSearchValue(searchInput);
+    setPage(0);
+  };
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (router.query.product_name) {
+        setSearchValue(router.query.product_name);
+      }
+      // if (router.query._sortDir) {
+      //   setSortDir(router.query._sortDir);
+      // }
+      // if (router.query._sortBy) {
+      //   setSortBy(router.query._sortBy);
+      // }
+      // if (router.query.selectedCategory) {
+      //   setSelectedCategory(router.query.selectedCategory);
+      // }
+      setPageIsReady(true);
+    }
+  }, [router.isReady]);
+
+  console.log(fetchProduct);
 
   useEffect(() => {
     fetchProduct();
-  }, []);
+
+    if (searchValue) {
+      router.push({
+        query: {
+          product_name: searchValue,
+        },
+      });
+    }
+    if (searchValue === "") {
+      router.replace("/admin/inventory/products", undefined, { shallow: true });
+    }
+    // if (pageIsReady) {
+    //   fetchProduct();
+
+    //   router.push({
+    //     query: {
+    //       name: searchValue,
+    //       // _sortBy: sortBy ? sortBy : undefined,
+    //       // _sortDir: sortDir ? sortDir : undefined,
+    //       _page: page ? page : undefined,
+    //       // selectedCategory: selectedCategory || undefined,
+    //     },
+    //   });
+    // }
+  }, [rowPerPage, page, searchValue, pageIsReady]);
 
   return (
     <Container
@@ -149,22 +190,22 @@ const Products = () => {
           >
             <OutlinedInput
               placeholder="Cari nama obat"
+              onChange={searchInputHandler}
               sx={{ width: "328px", height: "42px" }}
               endAdornment={
                 <InputAdornment>
-                  <SearchIcon />
+                  <SearchIcon
+                    onClick={searchButton}
+                    sx={{
+                      ":hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  />
                 </InputAdornment>
               }
             />
             <Box>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleOpenStock}
-                sx={{ mr: 2 }}
-              >
-                Tambah Stock
-              </Button>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
@@ -175,11 +216,22 @@ const Products = () => {
             </Box>
           </Box>
           <Divider />
-          <ModalAddProduct open={Open} handleClose={handleClose} />
-          <ModalAddStock open={OpenStock} handleClose={handleCloseStock} />
+          <ModalAddProduct
+            open={Open}
+            handleClose={handleClose}
+            fetchProduct={fetchProduct}
+          />
         </Box>
         <Box sx={{ px: 3, mb: 3 }}>
-          <TableData rows={rows}></TableData>
+          <TableData
+            rows={rows}
+            page={page}
+            rowPerPage={rowPerPage}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            totalData={totalData}
+            fetchProduct={fetchProduct}
+          ></TableData>
         </Box>
       </Box>
     </Container>

@@ -26,7 +26,7 @@ import Image from "next/image";
 
 const steps = ["Input New Product", "Input Product Image", "Finish"];
 
-const ModalAddProduct = ({ open, handleClose }) => {
+const ModalAddProduct = ({ open, handleClose, fetchProduct }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [selectedFile, setSelectedFile] = useState([]);
   const [preview, setPreview] = useState();
@@ -74,6 +74,8 @@ const ModalAddProduct = ({ open, handleClose }) => {
       formik.setFieldValue("packaging", "");
       formik.setFieldValue("discount", "");
       formik.setFieldValue("category", "");
+
+      fetchProduct();
 
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     } catch (err) {

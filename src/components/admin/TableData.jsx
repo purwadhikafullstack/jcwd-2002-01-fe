@@ -7,7 +7,17 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  TablePagination,
+} from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useState } from "react";
+import ModalAddStock from "./ModalAddStock";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,20 +39,33 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+const TableData = ({
+  rows = [],
+  rowPerPage,
+  page,
+  handleChangeRowsPerPage,
+  handleChangePage,
+  totalData,
+  fetchProduct,
+}) => {
+  const [editProduk, setEditProduk] = useState(false);
+  const [deleteProduk, setDeleteProduk] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [tambahStok, setTambahStok] = useState(false);
+  const [productData, setProductData] = useState({});
 
-// const rows = [
-//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-//   createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-//   createData("Eclair", 262, 16.0, 24, 6.0),
-//   createData("Cupcake", 305, 3.7, 67, 4.3),
-//   createData("Gingerbread", 356, 16.0, 49, 3.9),
-// ];
+  const open = (id) => {
+    setSelectedId(id);
+  };
 
-const TableData = ({ rows = [] }) => {
-  console.log(rows);
+  const handleClose = () => {
+    setTambahStok(false);
+    setEditProduk(false);
+    setDeleteProduk(false);
+    setSelectedId(0);
+  };
+
+  const [selectedId, setSelectedId] = useState(0);
 
   const renderTableBody = () => {
     return rows.map((val) => {
@@ -67,35 +90,95 @@ const TableData = ({ rows = [] }) => {
             Rp. {val.nilaiJual.toLocaleString() || "-"}
           </TableCell>
           <TableCell align="center">
-            <Button>Edit</Button>
+            <IconButton
+              onClick={(event) => {
+                setSelectedId(val.productId);
+                setAnchorEl(event.currentTarget);
+              }}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={val.productId === selectedId}
+              onClose={() => open(0)}
+            >
+              <MenuItem>Lihat Detail</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setTambahStok(true);
+                  setProductData(val);
+                  setSelectedId(0);
+                }}
+              >
+                Tambah Stok
+              </MenuItem>
+              <MenuItem
+              // onClick={() => {
+              //   setEditProduk(true);
+              //   setProdukData(val);
+              //   setProdukImages(val?.obatImages);
+              //   setSelectedId(0);
+              // }}
+              >
+                Ubah Produk
+              </MenuItem>
+              <MenuItem
+              // onClick={() => {
+              //   setDeleteProduk(true);
+              //   setProdukData(val);
+              //   setSelectedId(0);
+              // }}
+              >
+                Hapus Produk
+              </MenuItem>
+            </Menu>
+            {/* <Button>Edit</Button>
             <Button>Delete</Button>
-            <Button>Tambah Stock</Button>
+            <Button>Tambah Stock</Button> */}
           </TableCell>
         </TableRow>
       );
     });
   };
   return (
-    <Box>
-      <TableContainer component={Paper}>
-        <Table aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>No</StyledTableCell>
-              <StyledTableCell align="center">Nama Obat</StyledTableCell>
-              <StyledTableCell align="center">No.Obat</StyledTableCell>
-              <StyledTableCell align="center">No.BPOM</StyledTableCell>
-              <StyledTableCell align="center">Kategori</StyledTableCell>
-              <StyledTableCell align="center">Stok</StyledTableCell>
-              <StyledTableCell align="center">Satuan</StyledTableCell>
-              <StyledTableCell align="center">Nilai Jual</StyledTableCell>
-              <StyledTableCell align="center">Atur</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderTableBody()}</TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <>
+      <ModalAddStock
+        open={tambahStok}
+        handleClose={handleClose}
+        data={productData}
+        fetchProduct={fetchProduct}
+      ></ModalAddStock>
+      <Box>
+        <TableContainer component={Paper}>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>No</StyledTableCell>
+                <StyledTableCell align="center">Nama Obat</StyledTableCell>
+                <StyledTableCell align="center">No.Obat</StyledTableCell>
+                <StyledTableCell align="center">No.BPOM</StyledTableCell>
+                <StyledTableCell align="center">Kategori</StyledTableCell>
+                <StyledTableCell align="center">Stok</StyledTableCell>
+                <StyledTableCell align="center">Satuan</StyledTableCell>
+                <StyledTableCell align="center">Nilai Jual</StyledTableCell>
+                <StyledTableCell align="center">Atur</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{renderTableBody()}</TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 20]}
+          component="div"
+          count={totalData}
+          rowsPerPage={rowPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Box>
+    </>
   );
 };
 

@@ -66,7 +66,6 @@ const RegisterPage = () => {
     onSubmit: (values) => {
       setTimeout(async () => {
         try {
-          console.log("On Click");
           const newUser = {
             username: values.username,
             email: values.email,
