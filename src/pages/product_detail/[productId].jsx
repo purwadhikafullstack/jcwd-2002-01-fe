@@ -9,8 +9,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import Image from "next/image";
-import fotoObat from "assets/panadol.jpg";
+
 import Navbar from "components/Navbar";
 import { useState } from "react";
 import { useRouter } from "next/router"; 
@@ -24,7 +23,6 @@ import Footer from "components/Footer";
 import Deskripsi from "components/tabs/Deskripsi";
 import TabPanel from "components/TabPanel";
 import RelatedProduct from "components/RelatedProducts";
-import {useParams} from "react-router-dom"
 import ProductCarousel from "components/ProductCarousel"
 
 const productDetailPage = ({productDetail}) => {
@@ -36,8 +34,6 @@ const productDetailPage = ({productDetail}) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const [product, setProduct] = useState({});
-
-  console.log(productDetail)
 
   const renderProducts = () => {
     return products.map((val, idx) => {
@@ -115,9 +111,6 @@ const productDetailPage = ({productDetail}) => {
             }}
           >
             <Box>
-              <Typography fontSize="14px" fontWeight="700">
-              {productDetail.name}
-              </Typography>
               <Typography fontSize="22px" marginBottom="20px">
               {productDetail.name}
               </Typography>
