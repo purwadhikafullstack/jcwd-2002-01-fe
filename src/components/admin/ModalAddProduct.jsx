@@ -39,10 +39,16 @@ const ModalAddProduct = ({ open, handleClose, fetchProduct }) => {
   const inputFileRef = useRef(null);
 
   const handleFile = (event) => {
-    setSelectedFile([...selectedFile, event.target.files[0]]);
+    if (event.target.files[0]) {
+      setSelectedFile([...selectedFile, event.target.files[0]]);
+    }
   };
 
   const handleSubmit = async () => {
+    if (selectedFile.length === 0) {
+      alert("belum pilih file");
+      return;
+    }
     const formData = new FormData();
     const { name, price, no_bpom, no_medicine, packaging, discount, category } =
       formik.values;
@@ -474,6 +480,7 @@ const ModalAddProduct = ({ open, handleClose, fetchProduct }) => {
                     onClick={() => {
                       handleSubmit();
                     }}
+                    disabled={!selectedFile.length}
                     variant="contained"
                   >
                     Submit
