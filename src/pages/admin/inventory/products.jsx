@@ -3,8 +3,12 @@ import {
   Button,
   Container,
   Divider,
+  FormControl,
   InputAdornment,
+  InputLabel,
+  MenuItem,
   OutlinedInput,
+  Select,
   Typography,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -31,8 +35,9 @@ const Products = () => {
   const [sortBy, setSortBy] = useState();
   const [sortDir, setSortDir] = useState();
   const [filterCategory, setFilterCategory] = useState(
-    router.query.filter_by_category
+    router.query.selectedCategory
   );
+  const [categories, setCategories] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
   const [rows, setRows] = useState([]);
@@ -40,12 +45,23 @@ const Products = () => {
   const [pageIsReady, setPageIsReady] = useState(false);
   const [searchValue, setSearchValue] = useState(router.query.product_name);
 
+  const fetchCategory = async () => {
+    try {
+      const res = await axiosInstance.get("/categories");
+
+      setCategories(res.data.result);
+      console.log(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const fetchProduct = async () => {
     try {
       const res = await axiosInstance.get("/products/quantity", {
         params: {
           name: searchValue,
-          // selectedCategory: selectedCategory || undefined,
+          selectedCategory: filterCategory || undefined,
           _sortBy: sortBy ? sortBy : undefined,
           _sortDir: sortDir ? sortDir : undefined,
           _limit: rowPerPage,
@@ -103,48 +119,40 @@ const Products = () => {
       if (router.query.product_name) {
         setSearchValue(router.query.product_name);
       }
-      // if (router.query._sortDir) {
-      //   setSortDir(router.query._sortDir);
-      // }
-      // if (router.query._sortBy) {
-      //   setSortBy(router.query._sortBy);
-      // }
-      // if (router.query.selectedCategory) {
-      //   setSelectedCategory(router.query.selectedCategory);
-      // }
+      if (router.query.selectedCategory) {
+        setFilterCategory(router.query.selectedCategory);
+      }
       setPageIsReady(true);
     }
   }, [router.isReady]);
 
-  console.log(fetchProduct);
-
   useEffect(() => {
-    fetchProduct();
+    fetchCategory();
 
-    if (searchValue) {
-      router.push({
-        query: {
-          product_name: searchValue,
-        },
-      });
-    }
-    if (searchValue === "") {
-      router.replace("/admin/inventory/products", undefined, { shallow: true });
-    }
-    // if (pageIsReady) {
-    //   fetchProduct();
+    if (pageIsReady) {
+      fetchProduct();
 
-    //   router.push({
-    //     query: {
-    //       name: searchValue,
-    //       // _sortBy: sortBy ? sortBy : undefined,
-    //       // _sortDir: sortDir ? sortDir : undefined,
-    //       _page: page ? page : undefined,
-    //       // selectedCategory: selectedCategory || undefined,
-    //     },
-    //   });
-    // }
-  }, [rowPerPage, page, searchValue, pageIsReady]);
+      if (searchValue || filterCategory) {
+        router.push({
+          query: {
+            product_name: searchValue,
+            selectedCategory: filterCategory || undefined,
+          },
+        });
+      }
+      if (searchValue === "" || filterCategory === "") {
+        router.replace("/admin/inventory/products", undefined, {
+          shallow: true,
+        });
+      }
+    }
+  }, [rowPerPage, page, searchValue, pageIsReady, filterCategory]);
+
+  const renderCategory = () => {
+    return categories.map((val) => {
+      return <MenuItem value={val.id}>{val.name}</MenuItem>;
+    });
+  };
 
   return (
     <Container
@@ -188,23 +196,38 @@ const Products = () => {
             alignItems="center"
             marginBottom="24px"
           >
-            <OutlinedInput
-              placeholder="Cari nama obat"
-              onChange={searchInputHandler}
-              sx={{ width: "328px", height: "42px" }}
-              endAdornment={
-                <InputAdornment>
-                  <SearchIcon
-                    onClick={searchButton}
-                    sx={{
-                      ":hover": {
-                        cursor: "pointer",
-                      },
-                    }}
-                  />
-                </InputAdornment>
-              }
-            />
+            <Box
+              display="flex"
+              sx={{ justifyContent: "center", alignItems: "center" }}
+            >
+              <OutlinedInput
+                placeholder="Cari nama obat"
+                onChange={searchInputHandler}
+                sx={{ width: "328px", height: "42px" }}
+                endAdornment={
+                  <InputAdornment>
+                    <SearchIcon
+                      onClick={searchButton}
+                      sx={{
+                        ":hover": {
+                          cursor: "pointer",
+                        },
+                      }}
+                    />
+                  </InputAdornment>
+                }
+              />
+              <FormControl sx={{ m: 1, minWidth: 220 }} size="small">
+                <InputLabel>Filter</InputLabel>
+                <Select
+                  label="Filter"
+                  onChange={(e) => setFilterCategory(e.target.value)}
+                >
+                  <MenuItem value="">None</MenuItem>
+                  {renderCategory()}
+                </Select>
+              </FormControl>
+            </Box>
             <Box>
               <Button
                 variant="contained"
