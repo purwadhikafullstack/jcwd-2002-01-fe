@@ -26,7 +26,7 @@ import Image from "next/image";
 
 const steps = ["Input New Product", "Input Product Image", "Finish"];
 
-const ModalAddProduct = ({ open, handleClose }) => {
+const ModalAddProduct = ({ open, handleClose, fetchProduct }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [selectedFile, setSelectedFile] = useState([]);
   const [preview, setPreview] = useState();
@@ -39,10 +39,16 @@ const ModalAddProduct = ({ open, handleClose }) => {
   const inputFileRef = useRef(null);
 
   const handleFile = (event) => {
-    setSelectedFile([...selectedFile, event.target.files[0]]);
+    if (event.target.files[0]) {
+      setSelectedFile([...selectedFile, event.target.files[0]]);
+    }
   };
 
   const handleSubmit = async () => {
+    if (selectedFile.length === 0) {
+      alert("belum pilih file");
+      return;
+    }
     const formData = new FormData();
     const { name, price, no_bpom, no_medicine, packaging, discount, category } =
       formik.values;
@@ -74,6 +80,8 @@ const ModalAddProduct = ({ open, handleClose }) => {
       formik.setFieldValue("packaging", "");
       formik.setFieldValue("discount", "");
       formik.setFieldValue("category", "");
+
+      fetchProduct();
 
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     } catch (err) {
@@ -472,6 +480,7 @@ const ModalAddProduct = ({ open, handleClose }) => {
                     onClick={() => {
                       handleSubmit();
                     }}
+                    disabled={!selectedFile.length}
                     variant="contained"
                   >
                     Submit

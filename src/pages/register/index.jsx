@@ -26,9 +26,11 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { axiosInstance } from "configs/api";
 import { FcGoogle } from "react-icons/fc";
 import { BsFacebook } from "react-icons/bs";
+import axiosInstance from "configs/api";
+
+axiosInstance;
 const RegisterPage = () => {
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [alert, setAlert] = useState(false);
@@ -66,7 +68,6 @@ const RegisterPage = () => {
     onSubmit: (values) => {
       setTimeout(async () => {
         try {
-          console.log("On Click");
           const newUser = {
             username: values.username,
             email: values.email,
