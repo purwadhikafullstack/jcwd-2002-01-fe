@@ -35,7 +35,6 @@ const productListPage = () => {
   const [searchValue, setSearchValue] = useState(search.searchInput);
   const [selectedCategory, setSelectedCategory] = useState(0);
 
-
   const maxProductPerPage = 4;
 
   const fetchCategory = async () => {
@@ -140,7 +139,7 @@ const productListPage = () => {
           _sortBy: sortBy ? sortBy : undefined,
           _sortDir: sortDir ? sortDir : undefined,
           _page: page ? page : undefined,
-          selectedCategory: selectedCategory || undefined
+          selectedCategory: selectedCategory || undefined,
         },
       });
     }
