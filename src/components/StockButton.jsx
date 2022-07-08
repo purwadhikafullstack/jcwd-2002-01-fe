@@ -1,36 +1,90 @@
-import { Box, Button, ButtonGroup } from "@mui/material";
+import { Box, Button, ButtonGroup, Typography } from "@mui/material";
+import { useFormik } from "formik";
+import { useEffect } from "react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addToCart, quantityHandler } from "redux/reducers/cart";
+import * as Yup from "yup";
 
-const StockButton = () => {
-  const [counter, setCounter] = useState(0);
+const StockButton = ({ quantity, id, setQuantity, editQuantity }) => {
+  const [counter, setCounter] = useState(quantity);
+  const dispatch = useDispatch();
+
+  const qtyHandler = (status, values) => {
+    if (status === "increment") {
+      if (counter === "") {
+        formik.setFieldValue("quantity", 1);
+        return;
+      }
+      if (counter >= 10) return;
+      setCounter(counter + 1);
+      dispatch(quantityHandler({ id, type: "increment", quantity: 1 }));
+      editQuantity("increment")
+      console.log(counter);
+      
+    } else if (status === "decrement") {
+      if (counter < 1) return;
+
+      setCounter(counter - 1);
+      dispatch(quantityHandler({ id, type: "decrement", quantity: 1 }));
+      editQuantity("decrement")
+    }
+  };
+
+  useEffect(() => {
+    setQuantity(counter)
+  }, [counter])
 
   return (
-    <Box>
-      <ButtonGroup
-        size="small"
-        variant="text"
-        sx={{ backgroundColor: "#EDF6FF"}}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        maxWidth: 180,
+        borderRadius: 3,
+      }}
+    >
+      <Button
+        onClick={() => qtyHandler("decrement", quantity)}
+        disabled={counter == 0}
+        variant="outlined"
+        sx={{
+          border: 0,
+          fontWeight: "bold",
+          "&:hover": {
+            border: 0,
+          },
+          ":disabled": {
+            border: "none",
+          },
+        }}
       >
-        <Button
-          disabled={counter <= 0}
-          onClick={() => {
-            setCounter(counter - 1);
-          }}
-        >
-          -
-        </Button>
-
-        <Button disabled>{counter}</Button>
-
-        <Button
-          disabled={counter >= 10}
-          onClick={() => {
-            setCounter(counter + 1);
-          }}
-        >
-          +
-        </Button>
-      </ButtonGroup>
+        -
+      </Button>
+      <Typography
+        sx={{
+          border: 0,
+          color: "brand.500",
+          width: "50px",
+          textAlign: "center",
+        }}
+      >
+        {counter}
+      </Typography>
+      <Button
+        onClick={() => qtyHandler("increment", quantity)}
+        variant="outlined"
+        sx={{
+          border: 0,
+          fontWeight: "bold",
+          "&:hover": {
+            border: 0,
+          },
+        }}
+      >
+        +
+      </Button>
     </Box>
   );
 };

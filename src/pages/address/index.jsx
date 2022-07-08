@@ -15,17 +15,63 @@ import {
   Typography,
 } from "@mui/material";
 import Footer from "components/Footer";
+import axiosInstance from "configs/api";
+import { useEffect } from "react";
 import { useState } from "react";
 
 const shippingAddress = () => {
   const [nation, setNation] = useState("");
-  const [provinsi, setProvinsi] = useState("");
-  const [kota, setKota] = useState("");
+  const [provinsi, setProvinsi] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState(null)
+  const [selectedCity, setSelectedCity] = useState
+  const [kota, setKota] = useState([]);
   const [kecamatan, setKecamatan] = useState("");
+
+  console.log(kota)
 
   const handleChange = (event) => {
     setNation(event.target.value);
   };
+
+  const fetchProvince = async () => {
+    try {
+      const res = await axiosInstance.get("address/province");
+
+      setProvinsi(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderProvince = () => {
+    return provinsi?.map((val) => {
+      return <MenuItem value={val?.province_id}>{val?.province}</MenuItem>;
+    });
+  };
+
+  const fetchCity = async () => {
+    try {
+      const res = await axiosInstance.get(`address/city/${selectedProvince}`);
+
+      setKota(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderCity = () => {
+    return kota?.map((val) => {
+      return <MenuItem value={val?.city_id}>{val?.city_name}</MenuItem>;
+    });
+  };
+
+  useEffect(() => {
+      fetchProvince();
+  }, []);
+  useEffect(() => {
+      fetchCity()
+  }, [selectedProvince]);
+
 
   return (
     <Box>
@@ -77,15 +123,7 @@ const shippingAddress = () => {
             <Box sx={{ width: "100%" }}>
               <Typography>Provinsi</Typography>
               <FormControl sx={{ width: "100%" }}>
-                <Select
-                  size="small"
-                  value={provinsi}
-                  onChange={(e) => setProvinsi(e.target.value)}
-                >
-                  <MenuItem value="DKI Jakarta">DKI Jakarta</MenuItem>
-                  <MenuItem value="DIY">DIY</MenuItem>
-                  <MenuItem value="Aceh">Aceh</MenuItem>
-                </Select>
+                <Select size="small" onChange={(e) => setSelectedProvince(e.target.value)}>{renderProvince()}</Select>
               </FormControl>
             </Box>
             <Box sx={{ width: "100%" }}>
@@ -93,12 +131,9 @@ const shippingAddress = () => {
               <FormControl sx={{ width: "100%" }}>
                 <Select
                   size="small"
-                  value={kota}
-                  onChange={(e) => setKota(e.target.value)}
+                  
                 >
-                  <MenuItem value="Jakarta Barat">Jakarta Barat</MenuItem>
-                  <MenuItem value="Jakarta Timur">Jakarta Timur</MenuItem>
-                  <MenuItem value="Ciledug">Jakarta Pusat</MenuItem>
+                  {renderCity()}
                 </Select>
               </FormControl>
             </Box>

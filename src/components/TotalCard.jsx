@@ -1,6 +1,19 @@
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 
-const TotalCard = ({ delivery = "" || undefined, children }) => {
+const TotalCard = ({ delivery = "" || undefined, children, cartItems, checkedItems }) => {
+  const calculateTotalPrice = () => {
+    return cartItems.reduce((init, obj, idx) => {
+      if (!checkedItems.includes(idx)) {
+        return init;
+      }
+      return (
+        init +
+        (obj.Product.price * obj.quantity)
+      );
+    }, 0);
+  };
+
+
   return (
     <Stack
       spacing={2}
@@ -24,7 +37,9 @@ const TotalCard = ({ delivery = "" || undefined, children }) => {
         sx={{ display: "flex", justifyContent: "space-between" }}
       >
         <Typography fontWeight="400">Sub Total</Typography>
-        <Typography fontWeight="700"> Rp. 13.000</Typography>
+        <Typography fontWeight="700"> Rp. 
+        {calculateTotalPrice().toLocaleString()}
+        </Typography>
       </Box>
       {delivery ? (
         <Box
