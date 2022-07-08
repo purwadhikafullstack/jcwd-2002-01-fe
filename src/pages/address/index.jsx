@@ -86,6 +86,8 @@ const shippingAddress = () => {
     },
   });
 
+  console.log(kota)
+
   const handleChange = (event) => {
     setNation(event.target.value);
   };
