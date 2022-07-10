@@ -221,6 +221,7 @@ const productListPage = () => {
             </Box>
 
             {/* product list */}
+            <Link underline="hover" href="/product_detail/:Id"><a>
 
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
@@ -238,8 +239,10 @@ const productListPage = () => {
                 count={Math.ceil(productsCount / maxProductPerPage)}
                 page={page}
                 onChange={(e, value) => setPage(value)}
-              />
+                />
             </Box>
+                </a>
+            </Link>
           </Grid>
         </Grid>
       </Box>
