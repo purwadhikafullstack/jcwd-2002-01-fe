@@ -14,6 +14,7 @@ import {
 import Footer from "components/Footer";
 import ProductCard from "components/ProductCard";
 import UserSidebar from "components/Sidebar";
+import Link from "next/link"
 import axiosInstance from "configs/api";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -74,7 +75,7 @@ const productListPage = () => {
         <ProductCard
           productName={val?.name}
           price={val?.price}
-          productImage={val.Product_images[0].image_url}
+          productImage={val.Product_images[0]?.image_url}
           id={val.id}
         />
       );
@@ -206,6 +207,7 @@ const productListPage = () => {
               </Box>
             </Box>
             {/* product list */}
+            <Link underline="hover" href="/product_detail/:Id"><a>
 
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
@@ -218,14 +220,16 @@ const productListPage = () => {
                 justifyContent: "center",
                 flexDirection: "column",
               }}
-            >
+              >
               page: {page}
               <Pagination
                 count={Math.ceil(productsCount / maxProductPerPage)}
                 page={page}
                 onChange={(e, value) => setPage(value)}
-              />
+                />
             </Box>
+                </a>
+            </Link>
           </Grid>
         </Grid>
       </Box>
