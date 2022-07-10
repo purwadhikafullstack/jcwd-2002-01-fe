@@ -25,6 +25,7 @@ import logoMandiri from "assets/mandiri.png";
 import logoOvo from "assets/ovo.png";
 import logoGopay from "assets/gopay.png";
 import logoPermata from "assets/permata.png";
+import TotalCardCheckout from "components/TotalCardCheckout";
 
 const checkoutPage = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -133,7 +134,7 @@ const checkoutPage = () => {
           </Box>
         </Grid>
         <Grid item sm={4} md={4}>
-          <TotalCard delivery={"7000"}>
+          <TotalCardCheckout delivery={"7000"}>
             <Divider />
             <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
               Metode Pembayaran
@@ -144,7 +145,7 @@ const checkoutPage = () => {
             <Button variant="contained" onClick={handleOpen}>
               {"Pilih Metode Pembayaran (1)"}
             </Button>
-          </TotalCard>
+          </TotalCardCheckout>
         </Grid>
         <TemplateModal
           open={openModal}
