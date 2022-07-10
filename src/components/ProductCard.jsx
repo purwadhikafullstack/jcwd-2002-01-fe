@@ -15,7 +15,7 @@ import axiosInstance from "configs/api";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { addToCart } from "redux/reducers/cart";
+import { addToCart, cartCount, incrementCartCount } from "redux/reducers/cart";
 
 const ProductCard = ({ productName, price, productImage, id }) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -46,10 +46,10 @@ const ProductCard = ({ productName, price, productImage, id }) => {
 
 
       // const newCart = [...cartSelector.cartItems]
-      
       // newCart.push(res.data.result)
 
       dispatch(addToCart(res.data.result.rows))
+      dispatch(cartCount(res.data.result.count))
 
       if (res?.data?.message !== undefined) {
         setAlertContent("Added to Cart!");

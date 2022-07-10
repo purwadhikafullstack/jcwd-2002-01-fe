@@ -1,10 +1,12 @@
 import {
+  Alert,
   Box,
   Button,
   ButtonGroup,
   Divider,
   Grid,
   IconButton,
+  Snackbar,
   Tab,
   Tabs,
   Typography,
@@ -12,8 +14,8 @@ import {
 
 import Navbar from "components/Navbar";
 import { useState } from "react";
-import { useRouter } from "next/router"; 
-import  axios from "axios";
+import { useRouter } from "next/router";
+import axios from "axios";
 import * as Yup from "yup";
 import { HiOutlineHeart, HiHeart } from "react-icons/hi";
 import { FaCartPlus } from "react-icons/fa";
@@ -23,40 +25,100 @@ import Footer from "components/Footer";
 import Deskripsi from "components/tabs/Deskripsi";
 import TabPanel from "components/TabPanel";
 import RelatedProduct from "components/RelatedProducts";
-import ProductCarousel from "components/ProductCarousel"
+import ProductCarousel from "components/ProductCarousel";
+import { useDispatch } from "react-redux";
+import { cartCount, incrementCartCount, quantityHandler } from "redux/reducers/cart";
+import axiosInstance from "configs/api";
+import { addToCart } from "redux/reducers/cart";
 
-const productDetailPage = ({productDetail}) => {
- 
+const productDetailPage = ({ productDetail }) => {
   const [counter, setCounter] = useState(0);
-
   const [tabMenu, setTabMenu] = useState(0);
-
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
+  const [severity, setSeverity] = useState();
   const [isLiked, setIsLiked] = useState(false);
-
   const [product, setProduct] = useState({});
 
-  const renderProducts = () => {
-    return products.map((val, idx) => {
-      return (
-        <ProductCard
-          productName={val?.name}
-          price={val?.price}
-          productImage={val.Product_images[0]?.image_url}
-          id={val.id}
-        />
-      );
-    });
+  const router = useRouter();
+  const query = router.query;
+
+  const product_id = query.productId;
+
+  const dispatch = useDispatch();
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
+
+  const addItemsToCart = async () => {
+    try {
+      if (counter == 0) {
+        return console.log("quantitynya 0");
+      }
+      const res = await axiosInstance.post("/cart", {
+        quantity: counter,
+        product_id
+      });
+
+      dispatch(addToCart(res.data.result.rows));
+      dispatch(cartCount(res.data.result.count));
+
+      if (res?.data?.message !== undefined) {
+        setAlertContent("Added to Cart!");
+        setAlert(true);
+        setSeverity(true);
+      }
+    } catch (err) {
+      setAlertContent(err?.response?.data?.message);
+      setAlert(true);
+      setSeverity(false);
+      console.log(err);
+    }
+  };
+
+  const qtyHandler = (status) => {
+    if (status === "increment") {
+      if (counter === "") {
+        return;
+      }
+      if (counter >= 10) return;
+      setCounter(counter + 1);
+    } else if (status === "decrement") {
+      if (counter < 1) return;
+
+      setCounter(counter - 1);
+    }
   };
 
   const handleTabMenu = (event, newValue) => {
-    setTabMenu(newValue)
+    setTabMenu(newValue);
   };
-  
+
   return (
     <>
+      {alert ? (
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert variant="filled" severity={severity ? "success" : "error"}>
+            {alertContent}
+          </Alert>
+        </Snackbar>
+      ) : (
+        <></>
+      )}
       <Box sx={{ mx: "96px" }}>
-        
-        <Typography sx={{pl: "80px", pt: "40px"}}>Beranda/ Kategori/ Obat</Typography>
+        <Typography sx={{ pl: "80px", pt: "40px" }}>
+          Beranda/ Kategori/ Obat
+        </Typography>
         <Grid container spacing={2} marginTop="70px" sx={{ height: "100vh" }}>
           <Grid
             item
@@ -72,10 +134,10 @@ const productDetailPage = ({productDetail}) => {
             <Box>
               <Box>
                 {/* <Image src={productDetail.Product_images[0].image_url} /> */}
-                <Box             
+                <Box
                 // component="img" src={productDetail.Product_images[0].image_url}
                 />
-                <ProductCarousel img_url={productDetail.Product_images}/>
+                <ProductCarousel img_url={productDetail.Product_images} />
               </Box>
               <Box>
                 <Button
@@ -112,45 +174,71 @@ const productDetailPage = ({productDetail}) => {
           >
             <Box>
               <Typography fontSize="22px" marginBottom="20px">
-              {productDetail.name}
+                {productDetail.name}
               </Typography>
               <Typography fontSize="24px" fontWeight="700" marginBottom="24px">
-              {productDetail.price}
+                {productDetail.price}
               </Typography>
             </Box>
-            <ButtonGroup
-              size="small"
-              variant="text"
-              sx={{ backgroundColor: "#EDF6FF", mb: "44px" }}
+            {/* Button */}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                maxWidth: 180,
+                borderRadius: 3,
+                mb: "20px",
+              }}
             >
               <Button
-                disabled={counter <= 0}
-                onClick={() => {
-                  setCounter(counter - 1);
+                onClick={() => qtyHandler("decrement")}
+                disabled={counter == 0}
+                variant="outlined"
+                sx={{
+                  border: 0,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    border: 0,
+                  },
+                  ":disabled": {
+                    border: "none",
+                  },
                 }}
               >
                 -
               </Button>
-
-              <Button disabled>
+              <Typography
+                sx={{
+                  border: 0,
+                  color: "brand.500",
+                  width: "50px",
+                  textAlign: "center",
+                }}
+              >
                 {counter}
-              </Button>
-
+              </Typography>
               <Button
-                disabled={counter >= 10}
-                onClick={() => {
-                  setCounter(counter + 1);
+                onClick={() => qtyHandler("increment")}
+                variant="outlined"
+                sx={{
+                  border: 0,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    border: 0,
+                  },
                 }}
               >
                 +
               </Button>
-            </ButtonGroup>
+            </Box>
 
             <Box marginBottom="76px">
               <Button
                 variant="outlined"
                 startIcon={<FaCartPlus style={{ marginRight: "10px" }} />}
                 style={{ minWidth: "194px", minHeight: "47px" }}
+                onClick={() => addItemsToCart()}
               >
                 Keranjang
               </Button>
@@ -214,7 +302,7 @@ const productDetailPage = ({productDetail}) => {
         <Box>
           <Divider variant="fullWidth" sx={{ my: "72px" }} />
         </Box>
-        <RelatedProduct/>
+        <RelatedProduct />
       </Box>
       <Footer />
     </>

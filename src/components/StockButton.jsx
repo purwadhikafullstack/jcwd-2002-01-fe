@@ -13,14 +13,12 @@ const StockButton = ({ quantity, id, setQuantity, editQuantity }) => {
   const qtyHandler = (status, values) => {
     if (status === "increment") {
       if (counter === "") {
-        formik.setFieldValue("quantity", 1);
         return;
       }
       if (counter >= 10) return;
       setCounter(counter + 1);
       dispatch(quantityHandler({ id, type: "increment", quantity: 1 }));
       editQuantity("increment")
-      console.log(counter);
       
     } else if (status === "decrement") {
       if (counter < 1) return;

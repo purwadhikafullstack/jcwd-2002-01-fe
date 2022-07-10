@@ -29,8 +29,6 @@ const shippingAddress = () => {
   const [kota, setKota] = useState([]);
   const [mainAddress, setMainAddress] = useState(false);
 
-  console.log(selectedProvince);
-
   const formik = useFormik({
     initialValues: {
       address: "",
