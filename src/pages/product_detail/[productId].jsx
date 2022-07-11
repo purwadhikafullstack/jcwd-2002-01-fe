@@ -93,17 +93,59 @@ const productDetailPage = ({ productDetail }) => {
     }
   };
 
-  const renderProducts = () => {
-    return products.map((val, idx) => {
-      return (
-        <ProductCard
-          productName={val?.name}
-          price={val?.price}
-          productImage={val.Product_images[0]?.image_url}
-          id={val.id}
-        />
-      );
-    });
+  const router = useRouter();
+  const query = router.query;
+
+  const product_id = query.productId;
+
+  const dispatch = useDispatch();
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
+
+  const addItemsToCart = async () => {
+    try {
+      if (counter == 0) {
+        return console.log("quantitynya 0");
+      }
+      const res = await axiosInstance.post("/cart", {
+        quantity: counter,
+        product_id
+      });
+
+      dispatch(addToCart(res.data.result.rows));
+      dispatch(cartCount(res.data.result.count));
+
+      if (res?.data?.message !== undefined) {
+        setAlertContent("Added to Cart!");
+        setAlert(true);
+        setSeverity(true);
+      }
+    } catch (err) {
+      setAlertContent(err?.response?.data?.message);
+      setAlert(true);
+      setSeverity(false);
+      console.log(err);
+    }
+  };
+
+  const qtyHandler = (status) => {
+    if (status === "increment") {
+      if (counter === "") {
+        return;
+      }
+      if (counter >= 10) return;
+      setCounter(counter + 1);
+    } else if (status === "decrement") {
+      if (counter < 1) return;
+
+      setCounter(counter - 1);
+    }
   };
 
   const handleTabMenu = (event, newValue) => {
