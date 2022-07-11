@@ -1,18 +1,10 @@
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 
-const TotalCard = ({ delivery = "" || undefined, children, cartItems, checkedItems }) => {
-  const calculateTotalPrice = () => {
-    return cartItems.reduce((init, obj, idx) => {
-      if (!checkedItems.includes(idx)) {
-        return init;
-      }
-      return (
-        init +
-        (obj.Product.price * obj.quantity)
-      );
-    }, 0);
-  };
-
+const TotalCardCheckout = ({
+  children,
+  cartItems,
+  checkedItems,
+}) => {
 
   return (
     <Stack
@@ -29,7 +21,7 @@ const TotalCard = ({ delivery = "" || undefined, children, cartItems, checkedIte
         justifyContent: "space-between",
       }}
     >
-      <Typography  sx={{fontWeight:"700", fontSize:"20px", mb: "20px"}}>
+      <Typography sx={{ fontWeight: "700", fontSize: "20px", mb: "20px" }}>
         Total
       </Typography>
       <Box
@@ -37,19 +29,19 @@ const TotalCard = ({ delivery = "" || undefined, children, cartItems, checkedIte
         sx={{ display: "flex", justifyContent: "space-between" }}
       >
         <Typography fontWeight="400">Sub Total</Typography>
-        <Typography fontWeight="700"> Rp. 
-        {calculateTotalPrice().toLocaleString()}
+        <Typography fontWeight="700">
+          {" "}
+          Rp.
+          "200000"
         </Typography>
       </Box>
-      {delivery ? (
         <Box
           color="gray"
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
           <Typography fontWeight="400">Pengiriman</Typography>
-          <Typography fontWeight="700"> Rp. {delivery}</Typography>
+          <Typography fontWeight="700"> Rp. 2000</Typography>
         </Box>
-      ) : undefined}
       <Divider />
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography fontWeight="700">Total</Typography>
@@ -60,4 +52,4 @@ const TotalCard = ({ delivery = "" || undefined, children, cartItems, checkedIte
   );
 };
 
-export default TotalCard;
+export default TotalCardCheckout;

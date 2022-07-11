@@ -14,6 +14,7 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Badge,
 } from "@mui/material";
 import logo from "../assets/logo.png";
 import Image from "next/image";
@@ -27,13 +28,14 @@ import { logout } from "redux/reducers/auth";
 import jsCookie from "js-cookie";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import {search} from "redux/reducers/search";
+import { search } from "redux/reducers/search";
 
 const Navbar = () => {
   const userSelector = useSelector((state) => state.auth);
+  const userCart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const Router = useRouter();
-  const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState("");
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -94,9 +96,11 @@ const Navbar = () => {
       {userSelector.id ? (
         <Stack direction="row" spacing={3}>
           <Link href="/cart">
-            <IconButton>
-              <ShoppingCartIcon sx={{ color: "brand.500" }} />
-            </IconButton>
+            <Badge badgeContent={userCart.cartCount} color="primary">
+              <IconButton>
+                <ShoppingCartIcon sx={{ color: "brand.500" }} />
+              </IconButton>
+            </Badge>
           </Link>
           <IconButton>
             <NotificationsIcon sx={{ color: "brand.500" }} />
