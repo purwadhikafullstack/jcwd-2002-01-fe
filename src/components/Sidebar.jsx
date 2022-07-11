@@ -85,7 +85,6 @@ const SidebarMenu = ({ menuTitle, subMenus = [], icon, selectedCategory, setSele
   );
 };
 
-
 const UserSidebar = ({ category = [], setSelectedCategory, selectedCategory }) => {
   return (
     <Box>

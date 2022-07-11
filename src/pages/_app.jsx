@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "redux/store";
 import Navbar from "components/Navbar";
 import AdminProvider from "components/AuthProvider/AdminProvider";
+import CartProvider from "components/CartProvider";
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -19,12 +20,14 @@ const MyApp = ({ Component, pageProps }) => {
             <AdminPageContainer children={<Component {...pageProps} />} />
           ) : (
             <>
-              {router.pathname.startsWith("/register") ||
-              router.pathname.startsWith("/verification_page") ||
-              router.pathname.startsWith("/login") ? undefined : (
-                <Navbar />
-              )}
-              <Component {...pageProps} />
+              <CartProvider>
+                {router.pathname.startsWith("/register") ||
+                router.pathname.startsWith("/verification_page") ||
+                router.pathname.startsWith("/login") ? undefined : (
+                  <Navbar />
+                )}
+                <Component {...pageProps} />
+              </CartProvider>
             </>
           )}
         </AdminProvider>

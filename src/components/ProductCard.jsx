@@ -1,15 +1,85 @@
 import Image from "next/image";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  IconButton,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import fotoObat from "assets/panadol.jpg";
 import { IoMdHeart } from "react-icons/io";
 import { useState } from "react";
 import Link from "next/link";
+import axiosInstance from "configs/api";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { addToCart, cartCount, incrementCartCount } from "redux/reducers/cart";
 
 const ProductCard = ({ productName, price, productImage, id }) => {
   const [isLiked, setIsLiked] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
+  const [severity, setSeverity] = useState();
+  const userSelector = useSelector((state) => state.auth);
+  const cartSelector = useSelector(state => state.cart)
+
+  const router = useRouter();
+
+  const dispatch = useDispatch()
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
+
+  const addOneItemToCart = async () => {
+    try {
+      const res = await axiosInstance.post("/cart", {
+        product_id: id,
+        quantity: 1
+      });
+
+
+      // const newCart = [...cartSelector.cartItems]
+      // newCart.push(res.data.result)
+
+      dispatch(addToCart(res.data.result.rows))
+      dispatch(cartCount(res.data.result.count))
+
+      if (res?.data?.message !== undefined) {
+        setAlertContent("Added to Cart!");
+        setAlert(true);
+        setSeverity(true);
+      }
+    } catch (err) {
+      setAlertContent(err?.response?.data?.message);
+      setAlert(true);
+      setSeverity(false);
+      console.log(err);
+    }
+  };
 
   return (
-    <Link href={`product_detail/${id}`} >
+    <>
+      {alert ? (
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert variant="filled" severity={severity ? "success" : "error"}>
+            {alertContent}
+          </Alert>
+        </Snackbar>
+      ) : (
+        <></>
+      )}
       <Box
         sx={{
           width: "194px",
@@ -21,7 +91,6 @@ const ProductCard = ({ productName, price, productImage, id }) => {
           backgroundColor: "white",
           transition: "200ms",
           ":hover": {
-            cursor: "pointer",
             transform: "translateY(-5px)",
             boxShadow: "0px 12px 20px -12px black",
           },
@@ -36,11 +105,19 @@ const ProductCard = ({ productName, price, productImage, id }) => {
           alignItems="center"
         >
           {/* IMAGE */}
-          <Box
-            sx={{ width: "114px", height: "116px" }}
-            component="img"
-            src={productImage}
-          />
+          <Link href={`product_detail/${id}`}>
+            <Box
+              sx={{
+                width: "114px",
+                height: "116px",
+                ":hover": {
+                  cursor: "pointer",
+                },
+              }}
+              component="img"
+              src={productImage}
+            />
+          </Link>
         </Box>
         <Box position="absolute" top="20px" right="20px">
           <IconButton
@@ -69,6 +146,7 @@ const ProductCard = ({ productName, price, productImage, id }) => {
         <Box display="flex" flexDirection="column" alignItems="center">
           <Button
             variant="outlined"
+            onClick={() => addOneItemToCart()}
             sx={{
               borderRadius: "8px",
               width: "139px",
@@ -82,7 +160,7 @@ const ProductCard = ({ productName, price, productImage, id }) => {
           </Button>
         </Box>
       </Box>
-    </Link>
+    </>
   );
 };
 
