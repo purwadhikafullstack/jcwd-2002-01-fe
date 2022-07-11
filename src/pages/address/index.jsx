@@ -15,17 +15,119 @@ import {
   Typography,
 } from "@mui/material";
 import Footer from "components/Footer";
+import axiosInstance from "configs/api";
+import { useFormik } from "formik";
+import { useEffect } from "react";
 import { useState } from "react";
+import * as Yup from "yup";
 
 const shippingAddress = () => {
   const [nation, setNation] = useState("");
-  const [provinsi, setProvinsi] = useState("");
-  const [kota, setKota] = useState("");
-  const [kecamatan, setKecamatan] = useState("");
+  const [provinsi, setProvinsi] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [kota, setKota] = useState([]);
+  const [mainAddress, setMainAddress] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      address: "",
+      recipient_firstname: "",
+      recipient_lastname: "",
+      recipient_telephone: "",
+      kecamatan: "",
+      postal_code: "",
+      is_main_address: false,
+      address_label: "",
+    },
+    validationSchema: Yup.object().shape({
+      address: Yup.string("").required("This field is required"),
+      recipient_firstname: Yup.string("").required("This field is required"),
+      recipient_lastname: Yup.string("").required("This field is required"),
+      recipient_telephone: Yup.string("").required("This field is required"),
+      kecamatan: Yup.string("").required("This field is required"),
+      postal_code: Yup.string("").required("This field is required"),
+      is_main_address: Yup.boolean(),
+      address_label: Yup.string("").required("This field is required"),
+    }),
+
+    validateOnChange: false,
+    onSubmit: (values) => {
+      setTimeout(async () => {
+        try {
+          const newAddress = {
+            address: values.address,
+            recipient_name:
+              values.recipient_firstname + values.recipient_lastname,
+            recipient_telephone: nation + values.recipient_telephone,
+            province: selectedProvince || "",
+            city: selectedCity || "",
+            kecamatan: values.kecamatan,
+            postal_code: values.postal_code,
+            is_main_address: mainAddress || false,
+            address_label: values.address_label,
+          };
+
+          const res = await axiosInstance.post("/user/address", {
+            newAddress,
+          });
+
+          console.log(res);
+
+          formik.setSubmitting(false);
+        } catch (err) {
+          console.log(err);
+          // setAlertContent(err?.response?.data?.message);
+          // setAlert(true);
+          // setSeverity(false);
+          formik.setSubmitting(false);
+        }
+      }, 2000);
+    },
+  });
 
   const handleChange = (event) => {
     setNation(event.target.value);
   };
+
+  const fetchProvince = async () => {
+    try {
+      const res = await axiosInstance.get("address/province");
+
+      setProvinsi(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderProvince = () => {
+    return provinsi?.map((val, idx) => {
+      return <MenuItem value={val?.province_id} key={idx}>{val?.province}</MenuItem>;
+    });
+  };
+
+  const fetchCity = async () => {
+    try {
+      const res = await axiosInstance.get(`address/city/${selectedProvince}`);
+
+      setKota(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderCity = () => {
+    return kota?.map((val, idx) => {
+      return <MenuItem value={val?.city_id} key={idx}>{val?.city_name}</MenuItem>;
+    });
+  };
+
+  useEffect(() => {
+    fetchProvince();
+  }, []);
+  useEffect(() => {
+    fetchCity();
+  }, [selectedProvince]);
 
   return (
     <Box>
@@ -37,7 +139,14 @@ const shippingAddress = () => {
         </Typography>
         <Box sx={{ mb: "52px" }}>
           <Typography>Label Alamat</Typography>
-          <TextField fullWidth size="small" placeholder="Contoh: Apartemen" />
+          <TextField
+            fullWidth
+            size="small"
+            placeholder="Contoh: Apartemen"
+            onChange={(e) =>
+              formik.setFieldValue("address_label", e.target.value)
+            }
+          />
         </Box>
         <Box>
           <Typography sx={{ mb: "36px" }}>Info Penerima</Typography>
@@ -48,12 +157,18 @@ const shippingAddress = () => {
               fullWidth
               size="small"
               placeholder="Jane"
+              onChange={(e) =>
+                formik.setFieldValue("recipient_firstname", e.target.value)
+              }
             />
             <TextField
               label="Nama Belakang"
               fullWidth
               size="small"
               placeholder="Doe"
+              onChange={(e) =>
+                formik.setFieldValue("recipient_lastname", e.target.value)
+              }
             />
           </Stack>
           <Typography>Nomor HP</Typography>
@@ -79,62 +194,64 @@ const shippingAddress = () => {
               <FormControl sx={{ width: "100%" }}>
                 <Select
                   size="small"
-                  value={provinsi}
-                  onChange={(e) => setProvinsi(e.target.value)}
+                  onChange={(e) => setSelectedProvince(e.target.value)}
                 >
-                  <MenuItem value="DKI Jakarta">DKI Jakarta</MenuItem>
-                  <MenuItem value="DIY">DIY</MenuItem>
-                  <MenuItem value="Aceh">Aceh</MenuItem>
+                  {renderProvince()}
                 </Select>
               </FormControl>
             </Box>
             <Box sx={{ width: "100%" }}>
               <Typography>Kabupaten/Kota</Typography>
               <FormControl sx={{ width: "100%" }}>
-                <Select
-                  size="small"
-                  value={kota}
-                  onChange={(e) => setKota(e.target.value)}
-                >
-                  <MenuItem value="Jakarta Barat">Jakarta Barat</MenuItem>
-                  <MenuItem value="Jakarta Timur">Jakarta Timur</MenuItem>
-                  <MenuItem value="Ciledug">Jakarta Pusat</MenuItem>
-                </Select>
+                <Select size="small">{renderCity()}</Select>
               </FormControl>
             </Box>
           </Stack>
           <Box sx={{ mb: "36px" }}>
             <Typography>Kecamatan</Typography>
             <FormControl sx={{ width: "250px" }}>
-              <Select
+              <TextField
                 size="small"
-                value={kecamatan}
-                onChange={(e) => setKecamatan(e.target.value)}
-              >
-                <MenuItem value="Joglo">Joglo</MenuItem>
-                <MenuItem value="Palmerah">Palmerah</MenuItem>
-                <MenuItem value="Ciledug">Ciledug</MenuItem>
-              </Select>
+                onChange={(e) =>
+                  formik.setFieldValue("kecamatan", e.target.value)
+                }
+              />
             </FormControl>
           </Box>
           <Box sx={{ mb: "36px" }}>
             <Typography>Alamat</Typography>
-            <OutlinedInput sx={{ width: "100%" }} size="small" />
+            <OutlinedInput
+              sx={{ width: "100%" }}
+              size="small"
+              onChange={(e) => formik.setFieldValue("address", e.target.value)}
+            />
           </Box>
           <Box sx={{ mb: "36px" }}>
             <Typography>Kode Pos</Typography>
-            <OutlinedInput size="small" />
+            <OutlinedInput
+              size="small"
+              onChange={(e) =>
+                formik.setFieldValue("postal_code", e.target.value)
+              }
+            />
           </Box>
           <FormControlLabel
             sx={{ mb: "36px" }}
             label="Simpan sebagai alamat utama"
-            control={<Checkbox />}
+            control={
+              <Checkbox onChange={(e) => setMainAddress(!mainAddress)} />
+            }
           />
           <Stack direction="row" spacing={2} sx={{ mb: "36px" }}>
             <Button variant="outlined" sx={{ width: "100%" }}>
               Batalkan
             </Button>
-            <Button variant="contained" sx={{ width: "100%" }} disabled>
+            <Button
+              variant="contained"
+              sx={{ width: "100%" }}
+              onClick={formik.handleSubmit}
+              disabled={formik.isSubmitting}
+            >
               Simpan Alamat
             </Button>
           </Stack>

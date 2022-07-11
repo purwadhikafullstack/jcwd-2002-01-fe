@@ -23,8 +23,12 @@ import MetodePembayaran from "components/MetodePembayaran";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import KejarDiskon from "components/KejarDiskon";
+import axiosInstance from "configs/api";
+import { useState } from "react";
 
 const Home = () => {
+  const [products, setProducts] = useState([])
   const categoryList = [
     {
       foto: obat,
@@ -51,6 +55,23 @@ const Home = () => {
       category: "Perawatan Tubuh",
     },
   ];
+
+  const fetchProducts = async () => {
+    try {
+      const res = await axiosInstance.get("/products", {
+        params: {
+          _limit: 5,
+        },
+      })
+      setProducts(res.data.result.rows)
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   return (
     <Box>
@@ -107,66 +128,8 @@ const Home = () => {
         <Divider sx={{ width: "100%", my: "10px" }} variant="fullWidth" />
 
         {/* KEJAR DISKON */}
-        <Box my={5}>
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: "28px",
-                p: 2,
-              }}
-            >
-              <Typography sx={{ fontSize: "24px", fontWeight: "700" }}>
-                Kejar Diskon Hari Ini
-              </Typography>
-              <Link
-                underline="hover"
-                sx={{
-                  color: "brand.500",
-                  ":hover": {
-                    cursor: "pointer",
-                  },
-                }}
-              >
-                <Typography>Lihat Semua</Typography>
-              </Link>
-            </Box>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box sx={{ width: "301px", height: "395px", position: "relative" }}>
-              <Image
-                width="301px"
-                height="395px"
-                src={kejarDiskon}
-                style={{ position: "relative" }}
-              />
-              <Typography
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  fontWeight: "700",
-                  fontSize: "20px",
-                  width: "159px",
-                  height: "50px",
-                  m: 4,
-                  textAlign: "center",
-                }}
-              >
-                Yuk Buruan Ikutan!
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", ml: "-120px" }}>
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-            </Box>
-          </Box>
-        </Box>
+          <KejarDiskon products={products}/>
+
         <Divider sx={{ width: "100%", my: "10px" }} variant="fullWidth" />
 
         {/* Banner1 */}

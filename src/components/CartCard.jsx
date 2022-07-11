@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Checkbox,
   Divider,
   FormControlLabel,
@@ -10,8 +11,53 @@ import Image from "next/image";
 import fotoObat from "assets/panadol.jpg";
 import StockButton from "./StockButton";
 import { HiTrash } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "configs/api";
+import { addToCart, removefromCart } from "redux/reducers/cart";
 
-const CartCard = () => {
+const CartCard = ({ val, setCartChecked, checked = false, index}) => {
+  const userCart = useSelector((state) => state.cart);
+  const userSelector = useSelector((state) => state.auth);
+  const [quantity, setQuantity] = useState(val.quantity);
+  const dispatch = useDispatch();
+  const productId = val.product_id;
+
+  const editQuantity = async (type = "") => {
+    try {
+      if (type == "increment") {
+        await axiosInstance.post("/cart", {
+          quantity: quantity + 1,
+          product_id: val.product_id,
+        });
+      } else if (type == "decrement"){
+         await axiosInstance.post("/cart", {
+           quantity: quantity - 1,
+           product_id: val.product_id,
+         });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const removeItem = async () => {
+    try {
+      await axiosInstance.delete(`/cart/${productId}`);
+
+      console.log("delete item");
+
+      const res = await axiosInstance.get("/cart", {
+        user_id: userSelector.id,
+      });
+
+      dispatch(removefromCart(index))
+      dispatch(addToCart(res.data.result.rows));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Box>
       <Box>
@@ -25,16 +71,24 @@ const CartCard = () => {
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <FormControlLabel
-              sx={{}}
-              control={<Checkbox />}
-              label={<Image width="86px" height="86px" src={fotoObat} />}
+              control={<Checkbox onClick={setCartChecked} checked={checked} />}
+              label={
+                <Box
+                  component="img"
+                  width="86px"
+                  height="86px"
+                  src={val.Product?.Product_images[0]?.image_url}
+                />
+              }
             />
             <Box>
-              <Typography fontSize="16px">Panadol Merah PDI</Typography>
+              <Typography fontSize="16px">{val.Product?.name}</Typography>
               <Typography fontSize="12px">1 strip</Typography>
             </Box>
           </Box>
-          <Typography textAlign="right">Rp. 13.000</Typography>
+          <Typography textAlign="right">
+            Rp. {val.Product?.price?.toLocaleString()}
+          </Typography>
         </Box>
         <Box
           sx={{
@@ -58,9 +112,19 @@ const CartCard = () => {
             Pindahkan ke WishList
           </Typography>
           <Divider orientation="vertical" sx={{ mx: "20px" }} />
-          <IconButton sx={{mr: "25px", color: "brand.500"}}>{<HiTrash />}</IconButton>
+          <IconButton
+            onClick={() => removeItem()}
+            sx={{ mr: "25px", color: "brand.500" }}
+          >
+            {<HiTrash />}
+          </IconButton>
 
-          <StockButton />
+          <StockButton
+            quantity={val?.quantity}
+            editQuantity={editQuantity}
+            setQuantity={setQuantity}
+            id={val?.id}
+          />
         </Box>
       </Box>
     </Box>
