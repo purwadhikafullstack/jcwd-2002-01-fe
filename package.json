@@ -23,7 +23,7 @@
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "next": "12.1.6",
-    "react": "^18.2.0",
+    "react": "^18.1.0",
     "react-animated-progress-bar": "^1.1.1",
     "react-apexcharts": "^1.4.0",
     "react-dom": "18.1.0",
