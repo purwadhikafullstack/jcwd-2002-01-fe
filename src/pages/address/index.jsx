@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -10,6 +11,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  Snackbar,
   Stack,
   TextField,
   Typography,
@@ -28,6 +30,9 @@ const shippingAddress = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [kota, setKota] = useState([]);
   const [mainAddress, setMainAddress] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
+  const [severity, setSeverity] = useState();
 
   const formik = useFormik({
     initialValues: {
@@ -52,41 +57,55 @@ const shippingAddress = () => {
     }),
 
     validateOnChange: false,
-    onSubmit: (values) => {
-      setTimeout(async () => {
-        try {
-          const newAddress = {
-            address: values.address,
-            recipient_name:
-              values.recipient_firstname + values.recipient_lastname,
-            recipient_telephone: nation + values.recipient_telephone,
-            province: selectedProvince || "",
-            city: selectedCity || "",
-            kecamatan: values.kecamatan,
-            postal_code: values.postal_code,
-            is_main_address: mainAddress || false,
-            address_label: values.address_label,
-          };
-
-          const res = await axiosInstance.post("/user/address", {
-            newAddress,
-          });
-
-          console.log(res);
-
-          formik.setSubmitting(false);
-        } catch (err) {
-          console.log(err);
-          // setAlertContent(err?.response?.data?.message);
-          // setAlert(true);
-          // setSeverity(false);
-          formik.setSubmitting(false);
-        }
-      }, 2000);
-    },
   });
 
-  console.log(kota)
+  const submitNewAddress = async () => {
+    setTimeout(async () => {
+      try {
+        const newAddress = {
+          address: formik.values.address,
+          recipient_name:
+            formik.values.recipient_firstname +
+            " " +
+            formik.values.recipient_lastname,
+          recipient_telephone: nation + formik.values.recipient_telephone,
+          province: selectedProvince || "",
+          city: selectedCity || "",
+          kecamatan: formik.values.kecamatan,
+          postal_code: formik.values.postal_code,
+          is_main_address: mainAddress,
+          address_label: formik.values.address_label,
+        };
+
+        console.log(newAddress);
+
+        const res = await axiosInstance.post("/users/address", newAddress);
+
+        if (res?.data?.message !== undefined) {
+          setAlertContent("Added to Cart!");
+          setAlert(true);
+          setSeverity(true);
+        }
+
+        console.log(res);
+        formik.setSubmitting(false);
+      } catch (err) {
+        setAlertContent(err?.response?.data?.message);
+        setAlert(true);
+        setSeverity(false);
+        console.log(err);
+        formik.setSubmitting(false);
+      }
+    }, 2000);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
 
   const handleChange = (event) => {
     setNation(event.target.value);
@@ -104,7 +123,11 @@ const shippingAddress = () => {
 
   const renderProvince = () => {
     return provinsi?.map((val, idx) => {
-      return <MenuItem value={val?.province_id} key={idx}>{val?.province}</MenuItem>;
+      return (
+        <MenuItem value={val?.province_id} key={idx}>
+          {val?.province}
+        </MenuItem>
+      );
     });
   };
 
@@ -120,7 +143,11 @@ const shippingAddress = () => {
 
   const renderCity = () => {
     return kota?.map((val, idx) => {
-      return <MenuItem value={val?.city_id} key={idx}>{val?.city_name}</MenuItem>;
+      return (
+        <MenuItem value={val?.city_id} key={idx}>
+          {val?.city_name}
+        </MenuItem>
+      );
     });
   };
 
@@ -133,6 +160,20 @@ const shippingAddress = () => {
 
   return (
     <Box>
+      {alert ? (
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert variant="filled" severity={severity ? "success" : "error"}>
+            {alertContent}
+          </Alert>
+        </Snackbar>
+      ) : (
+        <></>
+      )}
       <Container maxWidth="sm">
         <Typography
           sx={{ mb: "36px", fontSize: "24px", fontWeight: "700", mt: "90px" }}
@@ -178,6 +219,9 @@ const shippingAddress = () => {
             <OutlinedInput
               size="small"
               id="nomerHp"
+              onChange={(e) =>
+                formik.setFieldValue("recipient_telephone", e.target.value)
+              }
               sx={{ padding: "0px", width: "480px" }}
               startAdornment={
                 <FormControl sx={{ width: "100px", mr: "10px" }}>
@@ -205,7 +249,12 @@ const shippingAddress = () => {
             <Box sx={{ width: "100%" }}>
               <Typography>Kabupaten/Kota</Typography>
               <FormControl sx={{ width: "100%" }}>
-                <Select size="small">{renderCity()}</Select>
+                <Select
+                  size="small"
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                >
+                  {renderCity()}
+                </Select>
               </FormControl>
             </Box>
           </Stack>
@@ -251,7 +300,7 @@ const shippingAddress = () => {
             <Button
               variant="contained"
               sx={{ width: "100%" }}
-              onClick={formik.handleSubmit}
+              onClick={() => submitNewAddress()}
               disabled={formik.isSubmitting}
             >
               Simpan Alamat
