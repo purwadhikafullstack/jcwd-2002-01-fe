@@ -26,19 +26,28 @@ import logoOvo from "assets/ovo.png";
 import logoGopay from "assets/gopay.png";
 import logoPermata from "assets/permata.png";
 import TotalCardCheckout from "components/TotalCardCheckout";
+import axiosInstance from "configs/api";
+import { useEffect } from "react";
+import UserAddress from "components/userAddress";
 
 const checkoutPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openMethod, setOpenMethod] = useState("");
+  const [userAddress, setUserAddress] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => {
-    setOpenModal(false)
-    setOpenMethod(false)
+    setOpenModal(false);
+    setOpenMethod(false);
   };
   const handleBack = () => setOpenMethod(false);
   const handleMethod = (payment) => {
     setOpenMethod(payment);
   };
+
+  const [open, setOpen] = useState(false);
+  const handleOpenAddress = () => setOpen(true);
+  const handleCloseAddress = () => setOpen(false);
 
   const paymentMethod = [
     {
@@ -68,6 +77,59 @@ const checkoutPage = () => {
     },
   ];
 
+  const fetchUserAddress = async () => {
+    try {
+      const res = await axiosInstance.get("/users/address");
+
+      setUserAddress(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchMainAddress = async () => {
+    try {
+      const res = await axiosInstance.get("/users/main-address");
+
+      setSelectedAddress(res.data.result);
+      console.log(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderUserAddress = () => {
+    return userAddress.map((val) => {
+      return (
+        <Box
+        onClick={()=> setSelectedAddress(val)}
+          sx={{
+            p: 2,
+            ":hover": {
+              backgroundColor: "brand.200",
+              cursor: "pointer",
+            },
+          }}
+        >
+          <Box sx={{ display: "flex" }}>
+            <Typography sx={{ fontSize: "16px", fontWeight: "700" }}>
+              {val.address_label}, {val.recipient_name}
+            </Typography>
+            <Typography>{`(${val.recipient_telephone})`}</Typography>
+          </Box>
+          <Typography sx={{ fontSize: "12px", fontWeight: "400" }}>
+            {val.address}, {val.province}, {val.city}
+          </Typography>
+        </Box>
+      );
+    });
+  };
+
+  useEffect(() => {
+    fetchUserAddress();
+    fetchMainAddress();
+  }, []);
+
   return (
     <Box>
       <Grid container padding="56px 96px">
@@ -81,9 +143,13 @@ const checkoutPage = () => {
           >
             <Stack spacing={2}>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography>Jane Doe, +62123456789</Typography>
+                <Typography>
+                  {selectedAddress?.recipient_name},{" "}
+                  {selectedAddress?.recipient_telephone}
+                </Typography>
                 <Link underline="hover">
                   <Typography
+                    onClick={handleOpenAddress}
                     sx={{
                       color: "brand.500",
                       fontWeight: "700",
@@ -97,10 +163,10 @@ const checkoutPage = () => {
                   </Typography>
                 </Link>
               </Box>
-              <Typography>Rumah Tukul</Typography>
+              <Typography>{selectedAddress?.address_label}</Typography>
               <Typography>
-                Jl. Erlangga XII No.25, RT.5/RW.3, Selong, Kec. Kby. Baru, Kota
-                Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12110
+                {`${selectedAddress?.address}, Kec. ${selectedAddress?.kecamatan}, Kota ${selectedAddress?.city}, 
+                ${selectedAddress?.province} ${selectedAddress?.postal_code}`}
               </Typography>
               <Divider />
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -121,6 +187,49 @@ const checkoutPage = () => {
               </Box>
             </Stack>
           </ProductCheckoutContainer>
+          <Modal open={open} onClose={handleCloseAddress}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 500,
+                minHeight: 600,
+                bgcolor: "background.paper",
+                borderRadius: "8px",
+                boxShadow: 24,
+                p: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  position: "relative",
+                }}
+              >
+                <Box sx={{ position: "absolute", right: "0px", top: "0px" }}>
+                  <IconButton onClick={handleCloseAddress}>
+                    {<MdClose />}
+                  </IconButton>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    pt: "5px",
+                  }}
+                >
+                  <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
+                    Alamat
+                  </Typography>
+                </Box>
+                {renderUserAddress()}
+              </Box>
+            </Box>
+          </Modal>
           <Box sx={{ my: "26px" }}>
             <ProductCheckoutContainer
               cardTitle={
