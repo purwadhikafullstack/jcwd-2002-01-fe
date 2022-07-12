@@ -18,7 +18,6 @@ import AddIcon from "@mui/icons-material/Add";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ModalAddProduct from "components/admin/ModalAddProduct";
 import { useEffect, useState } from "react";
-import ModalAddStock from "components/admin/ModalAddStock";
 import axiosInstance from "configs/api";
 import { useRouter } from "next/router";
 
@@ -81,11 +80,13 @@ const Products = () => {
             noObat: val?.no_medicine,
             noBpom: val?.no_bpom,
             kategori: val.Category.name,
+            kategoriId: val.Category.id,
             stok: val.Stock_opnames[0]?.amount,
             satuan: val?.packaging,
             nilaiJual: val.price,
             productId: val.id,
             diskon: val.discount,
+            productImage: val?.Product_images,
           };
         })
       );

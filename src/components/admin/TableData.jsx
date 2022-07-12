@@ -9,7 +9,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import {
   Box,
-  Button,
   IconButton,
   Menu,
   MenuItem,
@@ -18,6 +17,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import ModalAddStock from "./ModalAddStock";
+import ModalEditData from "./ModalEditData";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -53,6 +53,7 @@ const TableData = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [tambahStok, setTambahStok] = useState(false);
   const [productData, setProductData] = useState({});
+  const [productImage, setProductImage] = useState([]);
 
   const open = (id) => {
     setSelectedId(id);
@@ -108,18 +109,18 @@ const TableData = ({
                 onClick={() => {
                   setTambahStok(true);
                   setProductData(val);
-                  setSelectedId(0);
+                  setSelectedId(val?.productId);
                 }}
               >
                 Tambah Stok
               </MenuItem>
               <MenuItem
-              // onClick={() => {
-              //   setEditProduk(true);
-              //   setProdukData(val);
-              //   setProdukImages(val?.obatImages);
-              //   setSelectedId(0);
-              // }}
+                onClick={() => {
+                  setEditProduk(true);
+                  setProductData(val);
+                  setProductImage(val?.productImage);
+                  setSelectedId(val?.productId);
+                }}
               >
                 Ubah Produk
               </MenuItem>
@@ -127,20 +128,18 @@ const TableData = ({
               // onClick={() => {
               //   setDeleteProduk(true);
               //   setProdukData(val);
-              //   setSelectedId(0);
+              // setSelectedId(0);
               // }}
               >
                 Hapus Produk
               </MenuItem>
             </Menu>
-            {/* <Button>Edit</Button>
-            <Button>Delete</Button>
-            <Button>Tambah Stock</Button> */}
           </TableCell>
         </TableRow>
       );
     });
   };
+
   return (
     <>
       <ModalAddStock
@@ -149,6 +148,14 @@ const TableData = ({
         data={productData}
         fetchProduct={fetchProduct}
       ></ModalAddStock>
+      <ModalEditData
+        open={editProduk}
+        handleClose={handleClose}
+        data={productData}
+        fetchProduct={fetchProduct}
+        productImage={productImage}
+      ></ModalEditData>
+
       <Box>
         <TableContainer component={Paper}>
           <Table aria-label="customized table">
