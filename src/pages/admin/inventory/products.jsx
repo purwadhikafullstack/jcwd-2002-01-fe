@@ -31,8 +31,6 @@ const Products = () => {
 
   const [page, setPage] = useState(0);
   const [rowPerPage, setRowPerPage] = useState(5);
-  const [sortBy, setSortBy] = useState();
-  const [sortDir, setSortDir] = useState();
   const [filterCategory, setFilterCategory] = useState(
     router.query.selectedCategory
   );
@@ -43,6 +41,9 @@ const Products = () => {
   const [totalData, setTotalData] = useState(0);
   const [pageIsReady, setPageIsReady] = useState(false);
   const [searchValue, setSearchValue] = useState(router.query.product_name);
+  const [sortBy, setSortBy] = useState(router.query._sortBy || "");
+  const [sortDir, setSortDir] = useState(router.query._sortDir || "");
+  const [sortInput, setSortInput] = useState("");
 
   const fetchCategory = async () => {
     try {
@@ -95,6 +96,32 @@ const Products = () => {
     }
   };
 
+  const sortInputHandler = (event) => {
+    const { value } = event.target;
+    setSortInput(value);
+
+    if (value == "Harga Tertinggi") {
+      setSortBy("price");
+      setSortDir("DESC");
+      setPage(0);
+    } else if (value == "Harga Terendah") {
+      setSortBy("price");
+      setSortDir("ASC");
+      setPage(0);
+    } else if (value == "A-Z") {
+      setSortBy("name");
+      setSortDir("ASC");
+      setPage(0);
+    } else if (value == "Z-A") {
+      setSortBy("name");
+      setSortDir("DESC");
+    } else if (value == "") {
+      setSortBy("");
+      setSortDir("");
+      setPage(0);
+    }
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -123,6 +150,12 @@ const Products = () => {
       if (router.query.selectedCategory) {
         setFilterCategory(router.query.selectedCategory);
       }
+      if (router.query._sortBy) {
+        setSortBy(router.query._sortBy);
+      }
+      if (router.query._sortDir) {
+        setSortDir(router.query._sortDir);
+      }
       setPageIsReady(true);
     }
   }, [router.isReady]);
@@ -141,13 +174,21 @@ const Products = () => {
           },
         });
       }
-      if (searchValue === "" || filterCategory === "") {
+      if (searchValue === "" || filterCategory === "" || sortInput === "") {
         router.replace("/admin/inventory/products", undefined, {
           shallow: true,
         });
       }
     }
-  }, [rowPerPage, page, searchValue, pageIsReady, filterCategory]);
+  }, [
+    rowPerPage,
+    page,
+    searchValue,
+    pageIsReady,
+    filterCategory,
+    sortDir,
+    sortBy,
+  ]);
 
   const renderCategory = () => {
     return categories.map((val) => {
@@ -226,6 +267,21 @@ const Products = () => {
                 >
                   <MenuItem value="">None</MenuItem>
                   {renderCategory()}
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+                <InputLabel>Sort</InputLabel>
+                <Select
+                  label="Sort"
+                  value={sortInput}
+                  onChange={sortInputHandler}
+                >
+                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value="A-Z">A-Z</MenuItem>
+                  <MenuItem value="Z-A">Z-A</MenuItem>
+                  <MenuItem value="Harga Terendah">Harga Terendah</MenuItem>
+                  <MenuItem value="Harga Tertinggi">Harga Tertinggi</MenuItem>
                 </Select>
               </FormControl>
             </Box>

@@ -18,6 +18,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import ModalAddStock from "./ModalAddStock";
 import ModalEditData from "./ModalEditData";
+import Link from "next/link";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -104,7 +105,9 @@ const TableData = ({
               open={val.productId === selectedId}
               onClose={() => open(0)}
             >
-              <MenuItem>Lihat Detail</MenuItem>
+              <Link href={`/stock_detail/${val.productId}`}>
+                <MenuItem>Lihat Detail</MenuItem>
+              </Link>
               <MenuItem
                 onClick={() => {
                   setTambahStok(true);
