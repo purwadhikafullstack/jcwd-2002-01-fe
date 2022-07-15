@@ -23,7 +23,8 @@ const MyApp = ({ Component, pageProps }) => {
               <CartProvider>
                 {router.pathname.startsWith("/register") ||
                 router.pathname.startsWith("/verification_page") ||
-                router.pathname.startsWith("/login") ? undefined : (
+                router.pathname.startsWith("/login") ||
+                router.pathname.startsWith("/stock") ? undefined : (
                   <Navbar />
                 )}
                 <Component {...pageProps} />
