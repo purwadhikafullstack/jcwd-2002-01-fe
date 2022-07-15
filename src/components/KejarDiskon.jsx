@@ -24,20 +24,19 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
-const KejarDiskon = ({products}) => {
-
-    const renderProducts = () => {
-        return products.map((val) => {
-            return (
-              <ProductCard
-                productName={val.name}
-                id={val.id}
-                price={val.price}
-                productImage={val.Product_images[0].image_url}
-              />
-            );
-        })
-    }
+const KejarDiskon = ({ products }) => {
+  const renderProducts = () => {
+    return products.map((val) => {
+      return (
+        <ProductCard
+          productName={val?.name}
+          id={val?.id}
+          price={val?.price}
+          productImage={val?.Product_images[0]?.image_url}
+        />
+      );
+    });
+  };
 
   return (
     <Box my={5}>
@@ -92,13 +91,10 @@ const KejarDiskon = ({products}) => {
             Yuk Buruan Ikutan!
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", ml: "-120px" }}>
-          {renderProducts()}
-        </Box>
+        <Box sx={{ display: "flex", ml: "-120px" }}>{renderProducts()}</Box>
       </Box>
     </Box>
   );
 };
 
-
-export default KejarDiskon
+export default KejarDiskon;
