@@ -114,7 +114,7 @@ const Navbar = () => {
             />
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
               <MenuItem>
-                <Link href={"/"}>Profil Saya</Link>
+                <Link href={"/profile"}>Profil Saya</Link>
               </MenuItem>
               <MenuItem onClick={logoutBtnHandler}>Keluar</MenuItem>
             </Menu>
