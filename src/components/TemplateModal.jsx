@@ -16,6 +16,8 @@ const TemplateModal = ({
   handleBack,
   isiButton,
   isMethod = false,
+  totalPrice,
+  selectPaymentMethod,
 }) => {
   return (
     <Modal open={open} onClose={handleClose}>
@@ -83,7 +85,7 @@ const TemplateModal = ({
                   Total Harga
                 </Typography>
                 <Typography fontSize="20px" fontWeight="700">
-                  Rp. 20.000
+                  Rp. {totalPrice?.toLocaleString()}
                 </Typography>
               </Box>
               <Typography fontSize="12px" color="brand.500">
@@ -101,13 +103,17 @@ const TemplateModal = ({
                 }}
               >
                 {children}
-                <Box sx={{p: 2}}>
+                <Box sx={{ p: 2 }}>
                   <Button
                     variant="contained"
                     disabled={isMethod ? false : true}
                     sx={{ width: "100%" }}
+                    onClick={() => {
+                      handleClose();
+                      selectPaymentMethod();
+                    }}
                   >
-                    {isiButton}d
+                    {isiButton}
                   </Button>
                 </Box>
               </Box>

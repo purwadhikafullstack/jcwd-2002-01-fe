@@ -61,7 +61,7 @@ const myProfile = () => {
 
     try {
       const res = await axiosInstance.patch(
-        "/users/profile-picture/1",
+        "/users/profile-picture",
         formData
       );
 
@@ -86,7 +86,6 @@ const myProfile = () => {
       email: Yup.string()
         .email("please input a correct email format")
         .required("this field is required"),
-      id: Yup.string().required("this field is required"),
     }),
     validateOnChange: false,
     onSubmit: (values) => {
@@ -97,7 +96,6 @@ const myProfile = () => {
             gender: values.gender,
             age: values.age,
             email: values.email,
-            id: values.id,
           };
 
           const res = await axiosInstance.patch("/users", newProfile);
@@ -234,11 +232,6 @@ const myProfile = () => {
               </Tabs>
             </Box>
             <TabPanel value={tabMenu} index={0}>
-              <OutlinedInput
-                onChange={(event) =>
-                  profileFormik.setFieldValue("id", event.target.value)
-                }
-              />
               <FormControl sx={{ width: "500px", mb: "20px" }}>
                 <FormLabel htmlFor="nama">Fullname</FormLabel>
                 <OutlinedInput
