@@ -8,7 +8,7 @@ import { AiFillInstagram } from "react-icons/ai";
 
 const Footer = () => {
   return (
-    <Box sx={{ bottom: "0", width: "100%" }}>
+    <Box sx={{ bottom: "0", width: "100%", mt: "80px" }}>
       <Box padding="60px 96px" sx={{ backgroundColor: "whitesmoke" }}>
         <Grid container spacing={10}>
           <Grid item xs={3}>

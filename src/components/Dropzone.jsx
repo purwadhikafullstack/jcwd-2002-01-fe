@@ -12,14 +12,8 @@ import { useDropzone } from "react-dropzone";
 import { MdClose } from "react-icons/md";
 import { RiImageFill } from "react-icons/ri";
 
-const Dropzone = (props) => {
-  const [prescriptionImage, setPrescriptionImage] = useState(null);
+const Dropzone = ({isResep, onDrop, prescriptionImage, upload, setPrescriptionImage, isUploading}) => {
 
-
-
-  const onDrop = (acceptedFiles) => {
-    setPrescriptionImage(acceptedFiles[0])
-  };
 
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
     onDrop,
@@ -33,7 +27,7 @@ const Dropzone = (props) => {
       <Box>
         <Box
           sx={{
-            width: "1038px",
+            width: "100%",
             height: "522px",
             boxShadow: "0px 2px 3px 2px #E8F6FC, 0px 4px 12px 4px #E8F6FC",
             display: "flex",
@@ -83,7 +77,7 @@ const Dropzone = (props) => {
                   </IconButton>
                 </Box>
                 <Button variant="contained" sx={{ my: "10px" }}>
-                  Unggah Resep
+                  Unggah {isResep? "Resep" : "Bukti Transfer"}
                 </Button>
               </Box>
             ) : (
@@ -115,6 +109,8 @@ const Dropzone = (props) => {
             <Button
               variant="contained"
               sx={{ width: "125px", height: "42px", my: "20px" }}
+              onClick={upload}
+              disabled={isUploading? true : false}
             >
               Unggah
             </Button>
