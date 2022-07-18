@@ -1,10 +1,8 @@
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 
-const TotalCardCheckout = ({
-  children,
-  cartItems,
-  checkedItems,
-}) => {
+const TotalCardCheckout = ({ children, cartItems, checkedItems, ongkir }) => {
+  const { totalPrice } = useSelector((state) => state.cart);
 
   return (
     <Stack
@@ -31,21 +29,22 @@ const TotalCardCheckout = ({
         <Typography fontWeight="400">Sub Total</Typography>
         <Typography fontWeight="700">
           {" "}
-          Rp.
-          "200000"
+          Rp. {totalPrice?.toLocaleString()}
         </Typography>
       </Box>
-        <Box
-          color="gray"
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Typography fontWeight="400">Pengiriman</Typography>
-          <Typography fontWeight="700"> Rp. 2000</Typography>
-        </Box>
+      <Box
+        color="gray"
+        sx={{ display: "flex", justifyContent: "space-between" }}
+      >
+        <Typography fontWeight="400">Pengiriman</Typography>
+        <Typography fontWeight="700"> Rp. 2000</Typography>
+      </Box>
       <Divider />
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography fontWeight="700">Total</Typography>
-        <Typography fontWeight="700">Rp. 20.000</Typography>
+        <Typography fontWeight="700">
+          Rp. {totalPrice?.toLocaleString()}
+        </Typography>
       </Box>
       {children}
     </Stack>
