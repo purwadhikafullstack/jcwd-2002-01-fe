@@ -22,6 +22,7 @@ const CartCard = ({ val, setCartChecked, checked = false, index, stock }) => {
   const dispatch = useDispatch();
   const productId = val.product_id;
 
+
   const editQuantity = async (type = "") => {
     try {
       if (type == "increment") {
