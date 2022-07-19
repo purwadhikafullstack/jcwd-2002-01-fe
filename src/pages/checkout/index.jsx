@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
   IconButton,
@@ -29,17 +30,30 @@ import TotalCardCheckout from "components/TotalCardCheckout";
 import axiosInstance from "configs/api";
 import { useEffect } from "react";
 import UserAddress from "components/userAddress";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 const checkoutPage = () => {
+  const { selectedItems } = useSelector((state) => state.cart);
+  const { totalPrice } = useSelector((state) => state.cart);
   const [openModal, setOpenModal] = useState(false);
   const [openMethod, setOpenMethod] = useState("");
   const [userAddress, setUserAddress] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(selectedItems);
+  const [pageIsReady, setPageIsReady] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const router = useRouter();
   const handleOpen = () => setOpenModal(true);
+
   const handleClose = () => {
     setOpenModal(false);
     setOpenMethod(false);
   };
+  const selectPaymentMethod = () => {
+    setPaymentMethod(openMethod);
+  };
+
   const handleBack = () => setOpenMethod(false);
   const handleMethod = (payment) => {
     setOpenMethod(payment);
@@ -49,7 +63,7 @@ const checkoutPage = () => {
   const handleOpenAddress = () => setOpen(true);
   const handleCloseAddress = () => setOpen(false);
 
-  const paymentMethod = [
+  const paymentMethodList = [
     {
       logo: logoBCA,
       title: "BCA Virtual Account",
@@ -92,17 +106,19 @@ const checkoutPage = () => {
       const res = await axiosInstance.get("/users/main-address");
 
       setSelectedAddress(res.data.result);
-      console.log(res.data.result);
     } catch (err) {
       console.log(err);
     }
   };
 
   const renderUserAddress = () => {
-    return userAddress.map((val) => {
+    return userAddress?.map((val) => {
       return (
         <Box
-        onClick={()=> setSelectedAddress(val)}
+          onClick={() => {
+            setSelectedAddress(val);
+            handleCloseAddress();
+          }}
           sx={{
             p: 2,
             ":hover": {
@@ -126,120 +142,179 @@ const checkoutPage = () => {
   };
 
   useEffect(() => {
+    if (selectedItems?.length == 0) {
+      router.push("/cart");
+    }
     fetchUserAddress();
     fetchMainAddress();
+    fetchSelectedItems();
   }, []);
+
+  const fetchSelectedItems = async () => {
+    try {
+      const res = await axiosInstance.post("/cart/selected-cart", {
+        cart_id: selectedItems || selectedProduct,
+      });
+
+      setSelectedProduct(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // useEffect(() => {
+  //   const cart_id = localStorage.getItem("user-cart");
+  //   const parsedSelectedProduct = JSON.parse(cart_id);
+  //   setSelectedProduct(parsedSelectedProduct);
+  // }, []);
+  // console.log(selectedProduct);
+
+  // if (!pageIsReady) {
+  //   return <CircularProgress />;
+  // }
+
+  const renderSelectedItems = () => {
+    return selectedProduct?.map((val, idx) => {
+      return (
+        <CheckoutCard
+          price={val?.Product?.price}
+          productName={val?.Product?.name}
+          productImage={val?.Product?.Product_images[0]?.image_url}
+          quantity={val?.quantity}
+          key={idx}
+        />
+      );
+    });
+  };
+
+
+
+  const checkout = async () => {
+    try {
+      await axiosInstance.post("/cart/checkout", {
+        cart_id: selectedItems,
+        total_price: totalPrice,
+      });
+
+      router.push("/confirm_order");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Box>
       <Grid container padding="56px 96px">
         <Grid item sm={8} md={8}>
-          <ProductCheckoutContainer
-            cardTitle={
-              <Typography sx={{ fontSize: "24px", fontWeight: "700" }}>
-                Alamat Pengiriman
-              </Typography>
-            }
-          >
-            <Stack spacing={2}>
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography>
-                  {selectedAddress?.recipient_name},{" "}
-                  {selectedAddress?.recipient_telephone}
-                </Typography>
-                <Link underline="hover">
-                  <Typography
-                    onClick={handleOpenAddress}
-                    sx={{
-                      color: "brand.500",
-                      fontWeight: "700",
-                      fontSize: "12px",
-                      ":hover": {
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
-                    Pilih Alamat Lain
-                  </Typography>
-                </Link>
-              </Box>
-              <Typography>{selectedAddress?.address_label}</Typography>
-              <Typography>
-                {`${selectedAddress?.address}, Kec. ${selectedAddress?.kecamatan}, Kota ${selectedAddress?.city}, 
-                ${selectedAddress?.province} ${selectedAddress?.postal_code}`}
-              </Typography>
-              <Divider />
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <IconButton
-                  size="small"
-                  sx={{
-                    mr: "16px",
-                    color: "brand.500",
-                    boxShadow:
-                      "4px 0px 2px rgba(32, 51, 96, 0.01), 0px 4px 4px rgba(0, 0, 0, 0.03), 2px 2px 2px rgba(190, 190, 190, 0.08), -2px -2px 2px rgba(190, 190, 190, 0.08), -4px -4px 4px rgba(190, 190, 190, 0.06), 8px 8px 4px rgba(190, 190, 190, 0.06);",
-                  }}
-                >
-                  {<BsPlusLg />}
-                </IconButton>
-                <Typography sx={{ fontSize: "16px", fontWeight: "700" }}>
-                  Tambahkan Alamat Baru
-                </Typography>
-              </Box>
-            </Stack>
-          </ProductCheckoutContainer>
-          <Modal open={open} onClose={handleCloseAddress}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 500,
-                minHeight: 600,
-                bgcolor: "background.paper",
-                borderRadius: "8px",
-                boxShadow: 24,
-                p: 2,
-              }}
-            >
-              <Box
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  position: "relative",
-                }}
-              >
-                <Box sx={{ position: "absolute", right: "0px", top: "0px" }}>
-                  <IconButton onClick={handleCloseAddress}>
-                    {<MdClose />}
-                  </IconButton>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    pt: "5px",
-                  }}
-                >
-                  <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
-                    Alamat
-                  </Typography>
-                </Box>
-                {renderUserAddress()}
-              </Box>
-            </Box>
-          </Modal>
-          <Box sx={{ my: "26px" }}>
+          <Box sx={{ px: "60px" }}>
             <ProductCheckoutContainer
               cardTitle={
-                <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
-                  Ringkasan Order
+                <Typography sx={{ fontSize: "24px", fontWeight: "700" }}>
+                  Alamat Pengiriman
                 </Typography>
               }
             >
-              <CheckoutCard />
+              <Stack spacing={2}>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography>
+                    {selectedAddress?.recipient_name},{" "}
+                    {selectedAddress?.recipient_telephone}
+                  </Typography>
+                  <Link underline="hover">
+                    <Typography
+                      onClick={handleOpenAddress}
+                      sx={{
+                        color: "brand.500",
+                        fontWeight: "700",
+                        fontSize: "12px",
+                        ":hover": {
+                          cursor: "pointer",
+                        },
+                      }}
+                    >
+                      Pilih Alamat Lain
+                    </Typography>
+                  </Link>
+                </Box>
+                <Typography>{selectedAddress?.address_label}</Typography>
+                <Typography>
+                  {`${selectedAddress?.address}, Kec. ${selectedAddress?.kecamatan}, Kota ${selectedAddress?.city}, 
+                ${selectedAddress?.province} ${selectedAddress?.postal_code}`}
+                </Typography>
+                <Divider />
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <IconButton
+                    size="small"
+                    sx={{
+                      mr: "16px",
+                      color: "brand.500",
+                      boxShadow:
+                        "4px 0px 2px rgba(32, 51, 96, 0.01), 0px 4px 4px rgba(0, 0, 0, 0.03), 2px 2px 2px rgba(190, 190, 190, 0.08), -2px -2px 2px rgba(190, 190, 190, 0.08), -4px -4px 4px rgba(190, 190, 190, 0.06), 8px 8px 4px rgba(190, 190, 190, 0.06);",
+                    }}
+                    onClick={() => router.push("/address")}
+                  >
+                    {<BsPlusLg />}
+                  </IconButton>
+                  <Typography sx={{ fontSize: "16px", fontWeight: "700" }}>
+                    Tambahkan Alamat Baru
+                  </Typography>
+                </Box>
+              </Stack>
             </ProductCheckoutContainer>
+            <Modal open={open} onClose={handleCloseAddress}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 500,
+                  minHeight: 600,
+                  bgcolor: "background.paper",
+                  borderRadius: "8px",
+                  boxShadow: 24,
+                  p: 2,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    position: "relative",
+                  }}
+                >
+                  <Box sx={{ position: "absolute", right: "0px", top: "0px" }}>
+                    <IconButton onClick={handleCloseAddress}>
+                      {<MdClose />}
+                    </IconButton>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      pt: "5px",
+                    }}
+                  >
+                    <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
+                      Alamat
+                    </Typography>
+                  </Box>
+                  {renderUserAddress()}
+                </Box>
+              </Box>
+            </Modal>
+            <Box sx={{ my: "26px" }}>
+              <ProductCheckoutContainer
+                cardTitle={
+                  <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
+                    Ringkasan Order
+                  </Typography>
+                }
+              >
+                {renderSelectedItems()}
+              </ProductCheckoutContainer>
+            </Box>
           </Box>
         </Grid>
         <Grid item sm={4} md={4}>
@@ -252,16 +327,27 @@ const checkoutPage = () => {
               Silahkan pilih metode pembayaran anda disini
             </Typography>
             <Button variant="contained" onClick={handleOpen}>
-              {"Pilih Metode Pembayaran (1)"}
+              {`Pilih Metode Pembayaran (${selectedItems?.length})`}
+            </Button>
+            <Button
+              variant="contained"
+              onClick={checkout}
+              disabled={paymentMethod ? false : true}
+            >
+              Checkout
             </Button>
           </TotalCardCheckout>
         </Grid>
         <TemplateModal
           open={openModal}
-          handleClose={handleClose}
+          handleClose={() => {
+            handleClose();
+          }}
           isMethod={openMethod}
           handleBack={handleBack}
           isiButton="Pilih Metode Pembayaran"
+          totalPrice={totalPrice}
+          selectPaymentMethod={selectPaymentMethod}
         >
           {openMethod == "BCA" ? (
             <Box
@@ -299,7 +385,7 @@ const checkoutPage = () => {
               }}
             >
               <Box>
-                {paymentMethod.map((val) => {
+                {paymentMethodList.map((val) => {
                   return (
                     <PaymentMethod
                       logo={val.logo}

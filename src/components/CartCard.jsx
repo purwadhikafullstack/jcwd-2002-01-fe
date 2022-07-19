@@ -17,7 +17,6 @@ import axiosInstance from "configs/api";
 import { addToCart, removefromCart } from "redux/reducers/cart";
 
 const CartCard = ({ val, setCartChecked, checked = false, index}) => {
-  const userCart = useSelector((state) => state.cart);
   const userSelector = useSelector((state) => state.auth);
   const [quantity, setQuantity] = useState(val.quantity);
   const dispatch = useDispatch();
