@@ -16,8 +16,100 @@ import TransactionCard from "components/admin/TransactionCard";
 import DownloadIcon from "@mui/icons-material/Download";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import SearchIcon from "@mui/icons-material/Search";
+import { useEffect, useState } from "react";
+import axiosInstance from "configs/api";
+import { useRouter } from "next/router";
 
 const Transaction = () => {
+  const router = useRouter();
+  const [transaction, setTrancation] = useState([]);
+  const [cardPerPage, setCardPerPage] = useState("5");
+  const [page, setPage] = useState(router.query._page || 1);
+  const [productsCount, setProductsCount] = useState(0);
+  const [pageIsReady, setPageIsReady] = useState(false);
+
+  const cardHandle = (event) => {
+    setCardPerPage(event.target.value);
+  };
+
+  const handleChange = (e, p) => {
+    setPage(p);
+    // _DATA.jump(p);
+  };
+
+  const fetchTransaction = async () => {
+    try {
+      const res = await axiosInstance.get("/transactions", {
+        params: {
+          _limit: cardPerPage,
+          _page: page,
+        },
+      });
+      const data = res.data.result.rows;
+      setProductsCount(res.data.result.count);
+
+      setTrancation(
+        data.map((val) => {
+          return {
+            transactionId: val?.id,
+            createdAt: val?.createdAt,
+            productName: val?.TransactionItems[0]?.Product.name,
+            quantity: val?.TransactionItems[0]?.quantity,
+            productPrice: val?.TransactionItems[0]?.Product?.price,
+            customerName: val?.User?.username,
+            address: val?.User?.Addresses[0]?.address,
+            totalPrice: val?.total_price,
+            countProduct: val?.TransactionItems.length,
+            productImage:
+              val?.TransactionItems[0]?.Product?.Product_images[0]?.image_url,
+            productTransaction: val?.TransactionItems,
+            status: val?.status_transaction,
+          };
+        })
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderTransaction = () => {
+    return transaction.map((val) => {
+      return <TransactionCard data={val} fetchTransaction={fetchTransaction} />;
+    });
+  };
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (router.query.name) {
+        setSearchValue(router.query.name);
+      }
+      if (router.query._sortDir) {
+        setSortDir(router.query._sortDir);
+      }
+      if (router.query._sortBy) {
+        setSortBy(router.query._sortBy);
+      }
+      if (router.query._page) {
+        setPage(parseInt(router.query._page));
+      }
+      if (router.query.selectedCategory) {
+        setSelectedCategory(router.query.selectedCategory);
+      }
+      setPageIsReady(true);
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (pageIsReady) {
+      fetchTransaction();
+
+      router.push({
+        query: {
+          _page: page ? page : undefined,
+        },
+      });
+    }
+  }, [pageIsReady, cardPerPage, page]);
   return (
     <Container sx={{ mt: "24px" }}>
       {/* Header */}
@@ -132,7 +224,8 @@ const Transaction = () => {
                 backgroundColor: "white",
                 borderColor: "brand.500",
               }}
-              value="2"
+              onChange={cardHandle}
+              value={cardPerPage}
               autoWidth
               displayEmpty
             >
@@ -141,19 +234,15 @@ const Transaction = () => {
               <MenuItem value={5}>5</MenuItem>
             </Select>
           </FormControl>
-          <Pagination component="div" count={10} />
+          <Pagination
+            count={Math.ceil(productsCount / cardPerPage)}
+            page={page}
+            onChange={handleChange}
+          />
         </Box>
       </Box>
 
-      <TransactionCard></TransactionCard>
-      <TransactionCard></TransactionCard>
-      <TransactionCard></TransactionCard>
-      <TransactionCard></TransactionCard>
-      <TransactionCard></TransactionCard>
-      <TransactionCard></TransactionCard>
-      <TransactionCard></TransactionCard>
-      <TransactionCard></TransactionCard>
-      <TransactionCard></TransactionCard>
+      {renderTransaction()}
     </Container>
   );
 };
