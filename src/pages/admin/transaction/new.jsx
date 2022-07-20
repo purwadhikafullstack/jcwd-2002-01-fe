@@ -123,7 +123,7 @@ const Transaction = () => {
       >
         <Box>
           <Typography sx={{ fontWeight: "700", fontSize: "20px" }}>
-            Semua Pesanan
+            Pesanan baru
           </Typography>
         </Box>
         <Box display="flex">
@@ -243,7 +243,11 @@ const Transaction = () => {
         </Box>
       </Box>
 
-      {renderTransaction()}
+      {transaction.length ? (
+        renderTransaction()
+      ) : (
+        <Typography>No transaction added</Typography>
+      )}
     </Container>
   );
 };
