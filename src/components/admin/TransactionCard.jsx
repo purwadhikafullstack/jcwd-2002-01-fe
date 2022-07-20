@@ -1,23 +1,219 @@
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
   Divider,
   Grid,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
-import Image from "next/image";
-import fotoObat from "assets/panadol.jpg";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import ModalSalinanResep from "components/admin/ModalSalinanResep";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { borderRadius } from "@mui/system";
 
-const TransactionCard = () => {
+import ModalTransaction from "./ModalTransaction";
+import moment from "moment";
+import axiosInstance from "configs/api";
+
+const TransactionCard = ({ data }) => {
   const [salinanResep, setSalinanResep] = useState(false);
+  const [acceptOrderOpen, setAcceptOrderOpen] = useState(false);
+  const [isAvailable, setAvailable] = useState(false);
+  const [allTransaction, setAllTransaction] = useState(false);
+
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
+  const [severity, setSeverity] = useState();
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
+
+  const handleClose = () => {
+    setAcceptOrderOpen(false);
+  };
+
+  const checkStock = () => {
+    return data.productTransaction.forEach((val) => {
+      if (
+        val.quantity > val.Product.Stock_opnames[0]?.amount &&
+        val.Product.Stock_opnames.length
+      ) {
+        setAvailable(true);
+      } else {
+        setAvailable(false);
+      }
+    });
+  };
+
+  const renderTransactionItem = () => {
+    return data.productTransaction.map((val) => {
+      return (
+        <Grid container display="flex" sx={{ alignItems: "center" }}>
+          <Grid item xs={4}>
+            <Box display="flex" sx={{ alignItems: "center" }}>
+              <Box
+                sx={{
+                  m: 2,
+                  pt: 1,
+                  mr: "30px",
+                  border: "solid grey",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "8px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={val.Product?.Product_images[0]?.image_url}
+                  sx={{ width: "55px", height: "55px" }}
+                />
+              </Box>
+
+              <Box sx={{ mr: "32px" }}>
+                <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
+                  {val.Product.name}
+                </Typography>
+                <Typography sx={{ fontSize: "12px", color: "#737A8D" }}>
+                  {val.quantity} x {val.Product?.price}
+                </Typography>
+
+                {/* <Button
+                sx={{ bgcolor: "brand.400" }}
+                size="small"
+                onClick={() => setSalinanResep(true)}
+              >
+                Buat Salinan Resep
+              </Button> */}
+                <ModalSalinanResep
+                  open={salinanResep}
+                  handleClose={() => setSalinanResep(false)}
+                />
+              </Box>
+              <Divider sx={{ my: "16px" }} orientation="vertical" flexItem />
+            </Box>
+          </Grid>
+
+          <Grid item xs={8}>
+            <Stack direction="row" spacing={4}>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                  Pembeli
+                </Typography>
+                <Typography sx={{ fontSize: "14px" }}>
+                  {data.customerName}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                  Alamat
+                </Typography>
+                <Typography sx={{ fontSize: "14px" }}>
+                  {data.address}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                  Kurir
+                </Typography>
+                <Typography sx={{ fontSize: "14px" }}>Grab-Same Day</Typography>
+              </Grid>
+            </Stack>
+          </Grid>
+        </Grid>
+      );
+    });
+  };
+
+  const buttonHandler = async (newStatus) => {
+    console.log(newStatus);
+    try {
+      const res = await axiosInstance.patch(
+        `/transactions/${data.transactionId}`,
+        {
+          status_transaction: newStatus,
+        }
+      );
+      if (res?.data?.message !== undefined) {
+        setAlertContent("Success !");
+        setAlert(true);
+        setSeverity(true);
+      }
+    } catch (err) {
+      console.log(err);
+      setAlertContent("failed");
+      setAlert(true);
+      setSeverity(false);
+    }
+  };
+
+  const renderButton = () => {
+    if (data.status === "waiting for confirmation") {
+      return (
+        <Box display="flex">
+          <Button
+            sx={{ mr: "32px" }}
+            onClick={() => {
+              buttonHandler("canceled");
+            }}
+          >
+            Tolak Pesanan
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setAcceptOrderOpen(true);
+            }}
+            disabled={isAvailable}
+          >
+            Terima Pesanan
+          </Button>
+        </Box>
+      );
+    } else if (data.status === "ready delivery") {
+      return (
+        <Box display="flex">
+          <Button
+            variant="contained"
+            onClick={() => {
+              buttonHandler("on delivery");
+            }}
+          >
+            Minta Penjemputan
+          </Button>
+        </Box>
+      );
+    } else if (data.status === "on delivery") {
+      return (
+        <Box display="flex">
+          <Button
+            variant="contained"
+            onClick={() => {
+              buttonHandler("success");
+            }}
+          >
+            Selesai
+          </Button>
+        </Box>
+      );
+    }
+  };
+
+  useEffect(() => {
+    checkStock();
+  }, []);
+
   return (
     <Box
       sx={{
@@ -30,100 +226,132 @@ const TransactionCard = () => {
         bgcolor: "#FFFFFF",
       }}
     >
+      {alert ? (
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert variant="filled" severity={severity ? "success" : "error"}>
+            {alertContent}
+          </Alert>
+        </Snackbar>
+      ) : (
+        <></>
+      )}
       <Box display="flex" sx={{ alignItems: "center" }}>
         <Checkbox></Checkbox>
         <Typography sx={{ fontWeight: "bold" }}> Pesanan Baru </Typography>
         <Typography sx={{ margin: "5px", color: "#B4B9C7" }}> / </Typography>
-        <Typography sx={{ fontWeight: "bold" }}> HTMED29X </Typography>
+        <Typography sx={{ fontWeight: "bold" }}>
+          {`${data.transactionId}-${moment(data.createdAt).format("YYYYMMDD")}`}
+        </Typography>
         <Typography sx={{ margin: "5px", color: "#B4B9C7" }}> / </Typography>
         <AccessTimeIcon
           sx={{ fontSize: "20px", color: "#B4B9C7" }}
         ></AccessTimeIcon>
         <Typography sx={{ margin: "5px", color: "#B4B9C7" }}>
-          10 Jan 2022, 10:45 WIB
+          {moment(data.createdAt).format("LLL")}
         </Typography>
       </Box>
 
       <Divider></Divider>
-      <Grid container display="flex" sx={{ alignItems: "center" }}>
-        <Grid item xs={4}>
-          <Box display="flex" sx={{ alignItems: "center" }}>
-            <Box
-              sx={{
-                m: 2,
-                pt: 1,
-                mr: "30px",
-                border: "solid grey",
-                width: "80px",
-                height: "80px",
-                borderRadius: "8px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Image width="55px" height="55px" src={fotoObat} />
-            </Box>
 
-            <Box sx={{ mr: "32px" }}>
-              <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
-                Panadol Banteng Merah
-              </Typography>
-              <Typography sx={{ fontSize: "12px", color: "#737A8D" }}>
-                2 x 13.000
-              </Typography>
+      {allTransaction ? (
+        renderTransactionItem()
+      ) : (
+        <Grid container display="flex" sx={{ alignItems: "center" }}>
+          <Grid item xs={4}>
+            <Box display="flex" sx={{ alignItems: "center" }}>
               <Box
-                display="flex"
-                sx={{ color: "brand.500", alignItems: "center" }}
+                sx={{
+                  m: 2,
+                  pt: 1,
+                  mr: "30px",
+                  border: "solid grey",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "8px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
-                <Typography sx={{ fontSize: "12px" }}>
-                  lihat 2 obat lainnya
-                </Typography>
-                <ExpandMore fontSize="24px"></ExpandMore>
+                <Box
+                  component="img"
+                  src={data.productImage}
+                  sx={{ width: "55px", height: "55px" }}
+                />
               </Box>
-                <Button 
-                sx={{ bgcolor: "brand.400" }} 
+
+              <Box sx={{ mr: "32px" }}>
+                <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
+                  {data.productName}
+                </Typography>
+                <Typography
+                  sx={{ fontSize: "12px", color: "#737A8D" }}
+                ></Typography>
+                <Box
+                  display="flex"
+                  sx={{
+                    color: "brand.500",
+                    alignItems: "center",
+                    ":hover": { cursor: "pointer" },
+                  }}
+                  onClick={() => {
+                    setAllTransaction(true);
+                  }}
+                >
+                  <Typography sx={{ fontSize: "12px" }}>
+                    lihat 2 obat lainnya
+                  </Typography>
+                  <ExpandMore fontSize="24px"></ExpandMore>
+                </Box>
+                {/* <Button
+                sx={{ bgcolor: "brand.400" }}
                 size="small"
                 onClick={() => setSalinanResep(true)}
-                >
-                  Buat Salinan Resep
-                </Button>
+              >
+                Buat Salinan Resep
+              </Button> */}
                 <ModalSalinanResep
                   open={salinanResep}
                   handleClose={() => setSalinanResep(false)}
                 />
+              </Box>
+              <Divider sx={{ my: "16px" }} orientation="vertical" flexItem />
             </Box>
-            <Divider sx={{ my: "16px" }} orientation="vertical" flexItem />
-          </Box>
-        </Grid>
+          </Grid>
 
-        <Grid item xs={8}>
-          <Stack direction="row" spacing={4}>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
-                Pembeli
-              </Typography>
-              <Typography sx={{ fontSize: "14px" }}>
-                Alex Tuner Hernandas
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
-                Alamat
-              </Typography>
-              <Typography sx={{ fontSize: "14px" }}>
-                Jl . Tebet Barat Dalam 6K , Tebet, Kota Jakarta Selatan
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
-                Kurir
-              </Typography>
-              <Typography sx={{ fontSize: "14px" }}>Grab-Same Day</Typography>
-            </Grid>
-          </Stack>
+          <Grid item xs={8}>
+            <Stack direction="row" spacing={4}>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                  Pembeli
+                </Typography>
+                <Typography sx={{ fontSize: "14px" }}>
+                  {data.customerName}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                  Alamat
+                </Typography>
+                <Typography sx={{ fontSize: "14px" }}>
+                  {data.address}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                  Kurir
+                </Typography>
+                <Typography sx={{ fontSize: "14px" }}>Grab-Same Day</Typography>
+              </Grid>
+            </Stack>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
 
       <Box
         display="flex"
@@ -141,11 +369,13 @@ const TransactionCard = () => {
           <Typography sx={{ fontWeight: "Bold", mr: 2, fontSize: "14px" }}>
             Total Harga
           </Typography>
-          <Typography sx={{ fontSize: "14px" }}>(4 Obat)</Typography>
+          <Typography sx={{ fontSize: "14px" }}>
+            ({data.countProduct} Obat)
+          </Typography>
         </Box>
 
         <Typography sx={{ fontWeight: "Bold", fontSize: "14px" }}>
-          Rp 65.000
+          Rp {data.totalPrice}
         </Typography>
       </Box>
 
@@ -165,10 +395,13 @@ const TransactionCard = () => {
           <Typography sx={{ fontSize: "14px" }}>Detail Pesanan</Typography>
         </Box>
 
-        <Box display="flex">
-          <Button sx={{ mr: "32px" }}>Tolak Pesanan</Button>
-          <Button sx={{ bgcolor: "brand.400" }}>Terima Pesanan</Button>
-        </Box>
+        {renderButton()}
+
+        <ModalTransaction
+          open={acceptOrderOpen}
+          handleClose={handleClose}
+          data={data}
+        ></ModalTransaction>
       </Box>
     </Box>
   );
