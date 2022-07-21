@@ -383,7 +383,7 @@ const productDetailPage = ({ productDetail }) => {
 export async function getServerSideProps(context) {
   const { productId } = context.params;
 
-  const res = await axios.get(`http://localhost:2001/products/${productId}`);
+  const res = await axios.get(`http://localhost:2001/products/byId${productId}`);
 
   return {
     props: {
