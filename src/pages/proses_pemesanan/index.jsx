@@ -16,14 +16,58 @@ import {
 import DaftarPemesananCard from "components/DaftarPemesananCard";
 import Footer from "components/Footer";
 import TabPanel from "components/TabPanel";
+import axiosInstance from "configs/api";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
-const ProfilePage = () => {
+const ProsesPemesanan = () => {
+  const router = useRouter();
   const [tabMenu, setTabMenu] = useState(0);
+  const [userTransaction, setUserTransaction] = useState([]);
+  const [sortBy, setSortBy] = useState(router.query._sortyBy);
+  const [sortDir, setSortDir] = useState(router.query._sortyDir);
+  const [status, setStatus] = useState("");
 
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue);
+  };
+
+  const fetchUserTransaction = async () => {
+    try {
+      const res = await axiosInstance.get("/users/transaction", {
+        params: {
+          _limit: 3,
+          selected_status: status || undefined,
+          _sortBy: sortBy || undefined,
+          _sortDir: sortDir || undefined,
+        },
+      });
+
+      setUserTransaction(res.data.result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserTransaction();
+  });
+
+  const renderTransactionList = () => {
+    return userTransaction.map((val) => {
+      return (
+        <DaftarPemesananCard
+          status={val.status_transaction}
+          name={val.TransactionItems[0].Product.name}
+          image={val.TransactionItems[0].Product.Product_images[0].image_url}
+          price={val.TransactionItems[0].Product.price}
+          date={val.createdAt}
+          valid_until={val.valid_until}
+        />
+      );
+    });
   };
 
   return (
@@ -152,7 +196,6 @@ const ProfilePage = () => {
             <Box
               sx={{
                 width: "900px",
-                height: "561px",
                 boxShadow: "0px 2px 3px 2px #E8F6FC, 0px 4px 12px 4px #E8F6FC",
                 p: "28px 40px",
                 borderRadius: "8px",
@@ -173,12 +216,36 @@ const ProfilePage = () => {
                   },
                 }}
               >
-                <Tab label="Semua" sx={{ textTransform: "none" }} />
-                <Tab label="Menunggu" sx={{ textTransform: "none" }} />
-                <Tab label="Diproses" sx={{ textTransform: "none" }} />
-                <Tab label="Dikirim" sx={{ textTransform: "none" }} />
-                <Tab label="Diproses" sx={{ textTransform: "none" }} />
-                <Tab label="Dibatalkan" sx={{ textTransform: "none" }} />
+                <Tab
+                  label="Semua"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => setStatus("")}
+                />
+                <Tab
+                  label="Menunggu"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => setStatus("pending")}
+                />
+                <Tab
+                  label="Diproses"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => setStatus("waiting for confirmation")}
+                />
+                <Tab
+                  label="Dikirim"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => setStatus("sent")}
+                />
+                <Tab
+                  label="Selesai"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => setStatus("done")}
+                />
+                <Tab
+                  label="Dibatalkan"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => setStatus("canceled")}
+                />
               </Tabs>
               <Box
                 direction="row"
@@ -213,7 +280,46 @@ const ProfilePage = () => {
                 </Box>
               </Box>
               <TabPanel value={tabMenu} index={0}>
-                <DaftarPemesananCard />
+                {userTransaction.length !== 0 ? (
+                  renderTransactionList()
+                ) : (
+                  <Box>Tidak ada Item</Box>
+                )}
+              </TabPanel>
+              <TabPanel value={tabMenu} index={1}>
+                {userTransaction.length !== 0 ? (
+                  renderTransactionList()
+                ) : (
+                  <Box>Tidak ada Item</Box>
+                )}
+              </TabPanel>
+              <TabPanel value={tabMenu} index={2}>
+                {userTransaction.length !== 0 ? (
+                  renderTransactionList()
+                ) : (
+                  <Box>Tidak ada Item</Box>
+                )}
+              </TabPanel>
+              <TabPanel value={tabMenu} index={3}>
+                {userTransaction.length !== 0 ? (
+                  renderTransactionList()
+                ) : (
+                  <Box>Tidak ada Item</Box>
+                )}
+              </TabPanel>
+              <TabPanel value={tabMenu} index={4}>
+                {userTransaction.length !== 0 ? (
+                  renderTransactionList()
+                ) : (
+                  <Box>Tidak ada Item</Box>
+                )}
+              </TabPanel>
+              <TabPanel value={tabMenu} index={5}>
+                {userTransaction.length !== 0 ? (
+                  renderTransactionList()
+                ) : (
+                  <Box>Tidak ada Item</Box>
+                )}
               </TabPanel>
             </Box>
           </Grid>
@@ -224,4 +330,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default ProsesPemesanan;
