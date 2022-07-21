@@ -4,8 +4,14 @@ import {
   Button,
   Checkbox,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fade,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   Grid,
   IconButton,
@@ -20,15 +26,19 @@ import {
   Stack,
   Tab,
   Tabs,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ProductCheckoutContainer from "components/ProductCheckoutContainer";
 import TabPanel from "components/TabPanel";
+import InfoIcon from "@mui/icons-material/Info";
 import TemplateModal from "components/TemplateModal";
 import axiosInstance from "configs/api";
 import { useFormik } from "formik";
 import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { MdClose } from "react-icons/md";
+// import { useSnackbar } from "notistack";
 
 import * as Yup from "yup";
 
@@ -43,6 +53,10 @@ const myProfile = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => {
     setOpenModal(false);
+  };
+  const [openModalPassword, setOpenModalPassword] = useState(false);
+  const closeModal = () => {
+    setOpenModalPassword(false);
   };
 
   const handleTabMenu = (event, newValue) => {
@@ -170,6 +184,68 @@ const myProfile = () => {
     },
   });
 
+  const passwordFormik = useFormik({
+    initialValues: {
+      oldPassword: "",
+      newPassword: "",
+      repeatPassword: "",
+    },
+    validationSchema: Yup.object().shape({
+      oldPassword: Yup.string()
+        .required("Current Password is required")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/,
+          "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+        ),
+      newPassword: Yup.string()
+        .required("New Password is required")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/,
+          "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+        ),
+      repeatPassword: Yup.string()
+        .required("Confirm Password is required")
+        .oneOf(
+          [Yup.ref("newPassword"), null],
+          "Confirm Password does not match"
+        ),
+    }),
+    validateOnChange: false,
+    onSubmit: async (values) => {
+      try {
+        const userChangePassword = {
+          oldPassword: values.oldPassword,
+          newPassword: values.newPassword,
+        };
+        await axiosInstance.post("/auth/change-password", userChangePassword);
+
+        setOpenModalPassword(false);
+      } catch (err) {
+        console.log(err?.response?.data?.message);
+      }
+    },
+  });
+
+  
+
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+
+    return color;
+  }
+
   return (
     <Box>
       <Container maxWidth="lg" sx={{ mt: "40px" }}>
@@ -184,7 +260,7 @@ const myProfile = () => {
               }}
             >
               <Avatar sx={{ width: "80px", height: "80px", m: 3 }} />
-              <Box>
+              <Box mb="5px" >
                 <Input
                   onChange={handleFile}
                   inputRef={inputFileRef}
@@ -194,7 +270,7 @@ const myProfile = () => {
                 {!selectedFile ? (
                   <Button
                     variant="contained"
-                    sx={{ fontSize: "12px", fontWeight: "700" }}
+                    sx={{ fontSize: "12px", fontWeight: "700", }}
                     onClick={() => inputFileRef.current.click()}
                     disabled={selectedFile ? true : false}
                   >
@@ -210,6 +286,15 @@ const myProfile = () => {
                     Save
                   </Button>
                 )}
+              </Box>
+              <Box>
+                  <Button
+                    variant="contained"
+                    sx={{ fontSize: "12px", fontWeight: "700"}}
+                    onClick={() => setOpenModalPassword(true)}
+                  >
+                    Ganti Password
+                  </Button>
               </Box>
             </Box>
           </Grid>
@@ -313,6 +398,116 @@ const myProfile = () => {
                 </Button>
               </Box>
             </TabPanel>
+
+            {/* {  CHANGE PASSWORD  } */}
+
+            <Dialog open={openModalPassword} onClose={closeModal}>
+                <Box
+                  width="500px"
+                  p={4}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  pb={0}
+                >
+                  <DialogTitle variant="h5">Ganti Password</DialogTitle>
+                  <DialogContent>
+                    <FormControl
+                      fullWidth
+                      error={passwordFormik.errors.oldPassword}
+                    >
+                      <FormLabel sx={{ fontVariant: "body1", mt: "10px" }}>
+                        Password lama
+                      </FormLabel>
+                      <OutlinedInput
+                        type="password"
+                        onChange={(e) =>
+                          passwordFormik.setFieldValue(
+                            "oldPassword",
+                            e.target.value
+                          )
+                        }
+                      />
+                      {passwordFormik.errors.oldPassword && (
+                        <FormHelperText>
+                          {passwordFormik.errors.oldPassword}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                    <FormControl
+                      fullWidth
+                      error={passwordFormik.errors.newPassword}
+                    >
+                      <FormLabel sx={{ fontVariant: "body1", mt: "25px" }}>
+                        Password baru{" "}
+                        <Tooltip
+                          title="Passwords should contain at least 8 characters including an uppercase letter, a symbol, and a number"
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 600 }}
+                        >
+                          <InfoIcon fontSize="small" />
+                        </Tooltip>
+                      </FormLabel>
+                      <OutlinedInput
+                        type="password"
+                        onChange={(e) =>
+                          passwordFormik.setFieldValue(
+                            "newPassword",
+                            e.target.value
+                          )
+                        }
+                      />
+                      {passwordFormik.errors.newPassword && (
+                        <FormHelperText>
+                          {passwordFormik.errors.newPassword}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                    <FormControl
+                      fullWidth
+                      error={passwordFormik.errors.repeatPassword}
+                    >
+                      <FormLabel sx={{ fontVariant: "body1", mt: "25px" }}>
+                        Ulang password baru
+                      </FormLabel>
+                      <OutlinedInput
+                        type="password"
+                        onChange={(e) =>
+                          passwordFormik.setFieldValue(
+                            "repeatPassword",
+                            e.target.value
+                          )
+                        }
+                      />
+                      {passwordFormik.errors.repeatPassword && (
+                        <FormHelperText>
+                          {passwordFormik.errors.repeatPassword}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </DialogContent>
+                </Box>
+                <DialogActions
+                  sx={{ marginX: 6, marginBottom: 4, marginTop: 2 }}
+                >
+                  <Button
+                    variant="outlined"
+                    sx={{ height: "42px", width: "120px" }}
+                    onClick={closeModal}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    autoFocus
+                    variant="contained"
+                    sx={{ width: "120px", height: "42px" }}
+                    onClick={passwordFormik.handleSubmit}
+                    disabled={passwordFormik.isSubmitting}
+                  >
+                    Simpan
+                  </Button>
+                </DialogActions>
+                </Dialog>
 
             {/* {  ADDRESS  } */}
 
