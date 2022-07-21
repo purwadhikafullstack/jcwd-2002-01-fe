@@ -49,6 +49,10 @@ const cartPage = () => {
 
   useEffect(() => {
     // fetchCart();
+    if (!userSelector.id) {
+      router.push("/");
+    }
+
     if (userCart.cartItems) {
       setCartItems(userCart.cartItems);
     }

@@ -98,7 +98,6 @@ const productDetailPage = ({ productDetail }) => {
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue);
   };
-
   return (
     <>
       {alert ? (

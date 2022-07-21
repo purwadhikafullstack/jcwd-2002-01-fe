@@ -103,6 +103,7 @@ const UserSidebar = ({ category = [], setSelectedCategory, selectedCategory }) =
           subMenus={category}
           setSelectedCategory={setSelectedCategory}
           selectedCategory={selectedCategory}
+          setKategoriTerpilih={setKategoriTerpilih}
         />
       </Box>
       <Box
