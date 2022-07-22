@@ -4,7 +4,7 @@ const initial_state = {
   cartItems: [],
   cartCount: 0,
   totalPrice: 0,
-  selectedItems : []
+  selectedItems: [],
 };
 
 const cartReducer = createSlice({
@@ -55,6 +55,6 @@ export const {
   totalCart,
   quantityHandler,
   removefromCart,
-  selectedItems
+  selectedItems,
 } = cartReducer.actions;
 export default cartReducer.reducer;
