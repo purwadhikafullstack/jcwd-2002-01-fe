@@ -307,7 +307,7 @@ const myProfile = () => {
                 {!selectedFile ? (
                   <Button
                     variant="contained"
-                    sx={{ fontSize: "12px", fontWeight: "700" }}
+                    sx={{ fontSize: "12px", fontWeight: "700", }}
                     onClick={() => inputFileRef.current.click()}
                     disabled={selectedFile ? true : false}
                   >
