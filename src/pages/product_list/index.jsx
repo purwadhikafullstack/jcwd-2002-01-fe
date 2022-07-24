@@ -43,7 +43,6 @@ const productListPage = () => {
       const res = await axiosInstance.get("/categories");
 
       setCategories(res.data.result);
-      console.log(res.data.result);
     } catch (err) {
       console.log(err);
     }
@@ -223,6 +222,7 @@ const productListPage = () => {
             {/* product list */}
             <Link underline="hover" href="/product_detail/:Id"><a>
 
+            {/* product list */}
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
             </Box>
@@ -239,10 +239,8 @@ const productListPage = () => {
                 count={Math.ceil(productsCount / maxProductPerPage)}
                 page={page}
                 onChange={(e, value) => setPage(value)}
-                />
+              />
             </Box>
-                </a>
-            </Link>
           </Grid>
         </Grid>
       </Box>

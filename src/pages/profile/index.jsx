@@ -357,6 +357,7 @@ const myProfile = () => {
               <FormControl sx={{ width: "500px", mb: "20px" }}>
                 <FormLabel htmlFor="nama">Fullname</FormLabel>
                 <OutlinedInput
+                  value={userSelector.full_name || userSelector.username}
                   id="nama"
                   size="small"
                   placeholder={userSelector.full_name? userSelector.full_name : `${userSelector.username}(username)`}
