@@ -44,6 +44,7 @@ const ProductCard = ({ productName, price, productImage, id }) => {
         quantity: 1
       });
 
+      console.log(res.data.result.rows);
 
       // const newCart = [...cartSelector.cartItems]
       // newCart.push(res.data.result)

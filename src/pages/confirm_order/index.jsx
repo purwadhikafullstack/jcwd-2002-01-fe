@@ -142,7 +142,7 @@ const confirmOrder = () => {
     try {
       const res = await axiosInstance.get("/cart/checkout-items");
 
-      setProducts(res.data.result[0].TransactionItems);
+      setProducts(res.data.result[0]);
     } catch (err) {
       console.log(err);
     }
@@ -153,7 +153,7 @@ const confirmOrder = () => {
   }, []);
 
   const renderCheckedoutItems = () => {
-    return products?.map((val, idx) => {
+    return products?.TransactionItems?.map((val, idx) => {
       return (
         <CheckoutCard
           price={val?.Product.price}
@@ -205,11 +205,14 @@ const confirmOrder = () => {
                 Batas Akhir Pembayaran
               </Typography>
               <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
-                {moment().format("LLLL")}
+                {moment(products.valid_until).format("LLLL")}
               </Typography>
             </Stack>
             <Box>
-              <Countdown date={Date.now() + 8.64e7} renderer={renderer} />
+              <Countdown
+                date={moment(products.valid_until) + 8.64e7}
+                renderer={renderer}
+              />
             </Box>
           </Box>
           <ProductCheckoutContainer

@@ -16,12 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "configs/api";
 import { addToCart, removefromCart } from "redux/reducers/cart";
 
-const CartCard = ({ val, setCartChecked, checked = false, index}) => {
+const CartCard = ({ val, setCartChecked, checked = false, index, stock }) => {
   const userSelector = useSelector((state) => state.auth);
   const [quantity, setQuantity] = useState(val.quantity);
   const dispatch = useDispatch();
   const productId = val.product_id;
-
 
   const editQuantity = async (type = "") => {
     try {
@@ -30,11 +29,11 @@ const CartCard = ({ val, setCartChecked, checked = false, index}) => {
           quantity: quantity + 1,
           product_id: val.product_id,
         });
-      } else if (type == "decrement"){
-         await axiosInstance.post("/cart", {
-           quantity: quantity - 1,
-           product_id: val.product_id,
-         });
+      } else if (type == "decrement") {
+        await axiosInstance.post("/cart", {
+          quantity: quantity - 1,
+          product_id: val.product_id,
+        });
       }
     } catch (err) {
       console.log(err);
@@ -45,13 +44,11 @@ const CartCard = ({ val, setCartChecked, checked = false, index}) => {
     try {
       await axiosInstance.delete(`/cart/${productId}`);
 
-      console.log("delete item");
-
       const res = await axiosInstance.get("/cart", {
         user_id: userSelector.id,
       });
 
-      dispatch(removefromCart(index))
+      dispatch(removefromCart(index));
       dispatch(addToCart(res.data.result.rows));
     } catch (err) {
       console.log(err);
@@ -120,6 +117,7 @@ const CartCard = ({ val, setCartChecked, checked = false, index}) => {
           </IconButton>
 
           <StockButton
+            stock={stock}
             quantity={val?.quantity}
             editQuantity={editQuantity}
             setQuantity={setQuantity}

@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { addToCart, quantityHandler } from "redux/reducers/cart";
 import * as Yup from "yup";
 
-const StockButton = ({ quantity, id, setQuantity, editQuantity }) => {
+const StockButton = ({ quantity, id, setQuantity, editQuantity, stock }) => {
   const [counter, setCounter] = useState(quantity);
   const dispatch = useDispatch();
 
@@ -15,7 +15,7 @@ const StockButton = ({ quantity, id, setQuantity, editQuantity }) => {
       if (counter === "") {
         return;
       }
-      if (counter >= 10) return;
+      if (counter >= stock) return;
       setCounter(counter + 1);
       dispatch(quantityHandler({ id, type: "increment", quantity: 1 }));
       editQuantity("increment")
@@ -71,6 +71,7 @@ const StockButton = ({ quantity, id, setQuantity, editQuantity }) => {
         {counter}
       </Typography>
       <Button
+        disabled={counter >= stock}
         onClick={() => qtyHandler("increment", quantity)}
         variant="outlined"
         sx={{
@@ -78,6 +79,9 @@ const StockButton = ({ quantity, id, setQuantity, editQuantity }) => {
           fontWeight: "bold",
           "&:hover": {
             border: 0,
+          },
+          ":disabled": {
+            border: "none",
           },
         }}
       >

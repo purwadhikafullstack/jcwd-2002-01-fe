@@ -14,7 +14,7 @@ import {
 import Footer from "components/Footer";
 import ProductCard from "components/ProductCard";
 import UserSidebar from "components/Sidebar";
-import Link from "next/link"
+import Link from "next/link";
 import axiosInstance from "configs/api";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -43,7 +43,6 @@ const productListPage = () => {
       const res = await axiosInstance.get("/categories");
 
       setCategories(res.data.result);
-      console.log(res.data.result);
     } catch (err) {
       console.log(err);
     }
@@ -101,7 +100,6 @@ const productListPage = () => {
     } else if (value == "Z-A") {
       setSortBy("name");
       setSortDir("DESC");
-      
     } else if (value == "") {
       setSortBy("");
       setSortDir("");
@@ -207,9 +205,8 @@ const productListPage = () => {
                 ) : undefined}
               </Box>
             </Box>
-            {/* product list */}
-            <Link underline="hover" href="/product_detail/:Id"><a>
 
+            {/* product list */}
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
             </Box>
@@ -221,16 +218,14 @@ const productListPage = () => {
                 justifyContent: "center",
                 flexDirection: "column",
               }}
-              >
+            >
               page: {page}
               <Pagination
                 count={Math.ceil(productsCount / maxProductPerPage)}
                 page={page}
                 onChange={(e, value) => setPage(value)}
-                />
+              />
             </Box>
-                </a>
-            </Link>
           </Grid>
         </Grid>
       </Box>
