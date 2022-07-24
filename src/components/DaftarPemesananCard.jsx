@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import fotoObat from "assets/panadol.jpg";
+import moment from "moment";
 
 const DaftarPemesananCard = ({
   status,
@@ -37,7 +38,7 @@ const DaftarPemesananCard = ({
         }}
       >
         <Typography fontSize="14px" fontWeight="400">
-          {date}
+          {moment(date).format("LLLL")}
         </Typography>
         {/* <Box
           sx={{
@@ -126,7 +127,7 @@ const DaftarPemesananCard = ({
                   Rp {price?.toLocaleString()}
                 </Typography>
               </Box>
-              <Link underline="hover" sx={{ ":hover": { cursor: "pointer" } }}>
+              <Link underline="hover" sx={{ ":hover": { cursor: "pointer" } }} href={status == "pending" ? "/confirm_order" : undefined}>
                 <Typography fontSize="12px">Tampilkan Detail</Typography>
               </Link>
               <Divider />
@@ -149,8 +150,12 @@ const DaftarPemesananCard = ({
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Box textAlign="right" sx={{ mr: "15px" }}>
                   <Typography fontSize="12px">Bayar Sebelum</Typography>
-                  <Typography fontSize="12px">{valid_until}</Typography>
+                  <Typography fontSize="12px">
+                    {moment(valid_until).format("LLLL")}
+                  </Typography>
                 </Box>
+                <Link href="/confirm_order">
+
                 <Button
                   variant="contained"
                   sx={{
@@ -162,6 +167,7 @@ const DaftarPemesananCard = ({
                 >
                   Bayar Sekarang
                 </Button>
+                </Link>
               </Box>
             </Box>
           </>

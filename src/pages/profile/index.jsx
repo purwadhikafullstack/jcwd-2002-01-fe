@@ -38,7 +38,7 @@ import { useFormik } from "formik";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MdClose } from "react-icons/md";
-// import { useSnackbar } from "notistack";
+import { useSelector } from "react-redux";
 
 import * as Yup from "yup";
 
@@ -50,6 +50,7 @@ const myProfile = () => {
   const inputFileRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(false);
+  const userSelector = useSelector(state => state.auth)
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => {
     setOpenModal(false);
@@ -162,7 +163,6 @@ const myProfile = () => {
             city: values.city,
             kecamatan: values.kecamatan,
             postal_code: values.postal_code,
-            // kalo boolean gimana cara validatenya
             is_main_address: values.is_main_address,
             address_label: values.address_label,
           };
@@ -320,6 +320,7 @@ const myProfile = () => {
               <FormControl sx={{ width: "500px", mb: "20px" }}>
                 <FormLabel htmlFor="nama">Fullname</FormLabel>
                 <OutlinedInput
+                  value={userSelector.full_name || userSelector.username}
                   id="nama"
                   size="small"
                   onChange={(event) =>

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -7,6 +8,7 @@ import {
   IconButton,
   Link,
   Modal,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
@@ -43,8 +45,19 @@ const checkoutPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(selectedItems);
   const [pageIsReady, setPageIsReady] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
+  const [severity, setSeverity] = useState();
   const router = useRouter();
   const handleOpen = () => setOpenModal(true);
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
 
   const handleClose = () => {
     setOpenModal(false);
@@ -156,6 +169,12 @@ const checkoutPage = () => {
         cart_id: selectedItems || selectedProduct,
       });
 
+      // if (res?.data?.message !== undefined) {
+      //   setAlertContent("Added to Cart!");
+      //   setAlert(true);
+      //   setSeverity(true);
+      // }
+
       setSelectedProduct(res.data.result);
     } catch (err) {
       console.log(err);
@@ -187,23 +206,48 @@ const checkoutPage = () => {
     });
   };
 
-
-
   const checkout = async () => {
     try {
-      await axiosInstance.post("/cart/checkout", {
+      const res = await axiosInstance.post("/cart/checkout", {
         cart_id: selectedItems,
         total_price: totalPrice,
+        addressId: selectedAddress.id,
       });
 
-      router.push("/confirm_order");
+      if (res?.data?.message !== undefined) {
+        router.push("/confirm_order");
+      }
+      
     } catch (err) {
       console.log(err);
+      setAlertContent(err?.response?.data?.message);
+      setAlert(true);
+      setSeverity(false);
     }
   };
 
   return (
     <Box>
+      {alert ? (
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert variant="filled" severity={severity ? "success" : "error"}>
+            {alertContent}{" "}
+            <Link
+              href="/confirm_order"
+              sx={{ color: "brand.500", fontWeight: "700" }}
+            >
+              Bayar transaksi yang lain
+            </Link>
+          </Alert>
+        </Snackbar>
+      ) : (
+        <></>
+      )}
       <Grid container padding="56px 96px">
         <Grid item sm={8} md={8}>
           <Box sx={{ px: "60px" }}>
@@ -215,33 +259,42 @@ const checkoutPage = () => {
               }
             >
               <Stack spacing={2}>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Typography>
-                    {selectedAddress?.recipient_name},{" "}
-                    {selectedAddress?.recipient_telephone}
-                  </Typography>
-                  <Link underline="hover">
-                    <Typography
-                      onClick={handleOpenAddress}
-                      sx={{
-                        color: "brand.500",
-                        fontWeight: "700",
-                        fontSize: "12px",
-                        ":hover": {
-                          cursor: "pointer",
-                        },
-                      }}
+                {selectedAddress ? (
+                  <>
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
                     >
-                      Pilih Alamat Lain
-                    </Typography>
-                  </Link>
-                </Box>
-                <Typography>{selectedAddress?.address_label}</Typography>
-                <Typography>
-                  {`${selectedAddress?.address}, Kec. ${selectedAddress?.kecamatan}, Kota ${selectedAddress?.city}, 
+                      <Typography>
+                        {selectedAddress?.recipient_name},{" "}
+                        {selectedAddress?.recipient_telephone}
+                      </Typography>
+                      <Link underline="hover">
+                        <Typography
+                          onClick={handleOpenAddress}
+                          sx={{
+                            color: "brand.500",
+                            fontWeight: "700",
+                            fontSize: "12px",
+                            ":hover": {
+                              cursor: "pointer",
+                            },
+                          }}
+                        >
+                          Pilih Alamat Lain
+                        </Typography>
+                      </Link>
+                    </Box>
+                    <Typography>{selectedAddress?.address_label}</Typography>
+                    <Typography>
+                      {`${selectedAddress?.address}, Kec. ${selectedAddress?.kecamatan}, Kota ${selectedAddress?.city}, 
                 ${selectedAddress?.province} ${selectedAddress?.postal_code}`}
-                </Typography>
+                    </Typography>
+                  </>
+                ) : (
+                  <Typography sx={{ my: "40px" }}>Belum Ada Alamat</Typography>
+                )}
                 <Divider />
+
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <IconButton
                     size="small"
