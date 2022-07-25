@@ -19,6 +19,7 @@ import {
 import Footer from "components/Footer";
 import axiosInstance from "configs/api";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useState } from "react";
 import * as Yup from "yup";
@@ -33,6 +34,7 @@ const shippingAddress = () => {
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
   const [severity, setSeverity] = useState();
+  const router = useRouter()
 
   const formik = useFormik({
     initialValues: {
@@ -85,6 +87,7 @@ const shippingAddress = () => {
           setAlertContent("Added to Cart!");
           setAlert(true);
           setSeverity(true);
+          router.push("/checkout")
         }
 
         console.log(res);

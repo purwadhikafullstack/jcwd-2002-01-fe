@@ -19,7 +19,6 @@ const CartProvider = ({ children }) => {
           user_id: userSelector.id,
         });
         const cartItems = res.data;
-        console.log("fetch data");
         dispatch(addToCart(cartItems.result.rows));
         dispatch(cartCount(cartItems.result.count));
       } catch (err) {

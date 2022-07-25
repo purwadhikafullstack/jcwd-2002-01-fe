@@ -17,10 +17,15 @@ import DaftarPemesananCard from "components/DaftarPemesananCard";
 import Footer from "components/Footer";
 import TabPanel from "components/TabPanel";
 import axiosInstance from "configs/api";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaListUl } from "react-icons/fa";
+import { IoMdMail } from "react-icons/io";
+import { MdLocationOn, MdPayments } from "react-icons/md";
+import { RiHeartFill } from "react-icons/ri";
+import { useSelector } from "react-redux";
 
 const ProsesPemesanan = () => {
   const router = useRouter();
@@ -29,6 +34,7 @@ const ProsesPemesanan = () => {
   const [sortBy, setSortBy] = useState(router.query._sortyBy);
   const [sortDir, setSortDir] = useState(router.query._sortyDir);
   const [status, setStatus] = useState("");
+  const userSelector = useSelector(state => state.auth)
 
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue);
@@ -70,6 +76,8 @@ const ProsesPemesanan = () => {
     });
   };
 
+
+
   return (
     <Box>
       <Container maxWidth="xl">
@@ -94,8 +102,16 @@ const ProsesPemesanan = () => {
               <Box
                 sx={{ display: "flex", alignItems: "center", p: "28px 40px" }}
               >
-                <Avatar sx={{ mr: "28px" }} />
-                <Typography fontWeight="700">Jane Doe</Typography>
+                <Avatar
+                  src={
+                    userSelector?.profile_image || "/static/images/avatar/1.jpg"
+                  }
+                  sx={{ mr: "28px" }}
+                  alt={userSelector.username}
+                />
+                <Typography fontWeight="700">
+                  {userSelector.username}
+                </Typography>
               </Box>
               <Divider variant="fullWidth" />
               <Box height="380px" sx={{ px: 4, py: 2 }}>
@@ -117,7 +133,17 @@ const ProsesPemesanan = () => {
                     <Box sx={{ mr: "20px" }}>
                       <FaUserCircle />
                     </Box>
-                    <Typography>Profile</Typography>
+                    <Link href="/profile">
+                      <Typography
+                        sx={{
+                          ":hover": {
+                            cursor: "pointer",
+                          },
+                        }}
+                      >
+                        Profile
+                      </Typography>
+                    </Link>
                   </Box>
                   <Box
                     sx={{
@@ -127,7 +153,7 @@ const ProsesPemesanan = () => {
                     }}
                   >
                     <Box sx={{ mr: "20px" }}>
-                      <FaUserCircle />
+                      <FaListUl />
                     </Box>
                     <Typography>Proses Pemesanan</Typography>
                   </Box>
@@ -139,7 +165,7 @@ const ProsesPemesanan = () => {
                     }}
                   >
                     <Box sx={{ mr: "20px" }}>
-                      <FaUserCircle />
+                      <MdPayments />
                     </Box>
                     <Typography>Metode Pembayaran</Typography>
                   </Box>
@@ -151,7 +177,7 @@ const ProsesPemesanan = () => {
                     }}
                   >
                     <Box sx={{ mr: "20px" }}>
-                      <FaUserCircle />
+                      <MdLocationOn />
                     </Box>
                     <Typography>Alamat Pengiriman</Typography>
                   </Box>
@@ -163,7 +189,7 @@ const ProsesPemesanan = () => {
                     }}
                   >
                     <Box sx={{ mr: "20px" }}>
-                      <FaUserCircle />
+                      <RiHeartFill />
                     </Box>
                     <Typography>Wishlist</Typography>
                   </Box>
@@ -175,7 +201,7 @@ const ProsesPemesanan = () => {
                     }}
                   >
                     <Box sx={{ mr: "20px" }}>
-                      <FaUserCircle />
+                      <IoMdMail />
                     </Box>
                     <Typography>Proses Bantuan</Typography>
                   </Box>
@@ -196,6 +222,7 @@ const ProsesPemesanan = () => {
             <Box
               sx={{
                 width: "900px",
+                minHeight: "600px",
                 boxShadow: "0px 2px 3px 2px #E8F6FC, 0px 4px 12px 4px #E8F6FC",
                 p: "28px 40px",
                 borderRadius: "8px",
@@ -283,42 +310,96 @@ const ProsesPemesanan = () => {
                 {userTransaction.length !== 0 ? (
                   renderTransactionList()
                 ) : (
-                  <Box>Tidak ada Item</Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "24px",
+                    }}
+                  >
+                    Tidak ada Item
+                  </Box>
                 )}
               </TabPanel>
               <TabPanel value={tabMenu} index={1}>
                 {userTransaction.length !== 0 ? (
                   renderTransactionList()
                 ) : (
-                  <Box>Tidak ada Item</Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "24px",
+                    }}
+                  >
+                    Tidak ada Item
+                  </Box>
                 )}
               </TabPanel>
               <TabPanel value={tabMenu} index={2}>
                 {userTransaction.length !== 0 ? (
                   renderTransactionList()
                 ) : (
-                  <Box>Tidak ada Item</Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "24px",
+                    }}
+                  >
+                    Tidak ada Item
+                  </Box>
                 )}
               </TabPanel>
               <TabPanel value={tabMenu} index={3}>
                 {userTransaction.length !== 0 ? (
                   renderTransactionList()
                 ) : (
-                  <Box>Tidak ada Item</Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "24px",
+                    }}
+                  >
+                    Tidak ada Item
+                  </Box>
                 )}
               </TabPanel>
               <TabPanel value={tabMenu} index={4}>
                 {userTransaction.length !== 0 ? (
                   renderTransactionList()
                 ) : (
-                  <Box>Tidak ada Item</Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "24px",
+                    }}
+                  >
+                    Tidak ada Item
+                  </Box>
                 )}
               </TabPanel>
               <TabPanel value={tabMenu} index={5}>
                 {userTransaction.length !== 0 ? (
                   renderTransactionList()
                 ) : (
-                  <Box>Tidak ada Item</Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "24px",
+                    }}
+                  >
+                    Tidak ada Item
+                  </Box>
                 )}
               </TabPanel>
             </Box>

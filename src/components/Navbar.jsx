@@ -28,6 +28,7 @@ import { logout } from "redux/reducers/auth";
 import jsCookie from "js-cookie";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { search } from "redux/reducers/search";
 
 const Navbar = () => {
   const userSelector = useSelector((state) => state.auth);
@@ -85,7 +86,16 @@ const Navbar = () => {
           }}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton onClick={() => dispatch(search(searchInput))}>
+              <IconButton
+                onClick={() => {
+                  if (!Router.pathname.startsWith("/product_list")) {
+                    Router.push("/product_list");
+                    dispatch(search(searchInput));
+                  } else {
+                    dispatch(search(searchInput));
+                  }
+                }}
+              >
                 {<HiOutlineSearch />}
               </IconButton>
             </InputAdornment>
@@ -114,6 +124,9 @@ const Navbar = () => {
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
               <MenuItem>
                 <Link href={"/profile"}>Profil Saya</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link href={"/proses_pemesanan"}>Proses Pemesanan</Link>
               </MenuItem>
               <MenuItem onClick={logoutBtnHandler}>Keluar</MenuItem>
             </Menu>

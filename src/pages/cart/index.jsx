@@ -42,16 +42,19 @@ const cartPage = () => {
     dispatch(totalCart(calculateTotalPrice()));
     dispatch(selectedItems(checkedItems));
 
-    localStorage.setItem("user-cart", JSON.stringify(checkedItems))
+    localStorage.setItem("user-cart", JSON.stringify(checkedItems));
 
     router.push("/checkout");
-  }
+  };
 
   useEffect(() => {
-    // fetchCart();
     if (!userSelector.id) {
       router.push("/");
     }
+  }, [userSelector.id]);
+
+  useEffect(() => {
+    // fetchCart();
 
     if (userCart.cartItems) {
       setCartItems(userCart.cartItems);
@@ -74,7 +77,7 @@ const cartPage = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "space-between",
-                px: "70px"
+                px: "70px",
               }}
             >
               <ProductCheckoutContainer
@@ -103,6 +106,7 @@ const cartPage = () => {
                 {cartItems?.map((val, idx) => {
                   return (
                     <CartCard
+                      stock={val?.Product?.Stock_opnames[0]?.amount}
                       index={idx}
                       val={val}
                       setCartChecked={() => {
