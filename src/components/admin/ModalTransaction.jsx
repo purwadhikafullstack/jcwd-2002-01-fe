@@ -14,7 +14,7 @@ import moment from "moment";
 import { useState } from "react";
 import axiosInstance from "configs/api";
 
-const ModalTransaction = ({ open, handleClose, data }) => {
+const ModalTransaction = ({ open, handleClose, data, fetchTransaction }) => {
   const [allProduct, setAllProduct] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
@@ -41,6 +41,8 @@ const ModalTransaction = ({ open, handleClose, data }) => {
         setAlert(true);
         setSeverity(true);
       }
+      fetchTransaction();
+      handleClose();
     } catch (err) {
       console.log(err);
       setAlertContent(err?.response?.data?.message);

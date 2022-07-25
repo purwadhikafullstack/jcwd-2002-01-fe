@@ -94,6 +94,7 @@ const ModalAddStock = ({ open, handleClose, data, fetchProduct }) => {
           <CloseIcon
             onClick={() => {
               handleClose();
+              setActiveStep(0);
             }}
             sx={{
               "&:hover": {
