@@ -5,6 +5,8 @@ import {
   Container,
   FormControl,
   FormControlLabel,
+  InputAdornment,
+  InputLabel,
   MenuItem,
   OutlinedInput,
   Pagination,
@@ -27,14 +29,30 @@ const Transaction = () => {
   const [page, setPage] = useState(router.query._page || 1);
   const [productsCount, setProductsCount] = useState(0);
   const [pageIsReady, setPageIsReady] = useState(false);
+  const [sortBy, setSortBy] = useState(router.query._sortBy || "");
+  const [sortDir, setSortDir] = useState(router.query._sortDir || "");
+  const [sortInput, setSortInput] = useState("");
+  const [searchValue, setSearchValue] = useState(router.query.username);
+  const [searchInput, setSearchInput] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [searchDateValue, setSearchDateValue] = useState(router.query.date);
 
   const cardHandle = (event) => {
     setCardPerPage(event.target.value);
+    setPage(1);
   };
 
   const handleChange = (e, p) => {
     setPage(p);
     // _DATA.jump(p);
+  };
+
+  const startDateHandle = (event) => {
+    setStartDate(event.target.value);
+  };
+  const endDateHandle = (event) => {
+    setEndDate(event.target.value);
   };
 
   const fetchTransaction = async () => {
@@ -44,6 +62,10 @@ const Transaction = () => {
           status_transaction: "waiting for confirmation",
           _limit: cardPerPage,
           _page: page,
+          _sortBy: sortBy ? sortBy : undefined,
+          _sortDir: sortDir ? sortDir : undefined,
+          username: searchValue,
+          date: searchDateValue,
         },
       });
       const data = res.data.result.rows;
@@ -73,6 +95,41 @@ const Transaction = () => {
     }
   };
 
+  const sortInputHandler = (event) => {
+    const { value } = event.target;
+    setSortInput(value);
+
+    if (value == "Terbaru") {
+      setSortBy("createdAt");
+      setSortDir("DESC");
+      setPage(1);
+    } else if (value == "Terlama") {
+      setSortBy("createdAt");
+      setSortDir("ASC");
+      setPage(1);
+    } else if (value == "") {
+      setSortBy("");
+      setSortDir("");
+      setPage(1);
+    }
+  };
+
+  const searchInputHandler = (event) => {
+    const { value } = event.target;
+
+    setSearchInput(value);
+  };
+
+  const searchButton = () => {
+    setSearchValue(searchInput);
+    setPage(1);
+  };
+
+  const searchDateButton = () => {
+    setSearchDateValue([startDate, endDate]);
+    setPage(1);
+  };
+
   const renderTransaction = () => {
     return transaction.map((val) => {
       return <TransactionCard data={val} fetchTransaction={fetchTransaction} />;
@@ -81,8 +138,8 @@ const Transaction = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      if (router.query.name) {
-        setSearchValue(router.query.name);
+      if (router.query.username) {
+        setSearchValue(router.query.username);
       }
       if (router.query._sortDir) {
         setSortDir(router.query._sortDir);
@@ -93,8 +150,8 @@ const Transaction = () => {
       if (router.query._page) {
         setPage(parseInt(router.query._page));
       }
-      if (router.query.selectedCategory) {
-        setSelectedCategory(router.query.selectedCategory);
+      if (router.query.date) {
+        setSearchDateValue(router.query.date);
       }
       setPageIsReady(true);
     }
@@ -106,11 +163,30 @@ const Transaction = () => {
 
       router.push({
         query: {
+          username: searchValue,
           _page: page ? page : undefined,
+          date: searchDateValue,
+          _sortBy: sortBy ? sortBy : undefined,
+          _sortDir: sortDir ? sortDir : undefined,
         },
       });
+
+      if (searchValue === "" || sortInput === "") {
+        router.replace("/admin/transaction/transactions", undefined, {
+          shallow: true,
+        });
+      }
     }
-  }, [pageIsReady, cardPerPage, page]);
+  }, [
+    pageIsReady,
+    cardPerPage,
+    page,
+    sortDir,
+    sortBy,
+    searchValue,
+    searchDateValue,
+  ]);
+
   return (
     <Container sx={{ mt: "24px" }}>
       {/* Header */}
@@ -123,7 +199,7 @@ const Transaction = () => {
       >
         <Box>
           <Typography sx={{ fontWeight: "700", fontSize: "20px" }}>
-            Pesanan baru
+            Semua Pesanan
           </Typography>
         </Box>
         <Box display="flex">
@@ -150,53 +226,93 @@ const Transaction = () => {
               width: "328px",
               height: "42px",
               backgroundColor: "white",
-              marginRight: "16px",
             }}
+            onChange={searchInputHandler}
             placeholder="Cari nama obat"
-            endAdornment={<SearchIcon htmlColor="gray" />}
+            endAdornment={
+              <InputAdornment>
+                <SearchIcon
+                  htmlColor="gray"
+                  onClick={searchButton}
+                  sx={{
+                    ":hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                />
+              </InputAdornment>
+            }
           />
         </Stack>
+
         <Stack item>
-          <FormControl sx={{ marginRight: "16px" }}>
+          <FormControl size="small">
+            <InputLabel>Sort</InputLabel>
             <Select
+              label="Sort"
+              value={sortInput}
+              onChange={sortInputHandler}
               sx={{
                 borderRadius: "10px",
                 minWidth: "156px",
                 height: "42px",
                 backgroundColor: "white",
               }}
-              value="obat bebas"
-              displayEmpty
-              autoWidth
             >
-              <MenuItem disabled value="">
-                Filter
-              </MenuItem>
-              <MenuItem value="Obat Bebas">Obat Bebas</MenuItem>
-              <MenuItem value="Obat Resep">Obat Resep</MenuItem>
+              <MenuItem value="">None</MenuItem>
+              <MenuItem value="Terbaru">Terbaru</MenuItem>
+              <MenuItem value="Terlama">Terlama</MenuItem>
             </Select>
           </FormControl>
         </Stack>
         <Stack item>
-          <FormControl>
-            <Select
-              sx={{
-                borderRadius: "10px",
-                minWidth: "156px",
-                height: "42px",
-                backgroundColor: "white",
-              }}
-              value={2}
-              autoWidth
-              displayEmpty
+          <FormControl sx={{ borderRadius: "4px" }} size="small">
+            <Box
+              display="flex"
+              sx={{ justifyContent: "center", alignItems: "center" }}
             >
-              <MenuItem value="" disabled>
-                Urutkan
-              </MenuItem>
-              <MenuItem value="Terbaru">Terbaru</MenuItem>
-              <MenuItem value="Harga Tertinggi">Harga Tertinggi</MenuItem>
-              <MenuItem value="Harga Terendah">Harga Terendah</MenuItem>
-            </Select>
+              <Box>
+                <OutlinedInput
+                  type="date"
+                  sx={{
+                    borderRadius: "10px",
+                    width: "156px",
+                    height: "42px",
+                    backgroundColor: "white",
+                    marginRight: "16px",
+                  }}
+                  placeholder="Cari nama obat"
+                  onChange={startDateHandle}
+                  value={startDate}
+                />
+              </Box>
+              <Box>
+                <OutlinedInput
+                  type="date"
+                  sx={{
+                    borderRadius: "10px",
+                    width: "156px",
+                    height: "42px",
+                    backgroundColor: "white",
+                    marginRight: "16px",
+                  }}
+                  placeholder="Cari nama obat"
+                  onChange={endDateHandle}
+                  value={endDate}
+                />
+              </Box>
+              <Button>
+                <SearchIcon
+                  htmlColor="gray"
+                  onClick={searchDateButton}
+                  sx={{
+                    ":hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                />
+              </Button>
+            </Box>
           </FormControl>
         </Stack>
       </Stack>
@@ -246,7 +362,7 @@ const Transaction = () => {
       {transaction.length ? (
         renderTransaction()
       ) : (
-        <Typography>No transaction added</Typography>
+        <Typography>No Transaction Added</Typography>
       )}
     </Container>
   );
