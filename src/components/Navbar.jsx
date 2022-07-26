@@ -59,7 +59,8 @@ const Navbar = () => {
       sx={{
         height: "80px",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
+        px: 5,
         boxShadow: "0px 4px 12px -8px #1BA1E4",
         top: "0",
         position: "sticky",
@@ -67,23 +68,27 @@ const Navbar = () => {
         zIndex: "9",
       }}
     >
-      <Link href="/">
-        <Box marginRight="18px" sx={{ ":hover": { cursor: "pointer" } }}>
+      <Box
+        marginRight="18px"
+        display={{ xs: "none", md: "block" }}
+        sx={{ ":hover": { cursor: "pointer" } }}
+      >
+        <Link href="/">
           <Image src={logo} />
-        </Box>
-      </Link>
-      <FormControl>
+        </Link>
+      </Box>
+      <FormControl
+        sx={{
+          width: 800,
+          mr: "67px",
+          borderRadius: "8px",
+        }}
+      >
         <OutlinedInput
           placeholder="Cari Obat, Suplemen, Vitamin, produk Kesehatan"
           id="searchInput"
           onChange={(e) => setSearchInput(e.target.value)}
-          sx={{
-            width: "744px",
-            height: "44px",
-            mr: "67px",
-            borderRadius: "8px",
-            p: "24px 15px",
-          }}
+          sx={{ minWidth: "120px" }}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -138,7 +143,7 @@ const Navbar = () => {
           </Box>
         </Stack>
       ) : (
-        <>
+        <Box display={{ xs: "flex" }}>
           <Link href="/login_user">
             <Button
               variant="outlined"
@@ -156,6 +161,11 @@ const Navbar = () => {
             <Button
               variant="contained"
               sx={{
+                display: {
+                  xs: "none",
+                  sm: "inline-block",
+                  md: "inline-block",
+                },
                 height: "44px",
                 width: "118px",
               }}
@@ -163,7 +173,7 @@ const Navbar = () => {
               Daftar
             </Button>
           </Link>
-        </>
+        </Box>
       )}
     </Box>
   );
