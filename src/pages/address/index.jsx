@@ -316,7 +316,7 @@ const shippingAddress = () => {
           </Stack>
         </Box>
       </Container>
-      <Box sx={{ visibility: { xs: "hidden", md: "visible" } }}>
+      <Box sx={{ width: "100%", visibility: { xs: "hidden", md: "visible" } }}>
         <Footer />
       </Box>
     </Box>

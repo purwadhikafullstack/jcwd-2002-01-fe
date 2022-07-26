@@ -155,7 +155,7 @@ const productListPage = () => {
       <Box sx={{ px: "96px", pt: "20px" }}>
         <Typography sx={{ py: "20px" }}>Beranda/ Kategori/ Obat</Typography>
         <Grid container>
-          <Grid item sx={{display: {xs: "none", md: "grid"}}} sm={4} md={4}>
+          <Grid item sx={{ display: { xs: "none", md: "grid" } }} sm={4} md={4}>
             <Box display={{ xs: "none", sm: "none", md: "inline-block" }}>
               <UserSidebar
                 category={categories}
@@ -230,9 +230,8 @@ const productListPage = () => {
           </Grid>
         </Grid>
       </Box>
-      <Box display={{xs: "none", md: "inline-block"}}>
-
-      <Footer />
+      <Box display={{xs: "none", md: "flex"}}>
+        <Footer />
       </Box>
     </Box>
   );
