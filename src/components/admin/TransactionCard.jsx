@@ -19,7 +19,7 @@ import ModalTransaction from "./ModalTransaction";
 import moment from "moment";
 import axiosInstance from "configs/api";
 
-const TransactionCard = ({ data }) => {
+const TransactionCard = ({ data, fetchTransaction }) => {
   const [salinanResep, setSalinanResep] = useState(false);
   const [acceptOrderOpen, setAcceptOrderOpen] = useState(false);
   const [isAvailable, setAvailable] = useState(false);
@@ -44,8 +44,8 @@ const TransactionCard = ({ data }) => {
   const checkStock = () => {
     return data.productTransaction.forEach((val) => {
       if (
-        val.quantity > val.Product.Stock_opnames[0]?.amount &&
-        val.Product.Stock_opnames.length
+        val?.quantity > val?.Product?.Stock_opnames[0]?.amount ||
+        !val.Product?.Stock_opnames?.length
       ) {
         setAvailable(true);
       } else {
@@ -150,6 +150,7 @@ const TransactionCard = ({ data }) => {
         setAlert(true);
         setSeverity(true);
       }
+      fetchTransaction();
     } catch (err) {
       console.log(err);
       setAlertContent("failed");
@@ -401,6 +402,7 @@ const TransactionCard = ({ data }) => {
           open={acceptOrderOpen}
           handleClose={handleClose}
           data={data}
+          fetchTransaction={fetchTransaction}
         ></ModalTransaction>
       </Box>
     </Box>
