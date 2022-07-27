@@ -41,10 +41,6 @@ const AdminSidebar = () => {
               submenuTitle: "Daftar Produk",
               href: "/admin/inventory/products",
             },
-            {
-              submenuTitle: "Tambah Produk",
-              href: "/admin/inventory/mutation",
-            },
           ]}
           icon={<LocalPharmacyIcon />}
           prefix="/admin/inventory"

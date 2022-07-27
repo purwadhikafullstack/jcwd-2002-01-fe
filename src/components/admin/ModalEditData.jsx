@@ -102,6 +102,7 @@ const ModalEditData = ({
 
       setNewProductName(false);
       setnewProductPrice(false);
+      setSelectedFile([]);
 
       fetchProduct();
 
