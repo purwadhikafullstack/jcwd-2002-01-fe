@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Link,
+  Link as LinkUI,
   Typography,
   FormControl,
   OutlinedInput,
@@ -29,6 +29,7 @@ import * as Yup from "yup";
 import { FcGoogle } from "react-icons/fc";
 import { BsFacebook } from "react-icons/bs";
 import axiosInstance from "configs/api";
+import Link from "next/link";
 
 axiosInstance;
 const RegisterPage = () => {
@@ -142,7 +143,10 @@ const RegisterPage = () => {
             </Box>
 
             <Typography>
-              Sudah punya akun? <Link component="button">Masuk</Link>
+              Sudah punya akun?
+              <Link href={"/login_user"}>
+                <LinkUI component="button">Masuk</LinkUI>
+              </Link>
             </Typography>
 
             <Grid container>
