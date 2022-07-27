@@ -36,7 +36,7 @@ const productListPage = () => {
   const [searchValue, setSearchValue] = useState(search.searchInput);
   const [selectedCategory, setSelectedCategory] = useState(0);
 
-  const maxProductPerPage = 4;
+  const maxProductPerPage = 10;
 
   const fetchCategory = async () => {
     try {
@@ -155,14 +155,16 @@ const productListPage = () => {
       <Box sx={{ px: "96px", pt: "20px" }}>
         <Typography sx={{ py: "20px" }}>Beranda/ Kategori/ Obat</Typography>
         <Grid container>
-          <Grid item sm={4} md={4}>
-            <UserSidebar
-              category={categories}
-              setSelectedCategory={setSelectedCategory}
-              selectedCategory={selectedCategory}
-            />
+          <Grid item sx={{ display: { xs: "none", md: "grid" } }} sm={4} md={4}>
+            <Box display={{ xs: "none", sm: "none", md: "inline-block" }}>
+              <UserSidebar
+                category={categories}
+                setSelectedCategory={setSelectedCategory}
+                selectedCategory={selectedCategory}
+              />
+            </Box>
           </Grid>
-          <Grid item sm={8} md={8}>
+          <Grid item xs={12} md={8}>
             <Typography
               sx={{ fontSize: "24px", fontWeight: "700", mb: "10px" }}
             >
@@ -219,7 +221,6 @@ const productListPage = () => {
                 flexDirection: "column",
               }}
             >
-              page: {page}
               <Pagination
                 count={Math.ceil(productsCount / maxProductPerPage)}
                 page={page}
@@ -229,7 +230,9 @@ const productListPage = () => {
           </Grid>
         </Grid>
       </Box>
-      <Footer />
+      <Box display={{xs: "none", md: "flex"}}>
+        <Footer />
+      </Box>
     </Box>
   );
 };

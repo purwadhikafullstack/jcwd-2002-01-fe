@@ -124,7 +124,7 @@ const Footer = () => {
           padding: "36px",
         }}
       >
-        designed by ahayde
+        designed by JCWD2002
       </Box>
     </Box>
   );

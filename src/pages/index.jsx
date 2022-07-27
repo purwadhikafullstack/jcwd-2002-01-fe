@@ -28,7 +28,7 @@ import axiosInstance from "configs/api";
 import { useState } from "react";
 
 const Home = () => {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
   const categoryList = [
     {
       foto: obat,
@@ -62,16 +62,16 @@ const Home = () => {
         params: {
           _limit: 5,
         },
-      })
-      setProducts(res.data.result.rows)
+      });
+      setProducts(res.data.result.rows);
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
 
   return (
     <Box>
@@ -128,7 +128,7 @@ const Home = () => {
         <Divider sx={{ width: "100%", my: "10px" }} variant="fullWidth" />
 
         {/* KEJAR DISKON */}
-          <KejarDiskon products={products}/>
+        <KejarDiskon products={products} />
 
         <Divider sx={{ width: "100%", my: "10px" }} variant="fullWidth" />
 
@@ -162,12 +162,16 @@ const Home = () => {
             </Link>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+            {products.map((val) => {
+              return (
+                <ProductCard
+                  productName={val?.name}
+                  id={val?.id}
+                  price={val?.price}
+                  productImage={val?.Product_images[0]?.image_url}
+                />
+              );
+            })}
           </Box>
         </Box>
         <Divider sx={{ width: "100%", my: "10px" }} variant="fullWidth" />

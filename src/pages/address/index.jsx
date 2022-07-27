@@ -34,7 +34,8 @@ const shippingAddress = () => {
   const [alert, setAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
   const [severity, setSeverity] = useState();
-  const router = useRouter()
+  const router = useRouter();
+
 
   const formik = useFormik({
     initialValues: {
@@ -87,7 +88,7 @@ const shippingAddress = () => {
           setAlertContent("Added to Cart!");
           setAlert(true);
           setSeverity(true);
-          router.push("/checkout")
+          router.push("/checkout");
         }
 
         console.log(res);
@@ -222,10 +223,11 @@ const shippingAddress = () => {
             <OutlinedInput
               size="small"
               id="nomerHp"
+              placeholder="*********"
               onChange={(e) =>
                 formik.setFieldValue("recipient_telephone", e.target.value)
               }
-              sx={{ padding: "0px", width: "480px" }}
+              sx={{ padding: "0px", width: "100%" }}
               startAdornment={
                 <FormControl sx={{ width: "100px", mr: "10px" }}>
                   <Select size="small" value={nation} onChange={handleChange}>
@@ -243,6 +245,7 @@ const shippingAddress = () => {
               <FormControl sx={{ width: "100%" }}>
                 <Select
                   size="small"
+                  placeholder="DKI Jakarta"
                   onChange={(e) => setSelectedProvince(e.target.value)}
                 >
                   {renderProvince()}
@@ -253,6 +256,7 @@ const shippingAddress = () => {
               <Typography>Kabupaten/Kota</Typography>
               <FormControl sx={{ width: "100%" }}>
                 <Select
+                  placeholder="Jakarta Barat"
                   size="small"
                   onChange={(e) => setSelectedCity(e.target.value)}
                 >
@@ -265,6 +269,7 @@ const shippingAddress = () => {
             <Typography>Kecamatan</Typography>
             <FormControl sx={{ width: "250px" }}>
               <TextField
+                placeholder="Kembangan"
                 size="small"
                 onChange={(e) =>
                   formik.setFieldValue("kecamatan", e.target.value)
@@ -275,6 +280,7 @@ const shippingAddress = () => {
           <Box sx={{ mb: "36px" }}>
             <Typography>Alamat</Typography>
             <OutlinedInput
+              placeholder="Jl. Apel"
               sx={{ width: "100%" }}
               size="small"
               onChange={(e) => formik.setFieldValue("address", e.target.value)}
@@ -311,7 +317,9 @@ const shippingAddress = () => {
           </Stack>
         </Box>
       </Container>
-      <Footer />
+      <Box sx={{ width: "100%", visibility: { xs: "hidden", md: "visible" } }}>
+        <Footer />
+      </Box>
     </Box>
   );
 };
