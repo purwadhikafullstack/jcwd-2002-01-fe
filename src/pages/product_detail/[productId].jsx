@@ -44,7 +44,6 @@ const productDetailPage = ({ productDetail }) => {
   const query = router.query;
 
   const product_id = query.productId;
-
   const dispatch = useDispatch();
 
   const handleClose = (event, reason) => {
@@ -172,6 +171,9 @@ const productDetailPage = ({ productDetail }) => {
             }}
           >
             <Box>
+              <Typography fontSize="22px" marginBottom="20px">
+                {productDetail.Category.name}
+              </Typography>
               <Typography fontSize="22px" marginBottom="20px">
                 {productDetail.name}
               </Typography>

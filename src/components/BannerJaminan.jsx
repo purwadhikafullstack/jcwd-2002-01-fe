@@ -9,19 +9,18 @@ const BannerJaminan = () => {
     <Box mt="48px" mb="110px">
       <Typography sx={{ fontSize: "24px", fontWeight: "700" }}>Jaminan Untuk Anda</Typography>
     
-    <Box>
       <Box>
+        <Box>
             <Box  sx={{display: {xs: "block",md: "flex",}, height: "212px",}}>
               <Box 
-              sx={{
+                sx={{
                 mt: "32px",
                 display: {
-                  xs: "block",
-                  md: "flex",
+                xs: "block",
+                md: "flex",
                 },
               }}
               >
-        
                 <Box>
                   <Box>
                   <Paper 
@@ -120,4 +119,4 @@ const BannerJaminan = () => {
     )
 }
 
-export default BannerJaminan
+export default BannerJaminan;
