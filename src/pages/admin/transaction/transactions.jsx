@@ -79,7 +79,7 @@ const Transaction = () => {
             quantity: val?.TransactionItems[0]?.quantity,
             productPrice: val?.TransactionItems[0]?.Product?.price,
             customerName: val?.User?.username,
-            address: val?.User?.Addresses[0]?.address,
+            address: val?.Address?.address,
             totalPrice: val?.total_price,
             countProduct: val?.TransactionItems.length,
             productImage:
