@@ -31,7 +31,6 @@ import logoPermata from "assets/permata.png";
 import TotalCardCheckout from "components/TotalCardCheckout";
 import axiosInstance from "configs/api";
 import { useEffect } from "react";
-import UserAddress from "components/userAddress";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
@@ -217,7 +216,6 @@ const checkoutPage = () => {
       if (res?.data?.message !== undefined) {
         router.push("/confirm_order");
       }
-      
     } catch (err) {
       console.log(err);
       setAlertContent(err?.response?.data?.message);
