@@ -8,7 +8,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Banner from "../components/Banner";
-import BannerJaminan from "../components/BannerJaminan";
+import BannerJaminan from "components/BannerJaminan";
 import UnggahResep from "components/UnggahResep";
 import obat from "assets/obat.png";
 import nutrisi from "assets/apel.png";
@@ -133,7 +133,9 @@ const Home = () => {
         <Divider sx={{ width: "100%", my: "10px" }} variant="fullWidth" />
 
         {/* Banner1 */}
+        <Divider sx={{ marginY: "20px"}} />
         <Banner />
+        <Divider/>
 
         {/* POPULAR PRODUCT */}
         <Box sx={{ my: "58px", width: "100%" }}>

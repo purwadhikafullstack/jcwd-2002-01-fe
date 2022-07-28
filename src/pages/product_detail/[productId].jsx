@@ -176,7 +176,7 @@ const productDetailPage = ({ productDetail }) => {
                 {productDetail.name}
               </Typography>
               <Typography fontSize="24px" fontWeight="700" marginBottom="24px">
-                {productDetail.price}
+                Rp.{productDetail.price}
               </Typography>
             </Box>
             {/* Button */}
