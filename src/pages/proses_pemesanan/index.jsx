@@ -251,22 +251,22 @@ const ProsesPemesanan = () => {
                 <Tab
                   label="Menunggu"
                   sx={{ textTransform: "none" }}
-                  onClick={() => setStatus("pending")}
+                  onClick={() => setStatus("waiting for confirmation")}
                 />
                 <Tab
                   label="Diproses"
                   sx={{ textTransform: "none" }}
-                  onClick={() => setStatus("waiting for confirmation")}
+                  onClick={() => setStatus("ready delivery")}
                 />
                 <Tab
                   label="Dikirim"
                   sx={{ textTransform: "none" }}
-                  onClick={() => setStatus("sent")}
+                  onClick={() => setStatus("on delivery")}
                 />
                 <Tab
                   label="Selesai"
                   sx={{ textTransform: "none" }}
-                  onClick={() => setStatus("done")}
+                  onClick={() => setStatus("success")}
                 />
                 <Tab
                   label="Dibatalkan"
