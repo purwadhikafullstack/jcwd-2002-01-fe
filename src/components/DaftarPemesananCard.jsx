@@ -48,22 +48,23 @@ const DaftarPemesananCard = ({
             padding: "5px",
           }}
         > */}
-        {status === "sent" ||
-        status === "done" ||
-        status === "pending" ||
-        status === "waiing for confirmation" ? (
+        {status == "on delivery" ||
+        status == "success" ||
+        status == "pending" ||
+        status == "canceled" ||
+        status == "waiing for confirmation" ? (
           <Box
             sx={{
               border:
-                status === "Dikirim" || status === "Selesai"
+                status == "on delivery" || status == "success"
                   ? "1px solid #32A853"
                   : "1px solid #FFDE6B",
               color:
-                status === "Dikirim" || status === "Selesai"
+                status == "on delivery" || status == "success"
                   ? "#32A853"
                   : "#CBAF4E",
               background:
-                status === "Dikirim" || status === "Selesai"
+                status === "on delivery" || status === "success"
                   ? "#87DF9F"
                   : "rgba(255, 222, 107, 0.3)",
               width: "156px",
