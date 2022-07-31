@@ -218,10 +218,6 @@ const productListPage = () => {
                 ) : undefined}
               </Box>
             </Box>
-
-            {/* product list */}
-            <Link underline="hover" href="/product_detail/:Id"><a>
-
             {/* product list */}
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
