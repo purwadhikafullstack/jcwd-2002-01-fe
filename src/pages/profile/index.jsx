@@ -37,9 +37,8 @@ import axiosInstance from "configs/api";
 import { useFormik } from "formik";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { login } from "redux/reducers/auth";
 import { MdClose } from "react-icons/md";
-import { useSelector } from "react-redux";
-
 import * as Yup from "yup";
 
 const myProfile = () => {
@@ -47,21 +46,27 @@ const myProfile = () => {
   const [tabMenu, setTabMenu] = useState(0);
   const [gender, setGender] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [openModalPassword, setOpenModalPassword] = useState(false);
   const inputFileRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(false);
-  const userSelector = useSelector(state => state.auth)
+  const userSelector = useSelector((state) => state.auth);
   const handleOpen = () => setOpenModal(true);
+  const dispatch = useDispatch();
+
   const handleClose = () => {
     setOpenModal(false);
   };
-  const [openModalPassword, setOpenModalPassword] = useState(false);
   const closeModal = () => {
     setOpenModalPassword(false);
   };
 
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue);
+  };
+
+  const handleChange = (event) => {
+    setGender(event.target.value);
   };
 
   const handleFile = (event) => {
@@ -75,11 +80,10 @@ const myProfile = () => {
     formData.append("profile_image_file", selectedFile);
 
     try {
-      const res = await axiosInstance.patch(
-        "/users/profile-picture",
-        formData
-      );
+      const res = await axiosInstance.patch("/users/profile-picture", formData);
+      console.log(res.data.result);
 
+      dispatch(login(res.data.result));
       setSelectedFile(null);
     } catch (err) {
       console.log(err);
@@ -92,25 +96,22 @@ const myProfile = () => {
       gender: "",
       age: "",
       email: "",
-      id: "",
     },
     validationSchema: Yup.object().shape({
-      fullname: Yup.string().required("this field is required"),
-      gender: Yup.string().required("this field is required"),
-      age: Yup.string().required("this field is required"),
-      email: Yup.string()
-        .email("please input a correct email format")
-        .required("this field is required"),
+      fullname: Yup.string(),
+      gender: Yup.string(),
+      age: Yup.string(),
+      email: Yup.string().email("please input a correct email format")
     }),
     validateOnChange: false,
     onSubmit: (values) => {
       setTimeout(async () => {
         try {
           const newProfile = {
-            full_name: values.fullname,
-            gender: values.gender,
-            age: values.age,
-            email: values.email,
+            full_name: values.fullname || userSelector.username,
+            gender: gender || userSelector.gender,
+            age: values.age || userSelector.age,
+            email: values.email || userSelector.email,
           };
 
           const res = await axiosInstance.patch("/users", newProfile);
@@ -120,6 +121,7 @@ const myProfile = () => {
           }
 
           profileFormik.setSubmitting(false);
+          setIsEdit(!isEdit)
         } catch (err) {
           console.log(err?.response?.data?.message);
           profileFormik.setSubmitting(false);
@@ -169,7 +171,7 @@ const myProfile = () => {
 
           console.log(newAddress);
 
-          const res = await axiosInstance.post("/users/address/1", newAddress);
+          const res = await axiosInstance.post("/users/address", newAddress);
 
           if (res?.data?.message !== undefined) {
             console.log("Added new address");
@@ -226,8 +228,6 @@ const myProfile = () => {
     },
   });
 
-  
-
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -259,8 +259,11 @@ const myProfile = () => {
                 justifyContent: "center",
               }}
             >
-              <Avatar sx={{ width: "80px", height: "80px", m: 3 }} />
-              <Box mb="5px" >
+              <Avatar
+                src={userSelector.profile_image}
+                sx={{ width: "150px", height: "150px", m: 3 }}
+              />
+              <Box mb="5px">
                 <Input
                   onChange={handleFile}
                   inputRef={inputFileRef}
@@ -270,7 +273,7 @@ const myProfile = () => {
                 {!selectedFile ? (
                   <Button
                     variant="contained"
-                    sx={{ fontSize: "12px", fontWeight: "700", }}
+                    sx={{ fontSize: "12px", fontWeight: "700" }}
                     onClick={() => inputFileRef.current.click()}
                     disabled={selectedFile ? true : false}
                   >
@@ -288,13 +291,13 @@ const myProfile = () => {
                 )}
               </Box>
               <Box>
-                  <Button
-                    variant="contained"
-                    sx={{ fontSize: "12px", fontWeight: "700"}}
-                    onClick={() => setOpenModalPassword(true)}
-                  >
-                    Ganti Password
-                  </Button>
+                <Button
+                  variant="contained"
+                  sx={{ fontSize: "12px", fontWeight: "700" }}
+                  onClick={() => setOpenModalPassword(true)}
+                >
+                  Ganti Password
+                </Button>
               </Box>
             </Box>
           </Grid>
@@ -326,7 +329,7 @@ const myProfile = () => {
                   onChange={(event) =>
                     profileFormik.setFieldValue("fullname", event.target.value)
                   }
-                  readOnly={isEdit}
+                  disabled={isEdit}
                 />
               </FormControl>
               <Box>
@@ -334,27 +337,16 @@ const myProfile = () => {
                   <FormLabel id="demo-radio-buttons-group-label">
                     Gender
                   </FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="female"
-                    name="radio-buttons-group"
-                    onChange={(event) =>
-                      profileFormik.setFieldValue("gender", event.target.value)
-                    }
+                  <Select
+                    size="small"
+                    value={gender || userSelector.gender}
+                    disabled={isEdit}
+                    sx={{ width: "150 px" }}
+                    onChange={handleChange}
                   >
-                    <Box sx={{ display: "flex" }}>
-                      <FormControlLabel
-                        value="male"
-                        control={<Radio />}
-                        label="Male"
-                      />
-                      <FormControlLabel
-                        value="female"
-                        control={<Radio />}
-                        label="Female"
-                      />
-                    </Box>
-                  </RadioGroup>
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                  </Select>
                 </FormControl>
               </Box>
               <Stack spacing={3}>
@@ -363,7 +355,8 @@ const myProfile = () => {
                   <OutlinedInput
                     id="age"
                     size="small"
-                    readOnly={isEdit}
+                    value={userSelector.age}
+                    disabled={isEdit}
                     onChange={(event) =>
                       profileFormik.setFieldValue("age", event.target.value)
                     }
@@ -374,7 +367,8 @@ const myProfile = () => {
                   <OutlinedInput
                     id="email"
                     size="small"
-                    readOnly={isEdit}
+                    value={userSelector.email}
+                    disabled={isEdit}
                     onChange={(event) =>
                       profileFormik.setFieldValue("email", event.target.value)
                     }
@@ -403,112 +397,110 @@ const myProfile = () => {
             {/* {  CHANGE PASSWORD  } */}
 
             <Dialog open={openModalPassword} onClose={closeModal}>
-                <Box
-                  width="500px"
-                  p={4}
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  pb={0}
-                >
-                  <DialogTitle variant="h5">Ganti Password</DialogTitle>
-                  <DialogContent>
-                    <FormControl
-                      fullWidth
-                      error={passwordFormik.errors.oldPassword}
-                    >
-                      <FormLabel sx={{ fontVariant: "body1", mt: "10px" }}>
-                        Password lama
-                      </FormLabel>
-                      <OutlinedInput
-                        type="password"
-                        onChange={(e) =>
-                          passwordFormik.setFieldValue(
-                            "oldPassword",
-                            e.target.value
-                          )
-                        }
-                      />
-                      {passwordFormik.errors.oldPassword && (
-                        <FormHelperText>
-                          {passwordFormik.errors.oldPassword}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
-                    <FormControl
-                      fullWidth
-                      error={passwordFormik.errors.newPassword}
-                    >
-                      <FormLabel sx={{ fontVariant: "body1", mt: "25px" }}>
-                        Password baru{" "}
-                        <Tooltip
-                          title="Passwords should contain at least 8 characters including an uppercase letter, a symbol, and a number"
-                          TransitionComponent={Fade}
-                          TransitionProps={{ timeout: 600 }}
-                        >
-                          <InfoIcon fontSize="small" />
-                        </Tooltip>
-                      </FormLabel>
-                      <OutlinedInput
-                        type="password"
-                        onChange={(e) =>
-                          passwordFormik.setFieldValue(
-                            "newPassword",
-                            e.target.value
-                          )
-                        }
-                      />
-                      {passwordFormik.errors.newPassword && (
-                        <FormHelperText>
-                          {passwordFormik.errors.newPassword}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
-                    <FormControl
-                      fullWidth
-                      error={passwordFormik.errors.repeatPassword}
-                    >
-                      <FormLabel sx={{ fontVariant: "body1", mt: "25px" }}>
-                        Ulang password baru
-                      </FormLabel>
-                      <OutlinedInput
-                        type="password"
-                        onChange={(e) =>
-                          passwordFormik.setFieldValue(
-                            "repeatPassword",
-                            e.target.value
-                          )
-                        }
-                      />
-                      {passwordFormik.errors.repeatPassword && (
-                        <FormHelperText>
-                          {passwordFormik.errors.repeatPassword}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
-                  </DialogContent>
-                </Box>
-                <DialogActions
-                  sx={{ marginX: 6, marginBottom: 4, marginTop: 2 }}
-                >
-                  <Button
-                    variant="outlined"
-                    sx={{ height: "42px", width: "120px" }}
-                    onClick={closeModal}
+              <Box
+                width="500px"
+                p={4}
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                pb={0}
+              >
+                <DialogTitle variant="h5">Ganti Password</DialogTitle>
+                <DialogContent>
+                  <FormControl
+                    fullWidth
+                    error={passwordFormik.errors.oldPassword}
                   >
-                    Batal
-                  </Button>
-                  <Button
-                    autoFocus
-                    variant="contained"
-                    sx={{ width: "120px", height: "42px" }}
-                    onClick={passwordFormik.handleSubmit}
-                    disabled={passwordFormik.isSubmitting}
+                    <FormLabel sx={{ fontVariant: "body1", mt: "10px" }}>
+                      Password lama
+                    </FormLabel>
+                    <OutlinedInput
+                      type="password"
+                      onChange={(e) =>
+                        passwordFormik.setFieldValue(
+                          "oldPassword",
+                          e.target.value
+                        )
+                      }
+                    />
+                    {passwordFormik.errors.oldPassword && (
+                      <FormHelperText>
+                        {passwordFormik.errors.oldPassword}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                  <FormControl
+                    fullWidth
+                    error={passwordFormik.errors.newPassword}
                   >
-                    Simpan
-                  </Button>
-                </DialogActions>
-                </Dialog>
+                    <FormLabel sx={{ fontVariant: "body1", mt: "25px" }}>
+                      Password baru{" "}
+                      <Tooltip
+                        title="Passwords should contain at least 8 characters including an uppercase letter, a symbol, and a number"
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                      >
+                        <InfoIcon fontSize="small" />
+                      </Tooltip>
+                    </FormLabel>
+                    <OutlinedInput
+                      type="password"
+                      onChange={(e) =>
+                        passwordFormik.setFieldValue(
+                          "newPassword",
+                          e.target.value
+                        )
+                      }
+                    />
+                    {passwordFormik.errors.newPassword && (
+                      <FormHelperText>
+                        {passwordFormik.errors.newPassword}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                  <FormControl
+                    fullWidth
+                    error={passwordFormik.errors.repeatPassword}
+                  >
+                    <FormLabel sx={{ fontVariant: "body1", mt: "25px" }}>
+                      Ulang password baru
+                    </FormLabel>
+                    <OutlinedInput
+                      type="password"
+                      onChange={(e) =>
+                        passwordFormik.setFieldValue(
+                          "repeatPassword",
+                          e.target.value
+                        )
+                      }
+                    />
+                    {passwordFormik.errors.repeatPassword && (
+                      <FormHelperText>
+                        {passwordFormik.errors.repeatPassword}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </DialogContent>
+              </Box>
+              <DialogActions sx={{ marginX: 6, marginBottom: 4, marginTop: 2 }}>
+                <Button
+                  variant="outlined"
+                  sx={{ height: "42px", width: "120px" }}
+                  onClick={closeModal}
+                >
+                  Batal
+                </Button>
+                <Button
+                  autoFocus
+                  variant="contained"
+                  sx={{ width: "120px", height: "42px" }}
+                  onClick={passwordFormik.handleSubmit}
+                  disabled={passwordFormik.isSubmitting}
+                >
+                  Simpan
+                </Button>
+              </DialogActions>
+            </Dialog>
 
             {/* {  ADDRESS  } */}
 

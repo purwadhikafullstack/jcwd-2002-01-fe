@@ -9,6 +9,7 @@ const initial_state = {
   is_verified: "",
   role: "",
   gender: "",
+  age: ""
 };
 
 const authReducer = createSlice({
@@ -16,7 +17,6 @@ const authReducer = createSlice({
   initialState: initial_state,
   reducers: {
     login: (state, action) => {
-      console.log(action);
       state.id = action.payload.id;
       state.username = action.payload.username;
       state.email = action.payload.email;
@@ -24,6 +24,8 @@ const authReducer = createSlice({
       state.profile_image = action.payload.profile_image;
       state.is_verified = action.payload.is_verified;
       state.role = action.payload.role;
+      state.age = action.payload.age
+      state.gender = action.payload.gender
     },
     logout: (state, action) => {
       return initial_state;

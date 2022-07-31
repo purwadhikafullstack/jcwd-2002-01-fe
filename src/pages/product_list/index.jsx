@@ -35,6 +35,7 @@ const productListPage = () => {
   const [pageIsReady, setPageIsReady] = useState(false);
   const [searchValue, setSearchValue] = useState(search.searchInput);
   const [selectedCategory, setSelectedCategory] = useState(0);
+  const [categoryName, setCategoryName] = useState("")
 
   const maxProductPerPage = 10;
 
@@ -161,6 +162,7 @@ const productListPage = () => {
                 category={categories}
                 setSelectedCategory={setSelectedCategory}
                 selectedCategory={selectedCategory}
+                setCategoryName={setCategoryName}
               />
             </Box>
           </Grid>
@@ -177,7 +179,7 @@ const productListPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Typography>{`${productsCount} product di Vitamin & suplemen`}</Typography>
+              <Typography>{`${productsCount} products ${categoryName? `di ${categoryName}` : ""}`}</Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -230,7 +232,7 @@ const productListPage = () => {
           </Grid>
         </Grid>
       </Box>
-      <Box display={{xs: "none", md: "flex"}}>
+      <Box display={{ xs: "none", md: "flex" }}>
         <Footer />
       </Box>
     </Box>

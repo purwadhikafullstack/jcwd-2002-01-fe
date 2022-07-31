@@ -12,14 +12,16 @@ import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import { useState } from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
-const SidebarSubmenu = ({ submenuTitle, icon, isMenu = true, id, selectedCategory, setSelectedCategory }) => {
+const SidebarSubmenu = ({ submenuTitle, icon, isMenu = true, id, selectedCategory, setSelectedCategory, setCategoryName }) => {
   const categoryHandler = (value) => {
     setSelectedCategory(value)
   };
 
   return (
     <MenuItem
-      onClick={() => categoryHandler(id)}
+      onClick={() => {categoryHandler(id)
+      setCategoryName(submenuTitle)
+      }}
       sx={{
         color: selectedCategory == id ? "brand.500" : "black",
         "&:hover": {
@@ -39,9 +41,15 @@ const SidebarSubmenu = ({ submenuTitle, icon, isMenu = true, id, selectedCategor
   );
 };
 
-const SidebarMenu = ({ menuTitle, subMenus = [], icon, selectedCategory, setSelectedCategory }) => {
+const SidebarMenu = ({
+  menuTitle,
+  subMenus = [],
+  icon,
+  selectedCategory,
+  setSelectedCategory,
+  setCategoryName,
+}) => {
   const [menuOpen, setMenuOpen] = useState(false);
-
 
   return (
     <Box>
@@ -77,6 +85,7 @@ const SidebarMenu = ({ menuTitle, subMenus = [], icon, selectedCategory, setSele
               id={val.id}
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
+              setCategoryName={setCategoryName}
             />
           );
         })}
@@ -85,7 +94,12 @@ const SidebarMenu = ({ menuTitle, subMenus = [], icon, selectedCategory, setSele
   );
 };
 
-const UserSidebar = ({ category = [], setSelectedCategory, selectedCategory }) => {
+const UserSidebar = ({
+  category = [],
+  setSelectedCategory,
+  selectedCategory,
+  setCategoryName,
+}) => {
   return (
     <Box>
       <Box
@@ -103,6 +117,7 @@ const UserSidebar = ({ category = [], setSelectedCategory, selectedCategory }) =
           subMenus={category}
           setSelectedCategory={setSelectedCategory}
           selectedCategory={selectedCategory}
+          setCategoryName={setCategoryName}
         />
       </Box>
       <Box
