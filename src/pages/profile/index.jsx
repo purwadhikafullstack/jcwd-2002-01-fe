@@ -258,7 +258,10 @@ const myProfile = () => {
                 justifyContent: "center",
               }}
             >
-              <Avatar sx={{ width: "80px", height: "80px", m: 3 }} />
+              <Avatar
+                src={userSelector.profile_image}
+                sx={{ width: "150px", height: "150px", m: 3 }}
+              />
               <Box mb="5px">
                 <Input
                   onChange={handleFile}
