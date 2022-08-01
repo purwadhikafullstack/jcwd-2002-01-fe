@@ -24,7 +24,7 @@ const DeleteDialog = ({ open, handleClose, data }) => {
   };
   return (
     <Dialog open={open} handleClose={handleClose}>
-      <DialogTitle>Alert!</DialogTitle>
+      <DialogTitle>Alert</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           Produk {data.namaObat} ini akan terhapus secara permanen. Apakah Anda
