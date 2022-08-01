@@ -139,7 +139,9 @@ const ProductCard = ({ productName, price, productImage, id }) => {
           </IconButton>
         </Box>
         <Typography marginBottom="25px" fontWeight="700">
-          {productName}
+          {productName?.length > 20
+            ? `${productName?.slice(0, 15)}...`
+            : productName}
         </Typography>
         <Typography marginBottom="20px">
           Rp. {price?.toLocaleString()} / pack
