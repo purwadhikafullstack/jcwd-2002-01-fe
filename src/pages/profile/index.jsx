@@ -37,8 +37,8 @@ import axiosInstance from "configs/api";
 import { useFormik } from "formik";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { login } from "redux/reducers/auth";
 import { MdClose } from "react-icons/md";
-
 import * as Yup from "yup";
 
 const myProfile = () => {
@@ -46,21 +46,27 @@ const myProfile = () => {
   const [tabMenu, setTabMenu] = useState(0);
   const [gender, setGender] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [openModalPassword, setOpenModalPassword] = useState(false);
   const inputFileRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(false);
   const userSelector = useSelector((state) => state.auth);
   const handleOpen = () => setOpenModal(true);
+  const dispatch = useDispatch();
+
   const handleClose = () => {
     setOpenModal(false);
   };
-  const [openModalPassword, setOpenModalPassword] = useState(false);
   const closeModal = () => {
     setOpenModalPassword(false);
   };
 
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue);
+  };
+
+  const handleChange = (event) => {
+    setGender(event.target.value);
   };
 
   const handleFile = (event) => {
@@ -76,6 +82,7 @@ const myProfile = () => {
     try {
       const res = await axiosInstance.patch("/users/profile-picture", formData);
 
+      dispatch(login(res.data.result));
       setSelectedFile(null);
     } catch (err) {
       console.log(err);
@@ -88,25 +95,22 @@ const myProfile = () => {
       gender: "",
       age: "",
       email: "",
-      id: "",
     },
     validationSchema: Yup.object().shape({
-      fullname: Yup.string().required("this field is required"),
-      gender: Yup.string().required("this field is required"),
-      age: Yup.string().required("this field is required"),
-      email: Yup.string()
-        .email("please input a correct email format")
-        .required("this field is required"),
+      fullname: Yup.string(),
+      gender: Yup.string(),
+      age: Yup.string(),
+      email: Yup.string().email("please input a correct email format")
     }),
     validateOnChange: false,
     onSubmit: (values) => {
       setTimeout(async () => {
         try {
           const newProfile = {
-            full_name: values.fullname,
-            gender: values.gender,
-            age: values.age,
-            email: values.email,
+            full_name: values.fullname || userSelector.username,
+            gender: gender || userSelector.gender,
+            age: values.age || userSelector.age,
+            email: values.email || userSelector.email,
           };
 
           const res = await axiosInstance.patch("/users", newProfile);
@@ -116,6 +120,7 @@ const myProfile = () => {
           }
 
           profileFormik.setSubmitting(false);
+          setIsEdit(!isEdit)
         } catch (err) {
           console.log(err?.response?.data?.message);
           profileFormik.setSubmitting(false);
@@ -165,7 +170,7 @@ const myProfile = () => {
 
           console.log(newAddress);
 
-          const res = await axiosInstance.post("/users/address/1", newAddress);
+          const res = await axiosInstance.post("/users/address", newAddress);
 
           if (res?.data?.message !== undefined) {
             console.log("Added new address");
@@ -253,7 +258,10 @@ const myProfile = () => {
                 justifyContent: "center",
               }}
             >
-              <Avatar sx={{ width: "80px", height: "80px", m: 3 }} />
+              <Avatar
+                src={userSelector.profile_image}
+                sx={{ width: "150px", height: "150px", m: 3 }}
+              />
               <Box mb="5px">
                 <Input
                   onChange={handleFile}
@@ -320,7 +328,7 @@ const myProfile = () => {
                   onChange={(event) =>
                     profileFormik.setFieldValue("fullname", event.target.value)
                   }
-                  readOnly={isEdit}
+                  disabled={isEdit}
                 />
               </FormControl>
               <Box>
@@ -328,27 +336,16 @@ const myProfile = () => {
                   <FormLabel id="demo-radio-buttons-group-label">
                     Gender
                   </FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="female"
-                    name="radio-buttons-group"
-                    onChange={(event) =>
-                      profileFormik.setFieldValue("gender", event.target.value)
-                    }
+                  <Select
+                    size="small"
+                    value={gender || userSelector.gender}
+                    disabled={isEdit}
+                    sx={{ width: "150 px" }}
+                    onChange={handleChange}
                   >
-                    <Box sx={{ display: "flex" }}>
-                      <FormControlLabel
-                        value="male"
-                        control={<Radio />}
-                        label="Male"
-                      />
-                      <FormControlLabel
-                        value="female"
-                        control={<Radio />}
-                        label="Female"
-                      />
-                    </Box>
-                  </RadioGroup>
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                  </Select>
                 </FormControl>
               </Box>
               <Stack spacing={3}>
@@ -357,7 +354,8 @@ const myProfile = () => {
                   <OutlinedInput
                     id="age"
                     size="small"
-                    readOnly={isEdit}
+                    value={userSelector.age}
+                    disabled={isEdit}
                     onChange={(event) =>
                       profileFormik.setFieldValue("age", event.target.value)
                     }
@@ -368,7 +366,8 @@ const myProfile = () => {
                   <OutlinedInput
                     id="email"
                     size="small"
-                    readOnly={isEdit}
+                    value={userSelector.email}
+                    disabled={isEdit}
                     onChange={(event) =>
                       profileFormik.setFieldValue("email", event.target.value)
                     }

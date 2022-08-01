@@ -48,22 +48,23 @@ const DaftarPemesananCard = ({
             padding: "5px",
           }}
         > */}
-        {status === "sent" ||
-        status === "done" ||
-        status === "pending" ||
-        status === "waiing for confirmation" ? (
+        {status == "on delivery" ||
+        status == "success" ||
+        status == "pending" ||
+        status == "canceled" ||
+        status == "waiing for confirmation" ? (
           <Box
             sx={{
               border:
-                status === "Dikirim" || status === "Selesai"
+                status == "on delivery" || status == "success"
                   ? "1px solid #32A853"
                   : "1px solid #FFDE6B",
               color:
-                status === "Dikirim" || status === "Selesai"
+                status == "on delivery" || status == "success"
                   ? "#32A853"
                   : "#CBAF4E",
               background:
-                status === "Dikirim" || status === "Selesai"
+                status === "on delivery" || status === "success"
                   ? "#87DF9F"
                   : "rgba(255, 222, 107, 0.3)",
               width: "156px",
@@ -127,7 +128,11 @@ const DaftarPemesananCard = ({
                   Rp {price?.toLocaleString()}
                 </Typography>
               </Box>
-              <Link underline="hover" sx={{ ":hover": { cursor: "pointer" } }} href={status == "pending" ? "/confirm_order" : undefined}>
+              <Link
+                underline="hover"
+                sx={{ ":hover": { cursor: "pointer" } }}
+                href={status == "pending" ? "/confirm_order" : undefined}
+              >
                 <Typography fontSize="12px">Tampilkan Detail</Typography>
               </Link>
               <Divider />
@@ -155,18 +160,17 @@ const DaftarPemesananCard = ({
                   </Typography>
                 </Box>
                 <Link href="/confirm_order">
-
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: "157px",
-                    height: "30px",
-                    fontSize: "12px",
-                    fontWeight: "700",
-                  }}
-                >
-                  Bayar Sekarang
-                </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: "157px",
+                      height: "30px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    Bayar Sekarang
+                  </Button>
                 </Link>
               </Box>
             </Box>

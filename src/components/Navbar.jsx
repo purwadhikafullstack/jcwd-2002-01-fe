@@ -110,7 +110,7 @@ const Navbar = () => {
       {userSelector.id ? (
         <Stack direction="row" spacing={3}>
           <Link href="/cart">
-            <Badge badgeContent={userCart.cartCount} color="primary">
+            <Badge badgeContent={userCart.cartItems.length} color="primary">
               <IconButton>
                 <ShoppingCartIcon sx={{ color: "brand.500" }} />
               </IconButton>

@@ -35,6 +35,7 @@ const productListPage = () => {
   const [pageIsReady, setPageIsReady] = useState(false);
   const [searchValue, setSearchValue] = useState(search.searchInput);
   const [selectedCategory, setSelectedCategory] = useState(0);
+  const [categoryName, setCategoryName] = useState("")
 
   const maxProductPerPage = 10;
 
@@ -100,12 +101,20 @@ const productListPage = () => {
     } else if (value == "Z-A") {
       setSortBy("name");
       setSortDir("DESC");
+      setPage(1);
     } else if (value == "") {
       setSortBy("");
       setSortDir("");
       setPage(1);
     }
   };
+
+  const resetSort = () => {
+    setSortBy("");
+    setSortDir("");
+    setPage(1);
+    setSortInput("")
+  }
 
   useEffect(() => {
     if (router.isReady) {
@@ -161,6 +170,7 @@ const productListPage = () => {
                 category={categories}
                 setSelectedCategory={setSelectedCategory}
                 selectedCategory={selectedCategory}
+                setCategoryName={setCategoryName}
               />
             </Box>
           </Grid>
@@ -177,7 +187,7 @@ const productListPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Typography>{`${productsCount} product di Vitamin & suplemen`}</Typography>
+              <Typography>{`${productsCount} products ${categoryName? `di ${categoryName}` : ""}`}</Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -201,7 +211,7 @@ const productListPage = () => {
                   </Select>
                 </FormControl>
                 {sortInput ? (
-                  <IconButton onClick={() => setSortInput(undefined)}>
+                  <IconButton onClick={() => resetSort()}>
                     {<GrPowerReset />}
                   </IconButton>
                 ) : undefined}
@@ -209,6 +219,7 @@ const productListPage = () => {
             </Box>
 
             {/* product list */}
+            <Link underline="hover" href="/product_detail">
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
             </Box>
@@ -227,10 +238,27 @@ const productListPage = () => {
                 onChange={(e, value) => setPage(value)}
               />
             </Box>
+            <Box
+              sx={{
+                mt: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              page: {page}
+              <Pagination
+                count={Math.ceil(productsCount / maxProductPerPage)}
+                page={page}
+                onChange={(e, value) => setPage(value)}
+              />
+            </Box>
+            </Link>
           </Grid>
         </Grid>
       </Box>
-      <Box display={{xs: "none", md: "flex"}}>
+      <Box display={{ xs: "none", md: "flex" }}>
         <Footer />
       </Box>
     </Box>
