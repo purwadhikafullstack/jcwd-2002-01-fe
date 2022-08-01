@@ -83,11 +83,29 @@ const TransactionCard = ({ data, fetchTransaction }) => {
 
               <Box sx={{ mr: "32px" }}>
                 <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
-                  {val.Product.name}
+                  {val?.Product?.name?.length > 10
+                    ? `${val?.Product?.name?.slice(0, 10)}...`
+                    : val?.Product?.name}
                 </Typography>
                 <Typography sx={{ fontSize: "12px", color: "#737A8D" }}>
                   {val.quantity} x {val.Product?.price}
                 </Typography>
+                <Box
+                  display="flex"
+                  sx={{
+                    color: "brand.500",
+                    alignItems: "center",
+                    ":hover": { cursor: "pointer" },
+                  }}
+                  onClick={() => {
+                    setAllTransaction(false);
+                  }}
+                >
+                  <Typography sx={{ fontSize: "12px" }}>
+                    tutup obat lainnya
+                  </Typography>
+                  <ExpandLess fontSize="24px"></ExpandLess>
+                </Box>
 
                 {/* <Button
                 sx={{ bgcolor: "brand.400" }}
@@ -288,7 +306,9 @@ const TransactionCard = ({ data, fetchTransaction }) => {
 
               <Box sx={{ mr: "32px" }}>
                 <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>
-                  {data.productName}
+                  {data.productName.length > 10
+                    ? `${data?.productName?.slice(0, 10)}...`
+                    : data.productName}
                 </Typography>
                 <Typography
                   sx={{ fontSize: "12px", color: "#737A8D" }}
@@ -305,7 +325,7 @@ const TransactionCard = ({ data, fetchTransaction }) => {
                   }}
                 >
                   <Typography sx={{ fontSize: "12px" }}>
-                    lihat 2 obat lainnya
+                    lihat obat lainnya
                   </Typography>
                   <ExpandMore fontSize="24px"></ExpandMore>
                 </Box>
