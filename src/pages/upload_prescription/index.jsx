@@ -32,7 +32,6 @@ const uploadPrescriptionPage = () => {
     setTimeout(async () => {
       try {
         const res = await axiosInstance.post("/transactions", formData);
-        router.push("/");
 
         if (res?.data?.message !== undefined) {
           setAlertContent("upload prescription success");

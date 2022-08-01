@@ -55,7 +55,7 @@ const confirmOrder = () => {
         setUploading(true);
         const res = await axiosInstance.post("/payment", formData);
         fetchCheckedOutItems();
-        router.push("/");
+        router.push("/proses_pemesanan");
 
         if (res?.data?.message !== undefined) {
           setAlertContent("upload proof of payment success! your order will be processed as soon as posible");

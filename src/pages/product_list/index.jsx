@@ -102,13 +102,20 @@ const productListPage = () => {
     } else if (value == "Z-A") {
       setSortBy("name");
       setSortDir("DESC");
-      
+      setPage(1);
     } else if (value == "") {
       setSortBy("");
       setSortDir("");
       setPage(1);
     }
   };
+
+  const resetSort = () => {
+    setSortBy("");
+    setSortDir("");
+    setPage(1);
+    setSortInput("")
+  }
 
   useEffect(() => {
     if (router.isReady) {
@@ -205,7 +212,7 @@ const productListPage = () => {
                   </Select>
                 </FormControl>
                 {sortInput ? (
-                  <IconButton onClick={() => setSortInput(undefined)}>
+                  <IconButton onClick={() => resetSort()}>
                     {<GrPowerReset />}
                   </IconButton>
                 ) : undefined}

@@ -86,6 +86,7 @@ const cartPage = () => {
                     sx={{ fontSize: "14px" }}
                     control={
                       <Checkbox
+                        checked={cartItems.length == checkedItems.length}
                         onChange={({ target: { checked } }) => {
                           let dupItems = [...checkedItems];
                           if (checked) {
