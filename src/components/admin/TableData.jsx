@@ -18,6 +18,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import ModalAddStock from "./ModalAddStock";
 import ModalEditData from "./ModalEditData";
+import DeleteDialog from "../admin/DeleteDialog";
 import Link from "next/link";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -128,11 +129,11 @@ const TableData = ({
                 Ubah Produk
               </MenuItem>
               <MenuItem
-              // onClick={() => {
-              //   setDeleteProduk(true);
-              //   setProdukData(val);
-              // setSelectedId(0);
-              // }}
+              onClick={() => {
+                setDeleteProduk(true);
+                setProductkData(val);
+                setSelectedId(0);
+              }}
               >
                 Hapus Produk
               </MenuItem>
@@ -158,6 +159,11 @@ const TableData = ({
         fetchProduct={fetchProduct}
         productImage={productImage}
       ></ModalEditData>
+      <DeleteDialog
+        open={deleteProduk}
+        handleClose={handleClose}
+        data={productData}
+      />
 
       <Box>
         <TableContainer component={Paper}>
