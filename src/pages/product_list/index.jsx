@@ -35,8 +35,7 @@ const productListPage = () => {
   const [pageIsReady, setPageIsReady] = useState(false);
   const [searchValue, setSearchValue] = useState(search.searchInput);
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [categoryName, setCategoryName] = useState("")
-
+  const [categoryName, setCategoryName] = useState("");
   const maxProductPerPage = 10;
 
   const fetchCategory = async () => {
@@ -113,8 +112,8 @@ const productListPage = () => {
     setSortBy("");
     setSortDir("");
     setPage(1);
-    setSortInput("")
-  }
+    setSortInput("");
+  };
 
   useEffect(() => {
     if (router.isReady) {
@@ -187,7 +186,9 @@ const productListPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Typography>{`${productsCount} products ${categoryName? `di ${categoryName}` : ""}`}</Typography>
+              <Typography>{`${productsCount} products ${
+                categoryName ? `di ${categoryName}` : ""
+              }`}</Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -219,7 +220,6 @@ const productListPage = () => {
             </Box>
 
             {/* product list */}
-            <Link underline="hover" href="/product_detail">
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
             </Box>
