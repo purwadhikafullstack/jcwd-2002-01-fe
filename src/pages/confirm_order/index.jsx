@@ -205,7 +205,7 @@ const confirmOrder = () => {
                 Batas Akhir Pembayaran
               </Typography>
               <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
-                {moment(products.valid_until).format("LLLL")}
+                {moment(products?.valid_until).format("LLLL")}
               </Typography>
             </Stack>
             <Box>

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -23,6 +24,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Snackbar,
   Stack,
   Tab,
   Tabs,
@@ -50,6 +52,18 @@ const myProfile = () => {
   const inputFileRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
+  const [severity, setSeverity] = useState();
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
+
   const userSelector = useSelector((state) => state.auth);
   const handleOpen = () => setOpenModal(true);
   const dispatch = useDispatch();
@@ -71,7 +85,6 @@ const myProfile = () => {
 
   const handleFile = (event) => {
     setSelectedFile(event.target.files[0]);
-    alert(event.target.files[0].name);
   };
 
   const editProfileHandler = async () => {
@@ -81,6 +94,12 @@ const myProfile = () => {
 
     try {
       const res = await axiosInstance.patch("/users/profile-picture", formData);
+
+      if (res?.data?.message !== undefined) {
+        setAlertContent("Profile Picture Updated !");
+        setAlert(true);
+        setSeverity(true);
+      }
 
       dispatch(login(res.data.result));
       setSelectedFile(null);
@@ -100,14 +119,14 @@ const myProfile = () => {
       fullname: Yup.string(),
       gender: Yup.string(),
       age: Yup.string(),
-      email: Yup.string().email("please input a correct email format")
+      email: Yup.string().email("please input a correct email format"),
     }),
     validateOnChange: false,
     onSubmit: (values) => {
       setTimeout(async () => {
         try {
           const newProfile = {
-            full_name: values.fullname || userSelector.username,
+            full_name: values.fullname || userSelector.fullname,
             gender: gender || userSelector.gender,
             age: values.age || userSelector.age,
             email: values.email || userSelector.email,
@@ -116,11 +135,13 @@ const myProfile = () => {
           const res = await axiosInstance.patch("/users", newProfile);
 
           if (res?.data?.message !== undefined) {
-            console.log("profile edited");
+            setAlertContent("Profile Data Updated!");
+            setAlert(true);
+            setSeverity(true);
           }
 
           profileFormik.setSubmitting(false);
-          setIsEdit(!isEdit)
+          setIsEdit(!isEdit);
         } catch (err) {
           console.log(err?.response?.data?.message);
           profileFormik.setSubmitting(false);
@@ -247,6 +268,20 @@ const myProfile = () => {
 
   return (
     <Box>
+      {alert ? (
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert variant="filled" severity={severity ? "success" : "error"}>
+            {alertContent}
+          </Alert>
+        </Snackbar>
+      ) : (
+        <></>
+      )}
       <Container maxWidth="lg" sx={{ mt: "40px" }}>
         <Grid container>
           <Grid item sm={4} md={4}>
@@ -322,9 +357,9 @@ const myProfile = () => {
               <FormControl sx={{ width: "500px", mb: "20px" }}>
                 <FormLabel htmlFor="nama">Fullname</FormLabel>
                 <OutlinedInput
-                  value={userSelector.full_name || userSelector.username}
                   id="nama"
                   size="small"
+                  placeholder={userSelector.full_name? userSelector.full_name : `${userSelector.username}(username)`}
                   onChange={(event) =>
                     profileFormik.setFieldValue("fullname", event.target.value)
                   }
@@ -354,7 +389,7 @@ const myProfile = () => {
                   <OutlinedInput
                     id="age"
                     size="small"
-                    value={userSelector.age}
+                    placeholder={userSelector.age}
                     disabled={isEdit}
                     onChange={(event) =>
                       profileFormik.setFieldValue("age", event.target.value)
@@ -366,7 +401,7 @@ const myProfile = () => {
                   <OutlinedInput
                     id="email"
                     size="small"
-                    value={userSelector.email}
+                    placeholder={userSelector.email}
                     disabled={isEdit}
                     onChange={(event) =>
                       profileFormik.setFieldValue("email", event.target.value)

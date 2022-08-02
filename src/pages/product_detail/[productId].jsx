@@ -94,8 +94,6 @@ const productDetailPage = ({ productDetail }) => {
     }
   };
 
-  const [product, setProduct] = useState({});
-
   const handleTabMenu = (event, newValue) => {
     setTabMenu(newValue);
   };
