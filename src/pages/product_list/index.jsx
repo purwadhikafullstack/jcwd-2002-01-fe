@@ -36,7 +36,6 @@ const productListPage = () => {
   const [searchValue, setSearchValue] = useState(search.searchInput);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [categoryName, setCategoryName] = useState("");
-
   const maxProductPerPage = 10;
 
   const fetchCategory = async () => {
@@ -221,7 +220,6 @@ const productListPage = () => {
             </Box>
 
             {/* product list */}
-
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
             </Box>
@@ -240,6 +238,23 @@ const productListPage = () => {
                 onChange={(e, value) => setPage(value)}
               />
             </Box>
+            <Box
+              sx={{
+                mt: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              page: {page}
+              <Pagination
+                count={Math.ceil(productsCount / maxProductPerPage)}
+                page={page}
+                onChange={(e, value) => setPage(value)}
+              />
+            </Box>
+            </Link>
           </Grid>
         </Grid>
       </Box>
