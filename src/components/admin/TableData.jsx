@@ -131,7 +131,7 @@ const TableData = ({
               <MenuItem
               onClick={() => {
                 setDeleteProduk(true);
-                setProductkData(val);
+                setProductData(val);
                 setSelectedId(0);
               }}
               >
