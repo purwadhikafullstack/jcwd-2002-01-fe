@@ -38,7 +38,6 @@ const productDetailPage = ({ productDetail }) => {
   const [alertContent, setAlertContent] = useState("");
   const [severity, setSeverity] = useState();
   const [isLiked, setIsLiked] = useState(false);
-  const [product, setProduct] = useState({});
 
   const router = useRouter();
   const query = router.query;

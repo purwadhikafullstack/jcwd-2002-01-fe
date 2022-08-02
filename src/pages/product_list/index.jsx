@@ -218,7 +218,6 @@ const productListPage = () => {
                 ) : undefined}
               </Box>
             </Box>
-
             {/* product list */}
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {renderProducts()}
@@ -238,23 +237,6 @@ const productListPage = () => {
                 onChange={(e, value) => setPage(value)}
               />
             </Box>
-            <Box
-              sx={{
-                mt: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-              }}
-            >
-              page: {page}
-              <Pagination
-                count={Math.ceil(productsCount / maxProductPerPage)}
-                page={page}
-                onChange={(e, value) => setPage(value)}
-              />
-            </Box>
-            </Link>
           </Grid>
         </Grid>
       </Box>
